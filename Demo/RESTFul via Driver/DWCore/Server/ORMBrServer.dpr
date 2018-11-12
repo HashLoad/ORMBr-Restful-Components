@@ -1,0 +1,22 @@
+program ORMBrServer;
+
+uses
+  Vcl.Forms,
+  Server.Forms.Main in 'Server.Forms.Main.pas' {ServerForm},
+  Server.Resources in 'Server.Resources.pas',
+  ormbr.model.client in '..\ormbr.model.client.pas',
+  ormbr.model.detail in '..\ormbr.model.detail.pas',
+  ormbr.model.lookup in '..\ormbr.model.lookup.pas',
+  ormbr.model.master in '..\ormbr.model.master.pas',
+  Server.Datamodule in 'Server.Datamodule.pas' {ServerDataModule: TDataModule};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  ReportMemoryLeaksOnShutdown := True;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TServerForm, ServerForm);
+  Application.CreateForm(TServerDataModule, ServerDataModule);
+  Application.Run;
+end.

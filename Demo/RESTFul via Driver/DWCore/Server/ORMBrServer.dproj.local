@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2018/06/11 17:51:14.000.378,D:\ORMBr\Demo\DWCore\Server\FileServer.dproj=D:\ORMBr\Demo\DWCore\Server\ORMBrServer.dproj</Transaction>
+    <Transaction>2018/06/11 17:51:38.000.906,D:\ORMBr\Demo\DWCore\Server\uPrincipal.dfm=D:\ORMBr\Demo\DWCore\Server\Server.Forms.Main.dfm</Transaction>
+    <Transaction>2018/06/11 17:51:38.000.906,D:\ORMBr\Demo\DWCore\Server\uPrincipal.pas=D:\ORMBr\Demo\DWCore\Server\Server.Forms.Main.pas</Transaction>
+    <Transaction>2018/06/11 17:52:02.000.865,D:\ORMBr\Demo\DWCore\Server\SMDWCore.pas=D:\ORMBr\Demo\DWCore\Server\Server.Resources.pas</Transaction>
+    <Transaction>2018/06/11 18:26:55.000.453,=D:\ORMBr\Demo\DWCore\ormbr.model.lookup.pas</Transaction>
+    <Transaction>2018/06/11 18:26:55.000.414,=D:\ORMBr\Demo\DWCore\ormbr.model.detail.pas</Transaction>
+    <Transaction>2018/06/11 18:26:55.000.531,=D:\ORMBr\Demo\DWCore\ormbr.model.master.pas</Transaction>
+    <Transaction>2018/06/11 18:26:55.000.377,=D:\ORMBr\Demo\DWCore\ormbr.model.client.pas</Transaction>
+    <Transaction>2018/06/11 18:41:30.000.600,=D:\ORMBr\Demo\DWCore\Server\Unit1.pas</Transaction>
+    <Transaction>2018/06/11 18:42:20.000.601,D:\ORMBr\Demo\DWCore\Server\Server.Datamodule.pas=D:\ORMBr\Demo\DWCore\Server\Unit1.pas</Transaction>
+    <Transaction>2018/06/11 18:42:20.000.601,D:\ORMBr\Demo\DWCore\Server\Server.Datamodule.dfm=D:\ORMBr\Demo\DWCore\Server\Unit1.dfm</Transaction>
+  </Transactions>
+</BorlandProject>
