@@ -15,9 +15,19 @@ uses
   System.SysUtils, System.Classes, Vcl.Controls, Vcl.Forms, Vcl.ActnList,
   Vcl.StdCtrls, Vcl.ExtCtrls, System.Diagnostics, System.Actions,
 
-  WiRL.Core.Engine,
+  /// WiRL
   WiRL.http.Server,
   WiRL.http.Server.Indy,
+  WiRL.Core.Engine,
+  WiRL.Core.Application,
+  WiRL.Core.Registry,
+  WiRL.Core.Attributes,
+  WiRL.http.Accept.MediaType,
+  WiRL.http.URL,
+  WiRL.Core.MessageBody.Default,
+  WiRL.Core.Auth.Context,
+  WiRL.http.Request,
+  WiRL.http.Response,
 
   ormbr.factory.interfaces,
   ormbr.factory.firedac,
@@ -74,6 +84,7 @@ begin
 
   /// ORMBr - REST Server WiRL
   FConnection := TFactoryFireDAC.Create(ServerDataModule.FDConnection1, dnSQLite);
+
   RESTServerWiRL1 := TRESTServerWiRL.Create(Self);
   RESTServerWiRL1.WiRLEngine := RESTServer.GetEngine('/rest') as TWiRLEngine;
   RESTServerWiRL1.Connection := FConnection;

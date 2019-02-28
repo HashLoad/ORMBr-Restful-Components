@@ -7,8 +7,8 @@ object ServerDataModule: TServerDataModule
   Width = 267
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'DriverID=SQLite'
-      'Database=..\..\..\Data\Database\database.db3')
+      'Database=D:\ORMBr\Demo\Data\Database\database.db3'
+      'DriverID=SQLite')
     LoginPrompt = False
     Left = 68
     Top = 42
@@ -17,61 +17,84 @@ object ServerDataModule: TServerDataModule
     IgnoreInvalidParams = False
     Events = <
       item
-        DWParams = <>
+        Routes = [crAll]
+        DWParams = <
+          item
+            TypeObject = toParam
+            ObjectDirection = odINOUT
+            ObjectValue = ovString
+            ParamName = 'dwparam1'
+            Encoded = True
+          end
+          item
+            TypeObject = toParam
+            ObjectDirection = odINOUT
+            ObjectValue = ovString
+            ParamName = 'dwparam2'
+            Encoded = True
+          end>
         JsonMode = jmPureJSON
         Name = 'select'
         OnReplyEvent = MasterEventsselectReplyEvent
       end
       item
+        Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'selectid'
         OnReplyEvent = MasterEventsselectidReplyEvent
       end
       item
+        Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'selectwhere'
         OnReplyEvent = MasterEventsselectwhereReplyEvent
       end
       item
+        Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'insert'
         OnReplyEvent = MasterEventsinsertReplyEvent
       end
       item
+        Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'update'
         OnReplyEvent = MasterEventsupdateReplyEvent
       end
       item
+        Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'delete'
         OnReplyEvent = MasterEventsdeleteReplyEvent
       end
       item
+        Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'nextpacket'
         OnReplyEvent = MasterEventsnextpacketReplyEvent
       end
       item
+        Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'nextpacketwhere'
         OnReplyEvent = MasterEventsnextpacketwhereReplyEvent
       end>
     ContextName = 'master'
-    Left = 32
-    Top = 162
+    Left = 28
+    Top = 158
   end
   object Lookup: TDWServerEvents
     IgnoreInvalidParams = False
     Events = <
       item
+        Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'select'

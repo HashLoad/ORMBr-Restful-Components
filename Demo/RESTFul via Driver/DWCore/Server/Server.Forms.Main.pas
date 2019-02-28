@@ -15,9 +15,18 @@ uses
   StdCtrls,
   ExtCtrls,
   Vcl.Imaging.pngimage,
+
+  ormbr.factory.interfaces,
+  ormbr.factory.firedac,
+//  ormbr.server.dw,
+
   uRESTDWBase,
   uDWAbout,
-  uRESTDWServerEvents;
+  uRESTDWServerEvents, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.SQLite,
+  FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs, FireDAC.VCLUI.Wait,
+  FireDAC.Comp.UI, Data.DB, FireDAC.Comp.Client;
 
 type
   TServerForm = class(TForm)
@@ -37,10 +46,15 @@ type
     Label13: TLabel;
     Bevel2: TBevel;
     cbPoolerState: TCheckBox;
+    FDConnection1: TFDConnection;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
     procedure FormCreate(Sender: TObject);
     procedure ButtonStartClick(Sender: TObject);
   private
     { Private declarations }
+//    RESTServerDW: TRESTServerDW;
+//    FConnection: IDBConnection;
   public
     { Public declarations }
   end;
@@ -51,7 +65,7 @@ var
 implementation
 
 uses
-  Server.Datamodule;
+  Server.DataModule;
 
 {$R *.dfm}
 
@@ -79,6 +93,12 @@ end;
 procedure TServerForm.FormCreate(Sender: TObject);
 begin
   RESTServicePooler1.ServerMethodClass := TServerDataModule;
+
+//  FConnection := TFactoryFireDAC.Create(FDConnection1, dnSQLite);
+
+//  RESTServerDW := TRESTServerDW.Create(Self);
+//  RESTServerDW.RESTServicePooler := RESTServicePooler1;
+//  RESTServerDW.Connection := FConnection;
 end;
 
 end.

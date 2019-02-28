@@ -225,7 +225,7 @@ object Form3: TForm3
   object DataSource2: TDataSource
     DataSet = FDDetail
     Left = 422
-    Top = 146
+    Top = 148
   end
   object DataSource3: TDataSource
     AutoEdit = False
@@ -283,18 +283,17 @@ object Form3: TForm3
     ProxyParams.ProxyPort = 0
     Authenticator.Username = 'testserver'
     Authenticator.Password = 'testserver'
-    ORMBrServerUse = False
     Protocol = Http
     Host = 'localhost'
     Port = 8082
-    MethodSelectID = 'selectid'
-    MethodSelectWhere = 'selectwhere'
-    MethodNextPacket = 'nextpacket'
-    MethodNextPacketWhere = 'nextpacketwhere'
-    MethodSelect = 'select'
-    MethodInsert = 'insert'
-    MethodUpdate = 'update'
-    MethodDelete = 'delete'
+    MethodGETId = 'selectid'
+    MethodGETWhere = 'selectwhere'
+    MethodGETNextPacket = 'nextpacket'
+    MethodGETNextPacketWhere = 'nextpacketwhere'
+    MethodGET = 'select'
+    MethodPOST = 'insert'
+    MethodPUT = 'update'
+    MethodDELETE = 'delete'
     APIContext = 'restdataware'
     Left = 126
     Top = 38

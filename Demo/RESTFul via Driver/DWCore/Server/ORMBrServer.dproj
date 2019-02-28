@@ -136,7 +136,7 @@
                 </Source>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="Win32\Debug\ORMBrServer.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="ORMBrServer.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>ORMBrServer.exe</RemoteName>
                         <Overwrite>true</Overwrite>

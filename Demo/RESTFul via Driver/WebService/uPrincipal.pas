@@ -69,8 +69,6 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure btnBuscarClick(Sender: TObject);
     procedure btnBuscaCEPClick(Sender: TObject);
-    procedure RESTClientWS1AfterCommand(AStatusCode: Integer;
-      var AResponseString: string; ARequestMethod: string);
   private
     { Private declarations }
     oDTSManager: TManagerDataSet;
@@ -113,18 +111,6 @@ end;
 procedure TForm2.FormDestroy(Sender: TObject);
 begin
   oDTSManager.Free;
-end;
-
-procedure TForm2.RESTClientWS1AfterCommand(AStatusCode: Integer;
-  var AResponseString: string; ARequestMethod: string);
-begin
-  /// <summary>
-  /// Exemplo mostrando que JSON recebido poderá sobre alterações antes e
-  /// processado pelo ORMBr
-  /// </summary>
-//  AResponseString[1] := Char(' ');
-//  AResponseString[Length(AResponseString)] := Char(' ');
-//  AResponseString := Trim(AResponseString);
 end;
 
 procedure TForm2.SetBaseURL;

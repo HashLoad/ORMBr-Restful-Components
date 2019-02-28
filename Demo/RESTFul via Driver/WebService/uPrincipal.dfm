@@ -340,7 +340,6 @@ object Form2: TForm2
     MethodGETWhere = 'selectwhere'
     MethodGETNextPacket = 'nextpacket'
     MethodGETNextPacketWhere = 'nextpacketwhere'
-    AfterCommand = RESTClientWS1AfterCommand
     APIContext = 'ws'
     RESTContext = 'json'
     Left = 310

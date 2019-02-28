@@ -37,7 +37,6 @@ type
 
   TORMBrClient = class(TORMBrClientBase)
   private
-    FProtocol: TRestProtocol;
     FBeforeCommand: TBeforeCommandEvent;
     FAfterCommand: TAfterCommandEvent;
     function GetMethodGET: String;
@@ -69,6 +68,7 @@ type
     function GetProtocol: TRestProtocol;
     procedure SetProtocol(const Value: TRestProtocol);
   protected
+    FProtocol: TRestProtocol;
     FParams: TParams;
     FQueryParams: TParams;
     FBaseURL: String;

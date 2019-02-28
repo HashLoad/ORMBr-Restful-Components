@@ -161,6 +161,10 @@ begin
   FRESTClient.Port := FPort;
   FRESTClient.UserName := FAuthenticator.Username;
   FRESTClient.Password := FAuthenticator.Password;
+  if FProtocol = TRestProtocol.Http then
+    FRESTClient.TypeRequest := trHttp
+  else
+    FRESTClient.TypeRequest := trHttps;
   /// <summary> Adiciona os paramêtros do DW Core </summary>
   AddDWParams;
   try
@@ -228,7 +232,7 @@ begin
           try
             Result := FRESTClient.SendEvent(ASubResource,
                                             FDWParams,
-                                            seGET,
+                                            sePOST,
                                             jmPureJSON,
                                             AResource);  // GET
             if Pos('NOT FOUND', UpperCase(Result)) > 0 then

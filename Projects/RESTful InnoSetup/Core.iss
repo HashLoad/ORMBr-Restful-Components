@@ -66,6 +66,33 @@ begin
     end
     else
     begin
+      if WizardForm.UserInfoSerialEdit.Text = 'AD496A80-A200-4AD9-9670-4CD533AAD485' then
+      begin
+        if (WizardForm.UserInfoNameEdit.Text <> 'clecio@herto.com') or 
+           (WizardForm.UserInfoOrgEdit.Text  <> '1234567890') then
+        begin
+          Result := False;
+        end;
+      end
+      else
+      if WizardForm.UserInfoSerialEdit.Text = '5ECA3D78-5975-4569-9D7B-32D3624301F5' then
+      begin
+        if (WizardForm.UserInfoNameEdit.Text <> 'manoelguedess@gmail.com') or 
+           (WizardForm.UserInfoOrgEdit.Text  <> '50806440104') then
+        begin
+          Result := False;
+        end;
+      end
+      else
+      if WizardForm.UserInfoSerialEdit.Text = 'F5848E86-EF44-496A-911B-58E6E4004D96' then  // Thulio
+      begin
+        if (WizardForm.UserInfoNameEdit.Text <> 'bittencourtthulio@gmail.com') or 
+           (WizardForm.UserInfoOrgEdit.Text  <> '27726092000148') then
+        begin
+          Result := False;
+        end;
+      end
+      else
       if WizardForm.UserInfoSerialEdit.Text = '0E0B8FA8-94B4-46FA-A0E2-FD2054AD8F59' then
       begin
         if (WizardForm.UserInfoNameEdit.Text <> 'antoniocmoura@gmail.com') or 
@@ -105,7 +132,7 @@ begin
       if WizardForm.UserInfoSerialEdit.Text = '311CCE0C-291F-493E-85E6-80B7E75D646F' then
       begin
         if (WizardForm.UserInfoNameEdit.Text <> 'rui_zoomtec@hotmail.com') or 
-           (WizardForm.UserInfoOrgEdit.Text  <> '97504204000157') then
+           (WizardForm.UserInfoOrgEdit.Text  <> '97504203000157') then
         begin
           Result := False;
         end;

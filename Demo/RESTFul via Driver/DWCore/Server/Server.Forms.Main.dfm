@@ -1046,6 +1046,7 @@ object ServerForm: TServerForm
   end
   object RESTServicePooler1: TRESTServicePooler
     Active = False
+    CORS = False
     ServicePort = 0
     ProxyOptions.Port = 8888
     ServerParams.HasAuthentication = False
@@ -1059,7 +1060,24 @@ object ServerForm: TServerForm
     SSLVerifyMode = []
     SSLVerifyDepth = 0
     ForceWelcomeAccess = False
-    Left = 224
-    Top = 170
+    Left = 278
+    Top = 144
+  end
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'DriverID=SQLite'
+      'Database=..\..\..\Data\Database\database.db3')
+    LoginPrompt = False
+    Left = 58
+    Top = 144
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 108
+    Top = 202
+  end
+  object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
+    Left = 152
+    Top = 142
   end
 end
