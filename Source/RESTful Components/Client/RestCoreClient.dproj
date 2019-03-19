@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{3AF8491C-841D-4F16-86BF-49E61176B0ED}</ProjectGuid>
         <MainSource>RestCoreClient.dpk</MainSource>
-        <ProjectVersion>18.4</ProjectVersion>
+        <ProjectVersion>18.5</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>
@@ -178,10 +178,6 @@
         <DCCReference Include="ormbr.session.rest.pas"/>
         <DCCReference Include="..\..\RESTful\ormbr.restdataset.adapter.pas"/>
         <DCCReference Include="..\Common\ormbr.rest.classes.pas"/>
-        <RcItem Include="Images\restful.bmp">
-            <ResourceType>BITMAP</ResourceType>
-            <ResourceId>ORMBr</ResourceId>
-        </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -202,7 +198,11 @@
                 <Source>
                     <Source Name="MainSource">RestCoreClient.dpk</Source>
                 </Source>
-                <Excluded_Packages/>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="D:\ACBr2\Lib\Delphi\LibD26\ACBr_Integrador.bpl">ACBr - Integrador - (http://www.projetoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
@@ -231,18 +231,29 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\RestCoreClient.bpl" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>RestCoreClient.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="OSX32">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Win32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
                         <Operation>0</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidClassesDexFile">
                     <Platform Name="Android">
                         <RemoteDir>classes</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidFileProvider">
+                    <Platform Name="Android">
+                        <RemoteDir>res\xml</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -279,6 +290,12 @@
                 <DeployClass Name="AndroidSplashStyles">
                     <Platform Name="Android">
                         <RemoteDir>res\values</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidSplashStylesV21">
+                    <Platform Name="Android">
+                        <RemoteDir>res\values-v21</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -358,12 +375,20 @@
                         <Operation>1</Operation>
                         <Extensions>.framework</Extensions>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <Operation>1</Operation>
+                        <Extensions>.framework</Extensions>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="DependencyModule">
                     <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
                     </Platform>
@@ -389,6 +414,10 @@
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                         <Extensions>.bpl</Extensions>
@@ -408,6 +437,9 @@
                         <Operation>0</Operation>
                     </Platform>
                     <Platform Name="OSX32">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <Operation>0</Operation>
                     </Platform>
                     <Platform Name="Win32">
@@ -520,10 +552,15 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
+                <DeployClass Name="ProjectOSXDebug"/>
                 <DeployClass Name="ProjectOSXEntitlements"/>
                 <DeployClass Name="ProjectOSXInfoPList"/>
                 <DeployClass Name="ProjectOSXResource">
                     <Platform Name="OSX32">
+                        <RemoteDir>Contents\Resources</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <RemoteDir>Contents\Resources</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -546,6 +583,9 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Win32">
@@ -587,6 +627,7 @@
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="OSX64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>

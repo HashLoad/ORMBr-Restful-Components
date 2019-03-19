@@ -371,7 +371,10 @@ begin
   begin
     FServerUse := Value;
     if FServerUse then
-      FAPIContext := FAPIContext + '/ormbr'
+    begin
+      if Pos('/ORMBR', UpperCase(FAPIContext)) = 0 then
+        FAPIContext := FAPIContext + '/ormbr';
+    end
     else
       FAPIContext := ReplaceStr(FAPIContext, '/ormbr', '');
   end;

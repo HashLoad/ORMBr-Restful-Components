@@ -25,7 +25,7 @@ SelectDirBrowseLabel=Pra continuar, clique em Próximo. Informe a pasta que o ORM
 WizardUserInfo=Informação do Usuário
 UserInfoDesc=Por favor insira suas informações.
 UserInfoName=&E-Mail:
-UserInfoOrg=&CNPJ (sem ponto):
+UserInfoOrg=&CNPJ/CPF (sem ponto):
 UserInfoSerial=&Serial:
 UserInfoNameRequired=Você deve inserir os dados solicitados.
 
@@ -124,6 +124,24 @@ begin
       begin
         if (WizardForm.UserInfoNameEdit.Text <> 'ma.pileggi@gmail.com') or 
            (WizardForm.UserInfoOrgEdit.Text  <> '11111169000135') then
+        begin
+          Result := False;
+        end;
+      end
+      else
+      if WizardForm.UserInfoSerialEdit.Text = 'C79C4E84-AAE1-4222-9F65-B44DD9929431' then
+      begin
+        if (WizardForm.UserInfoNameEdit.Text <> 'pauloandrzejevski@gmail.com') or 
+           (WizardForm.UserInfoOrgEdit.Text  <> '42116821991') then
+        begin
+          Result := False;
+        end;
+      end
+      else
+      if WizardForm.UserInfoSerialEdit.Text = '9A65CCA6-F015-47AF-ABAA-DA78C3417422' then
+      begin
+        if (WizardForm.UserInfoNameEdit.Text <> 'pauloandrzejevski@gmail.com') or 
+           (WizardForm.UserInfoOrgEdit.Text  <> '42116821991') then
         begin
           Result := False;
         end;

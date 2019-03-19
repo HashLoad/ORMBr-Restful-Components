@@ -25,6 +25,7 @@ uses
   Variants,
   SysUtils,
   Generics.Collections,
+  ormbr.core.consts,
   ormbr.mapping.classes,
   ormbr.types.mapping,
   ormbr.rtti.helper,
@@ -138,12 +139,6 @@ begin
 end;
 
 procedure TRESTObjectSet.AddObjectState(const ASourceObject: TObject);
-const
-  cPropertyTypes = [tkUnknown,
-                    tkInterface,
-                    tkClassRef,
-                    tkPointer,
-                    tkProcedure];
 var
   LRttiType: TRttiType;
   LProperty: TRttiProperty;
@@ -176,7 +171,7 @@ begin
         /// <summary>
         /// Validação para entrar no IF somente propriedades que o tipo não esteja na lista
         /// </summary>
-        if not (LProperty.PropertyType.TypeKind in cPropertyTypes) then
+        if not (LProperty.PropertyType.TypeKind in cPROPERTYTYPES_2) then
         begin
           if LProperty.PropertyType.TypeKind = tkClass then
           begin
@@ -318,7 +313,7 @@ var
 begin
   LKey := AObject.ClassName;
   for LColumn in AObject.GetPrimaryKey do
-    LKey := LKey + '-' + VarToStr(LColumn.PropertyRtti.GetNullableValue(AObject).AsVariant);
+    LKey := LKey + '-' + VarToStr(LColumn.ColumnProperty.GetNullableValue(AObject).AsVariant);
   Result := LKey;
 end;
 
@@ -516,10 +511,10 @@ begin
       if CascadeAutoInc in LAssociation.CascadeActions then
       begin
         if LAssociation.Multiplicity in [OneToOne, ManyToOne] then
-          SetAutoIncValueOneToOne(AObject, LAssociation, AColumn.PropertyRtti)
+          SetAutoIncValueOneToOne(AObject, LAssociation, AColumn.ColumnProperty)
         else
         if LAssociation.Multiplicity in [OneToMany, ManyToMany] then
-          SetAutoIncValueOneToMany(AObject, LAssociation, AColumn.PropertyRtti);
+          SetAutoIncValueOneToMany(AObject, LAssociation, AColumn.ColumnProperty);
       end;
     end;
   end;
@@ -659,7 +654,7 @@ var
 begin
   LKey := AObject.ClassName;
   for LColumn in AObject.GetPrimaryKey do
-    LKey := LKey + '-' + VarToStr(LColumn.PropertyRtti.GetNullableValue(TObject(AObject)).AsVariant);
+    LKey := LKey + '-' + VarToStr(LColumn.ColumnProperty.GetNullableValue(TObject(AObject)).AsVariant);
   ///
   if FSession.ModifiedFields.ContainsKey(LKey) then
     if FSession.ModifiedFields.Items[LKey].Count > 0 then

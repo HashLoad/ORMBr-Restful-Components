@@ -145,14 +145,14 @@ begin
         begin
           for LColumn in LObject.GetPrimaryKey do
           begin
-            case LColumn.PropertyRtti.PropertyType.TypeKind of
+            case LColumn.ColumnProperty.PropertyType.TypeKind of
               tkString, tkWString, tkUString, tkWChar, tkLString, tkChar:
                 begin
-                  LColumn.PropertyRtti.SetValue(LObject, TValue.From<String>(AQuery.ID));
+                  LColumn.ColumnProperty.SetValue(LObject, TValue.From<String>(AQuery.ID));
                 end;
               tkInteger, tkSet, tkInt64:
                 begin
-                  LColumn.PropertyRtti.SetValue(LObject, TValue.From<Integer>(AQuery.ID));
+                  LColumn.ColumnProperty.SetValue(LObject, TValue.From<Integer>(AQuery.ID));
                 end;
             end;
           end;
@@ -222,8 +222,8 @@ begin
                   + ' "params":[{%s}]}';
           LValues := '';
           for LColumn in LObject.GetPrimaryKey do
-            LValues := LValues + '"'  + LColumn.PropertyRtti.Name
-                               + '":' + VarToStr(LColumn.PropertyRtti.GetNullableValue(LObject).AsVariant)
+            LValues := LValues + '"'  + LColumn.ColumnProperty.Name
+                               + '":' + VarToStr(LColumn.ColumnProperty.GetNullableValue(LObject).AsVariant)
                                + ',';
 
           LValues[Length(LValues)] := ' ';
@@ -265,7 +265,7 @@ begin
           LWhere := '';
           for LColumn in LObjectNew.GetPrimaryKey do
             LWhere := LWhere + '(' + LObjectNew.GetTable.Name + '.' + LColumn.ColumnName
-                             + '=' + VarToStr(LColumn.PropertyRtti.GetNullableValue(LObjectNew).AsVariant) + ') AND ';
+                             + '=' + VarToStr(LColumn.ColumnProperty.GetNullableValue(LObjectNew).AsVariant) + ') AND ';
           LWhere := Copy(LWhere, 1, Length(LWhere) -5);
           LObjectOld := LObjectSet.FindOne(LWhere);
           if LObjectOld <> nil then

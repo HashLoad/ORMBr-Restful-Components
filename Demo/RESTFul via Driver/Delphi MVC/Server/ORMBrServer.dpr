@@ -19,8 +19,8 @@ uses
   ormbr.model.lookup in '..\ormbr.model.lookup.pas',
   ormbr.model.master in '..\ormbr.model.master.pas',
   Server.Data.Module in 'Server.Data.Module.pas' {ServerDataModule: TDataModule},
-  ormbr.server.dmvc in '..\..\..\..\Source\Drivers RESTFul\Component Server\ormbr.server.dmvc.pas',
-  ormbr.server.resource.dmvc in '..\..\..\..\Source\Drivers RESTFul\Component Server\ormbr.server.resource.dmvc.pas';
+  ormbr.server.dmvc in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.dmvc.pas',
+  ormbr.server.resource.dmvc in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.resource.dmvc.pas';
 
 {$R *.res}
 

@@ -598,7 +598,7 @@ begin
         Sender.Options.Add('-NSData.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;System.Win');
 
      if MatchText(VersionNumberStr, ['d17','d18','d19','d20','d21','d22','d23','d24','d25','d26']) then
-        Sender.Options.Add('-NSWinapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell');
+        Sender.Options.Add('-NSWinapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell,Ibx');
 
   end;
 end;
@@ -658,7 +658,9 @@ begin
     else if oORMBr.Installations[iFor].VersionNumberStr = 'd24' then
       edtDelphiVersion.Items.Add('Delphi 10.1 Berlin')
     else if oORMBr.Installations[iFor].VersionNumberStr = 'd25' then
-      edtDelphiVersion.Items.Add('Delphi 10.2 Tokyo');
+      edtDelphiVersion.Items.Add('Delphi 10.2 Tokyo')
+    else if oORMBr.Installations[iFor].VersionNumberStr = 'd26' then
+      edtDelphiVersion.Items.Add('Delphi 10.3 Rio');
 
     // -- Evento disparado antes de iniciar a execução do processo.
     oORMBr.Installations[iFor].DCC32.OnBeforeExecute := BeforeExecute;

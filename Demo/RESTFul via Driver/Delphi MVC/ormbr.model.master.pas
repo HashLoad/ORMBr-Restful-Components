@@ -18,8 +18,7 @@ uses
   ormbr.mapping.register;
 
 type
-//  [Enumeration(TEnumType.etInteger, '0, 1, 2, 9')]
-//  TMyEnum = (fmsEmitente, fmsTerceiros, fmsDestinatario, fmsSemFrete);
+  TMyEnum = (fmsEmitente, fmsTerceiros, fmsDestinatario, fmsSemFrete);
 
   [Entity]
   [Table('master','')]
@@ -38,7 +37,7 @@ type
     Fclient_name: string;
     Fdetail: TObjectList<Tdetail>;
     Fclient: Tclient;
-//    FEnumer: TMyEnum;
+    FEnumer: TMyEnum;
     function GetTotal: Double;
   public
     { Public declarations }
@@ -70,13 +69,14 @@ type
     [Dictionary('client_id','Mensagem de validação','','','',taCenter)]
     property client_id: Integer read Fclient_id write Fclient_id;
 
-//    [Column('MyEnum', ftInteger)]
-//    property MyEnum: TMyEnum read FEnumer write FEnumer;
+  [Enumeration(TEnumType.etInteger, '0, 1, 2, 9')]
+    [Column('MyEnum', ftInteger)]
+    property MyEnum: TMyEnum read FEnumer write FEnumer;
 
     [Restrictions([NoInsert, NoUpdate])]
     [Column('client_name', ftString, 60)]
     [JoinColumn('client_id', 'client', 'client_id', 'client_name', InnerJoin)]
-    [Dictionary('Nome do Cliente')]
+    [Dictionary('Nome do Cliente', '')]
     property client_name: string read fclient_name write fclient_name;
 
     [Association(OneToOne, 'client_id', 'client', 'client_id')]

@@ -37,8 +37,9 @@ requires
   IndySystem,
   IndyProtocols,
   IndyCore,
-  RestCoreClient,
-  DMVC_IDE_Expert_D102Tokyo;
+  {$IFDEF VER320}DMVC_IDE_Expert_D102Tokyo,   {$ENDIF} // Tokyo
+  {$IFDEF VER330}dmvcframeworkRT, loggerproRT,{$ENDIF} // Rio
+  RestCoreClient;
 
 contains
   ormbr.client.dmvc in 'ormbr.client.dmvc.pas',

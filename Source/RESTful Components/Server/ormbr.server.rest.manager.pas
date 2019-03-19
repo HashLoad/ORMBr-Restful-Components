@@ -46,15 +46,15 @@ type
     FConnection: IDBConnection;
     FFetchingRecords: Boolean;
     /// <summary>
-    /// Instancia a class que mapea todas as class do tipo Entity
+    ///   Instancia a class que mapea todas as class do tipo Entity
     /// </summary>
     FExplorer: IMappingExplorerStrategy;
     /// <summary>
-    /// Fábrica de comandos a serem executados
+    ///   Fábrica de comandos a serem executados
     /// </summary>
     FDMLCommandFactory: TDMLCommandFactoryAbstract;
     /// <summary>
-    /// Controle de paginação vindo do banco de dados
+    ///   Controle de paginação vindo do banco de dados
     /// </summary>
     FPageSize: Integer;
     procedure ExecuteOneToOne(AObject: TObject; AProperty: TRttiProperty;
@@ -69,7 +69,7 @@ type
       const AClassType: TClass; const APageSize: Integer);
     destructor Destroy; override;
     /// <summary>
-    /// Procedures
+    ///   Procedures
     /// </summary>
     procedure InsertInternal(const AObject: TObject);
     procedure UpdateInternal(const AObject: TObject; const AModifiedFields: TList<string>);
@@ -84,12 +84,12 @@ type
     function NextPacketList(const AWhere, AOrderBy: String;
       const APageSize, APageNext: Integer): TObjectList<TObject>; overload;
     /// <summary>
-    /// Functions
+    ///   Functions
     /// </summary>
     function GetDMLCommand: string;
     function ExistSequence: Boolean;
     /// <summary>
-    /// DataSet
+    ///   DataSet
     /// </summary>
     function SelectInternalAll: IDBResultSet;
     function SelectInternalID(const AID: Variant): IDBResultSet;
@@ -99,7 +99,7 @@ type
     function NextPacket(const AWhere, AOrderBy: String;
       const APageSize, APageNext: Integer): IDBResultSet; overload;
     /// <summary>
-    /// ObjectSet
+    ///   ObjectSet
     /// </summary>
     function Find: TObjectList<TObject>; overload;
     function Find(const AID: Variant): TObject; overload;

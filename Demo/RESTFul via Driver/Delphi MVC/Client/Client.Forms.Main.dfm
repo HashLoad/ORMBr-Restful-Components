@@ -281,15 +281,14 @@ object Form3: TForm3
   object RESTClientDelphiMVC1: TRESTClientDelphiMVC
     ProxyParams.BasicAuthentication = False
     ProxyParams.ProxyPort = 0
-    ORMBrServerUse = True
     Protocol = Http
     Host = 'localhost'
     Port = 211
-    MethodSelectID = 'selectid'
-    MethodSelectWhere = 'selectwhere'
-    MethodNextPacket = 'nextpacket'
-    MethodNextPacketWhere = 'nextpacketwhere'
-    APIContext = '/ormbr'
+    MethodGETId = 'selectid'
+    MethodGETWhere = 'selectwhere'
+    MethodGETNextPacket = 'nextpacket'
+    MethodGETNextPacketWhere = 'nextpacketwhere'
+    ORMBrServerUse = True
     Left = 106
     Top = 52
   end
