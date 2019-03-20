@@ -113,7 +113,7 @@ begin
   RESTClientDelphiMVC1.AsConnection.SetCommandMonitor(TCommandMonitor.GetInstance);
 
   oManager := TManagerDataSet.Create(RESTClientDelphiMVC1.AsConnection);
-  oManager.AddAdapter<Tmaster>(FDMaster, 2);
+  oManager.AddAdapter<Tmaster>(FDMaster, 10);
   oManager.AddAdapter<Tdetail, Tmaster>(FDDetail);
   oManager.AddAdapter<Tclient, Tmaster>(FDClient);
   oManager.AddAdapter<Tlookup>(FDLookup);

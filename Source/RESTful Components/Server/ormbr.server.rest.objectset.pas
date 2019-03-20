@@ -308,23 +308,31 @@ end;
 
 function TRESTObjectSet.GenerateKey(const AObject: TObject): string;
 var
+  LPrimaryKey: TPrimaryKeyColumnsMapping;
   LColumn: TColumnMapping;
   LKey: string;
 begin
   LKey := AObject.ClassName;
-  for LColumn in AObject.GetPrimaryKey do
+  LPrimaryKey := TMappingExplorer
+                   .GetInstance
+                     .GetMappingPrimaryKeyColumns(AObject.ClassType);
+  if LPrimaryKey = nil then
+    raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+  for LColumn in LPrimaryKey.Columns do
     LKey := LKey + '-' + VarToStr(LColumn.ColumnProperty.GetNullableValue(AObject).AsVariant);
   Result := LKey;
 end;
 
 procedure TRESTObjectSet.Insert(const AObject: TObject);
 var
+  LPrimaryKey: TPrimaryKeyColumnsMapping;
   LColumn: TColumnMapping;
   LInTransaction: Boolean;
   LIsConnected: Boolean;
 begin
   /// <summary>
-  /// Controle de transação externa, controlada pelo desenvolvedor
+  ///   Controle de transação externa, controlada pelo desenvolvedor
   /// </summary>
   LInTransaction := FConnection.InTransaction;
   LIsConnected := FConnection.IsConnected;
@@ -337,11 +345,17 @@ begin
       FSession.Insert(AObject);
       if FSession.ExistSequence then
       begin
-        for LColumn in AObject.GetPrimaryKey do
+        LPrimaryKey := TMappingExplorer
+                         .GetInstance
+                           .GetMappingPrimaryKeyColumns(AObject.ClassType);
+        if LPrimaryKey = nil then
+          raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+        for LColumn in LPrimaryKey.Columns do
           SetAutoIncValueChilds(AObject, LColumn);
       end;
       /// <summary>
-      /// Executa comando insert em cascade
+      ///   Executa comando insert em cascade
       /// </summary>
       CascadeActionsExecute(AObject, CascadeInsert);
       ///
@@ -396,6 +410,7 @@ end;
 procedure TRESTObjectSet.OneToManyCascadeActionsExecute(const AObject: TObject;
   const AAssociation: TAssociationMapping; const ACascadeAction: TCascadeAction);
 var
+  LPrimaryKey: TPrimaryKeyColumnsMapping;
   LColumn: TColumnMapping;
   LValue: TValue;
   LObjectList: TObjectList<TObject>;
@@ -419,7 +434,13 @@ begin
         /// </summary>
         if FSession.ExistSequence then
         begin
-          for LColumn in LObject.GetPrimaryKey do
+          LPrimaryKey := TMappingExplorer
+                           .GetInstance
+                             .GetMappingPrimaryKeyColumns(AObject.ClassType);
+          if LPrimaryKey = nil then
+            raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+          for LColumn in LPrimaryKey.Columns do
             SetAutoIncValueChilds(LObject, LColumn);
         end;
       end
@@ -451,6 +472,7 @@ procedure TRESTObjectSet.OneToOneCascadeActionsExecute(
   const AObject: TObject; const AAssociation: TAssociationMapping;
   const ACascadeAction: TCascadeAction);
 var
+  LPrimaryKey: TPrimaryKeyColumnsMapping;
   LColumn: TColumnMapping;
   LValue: TValue;
   LObject: TObject;
@@ -469,7 +491,13 @@ begin
       /// </summary>
       if FSession.ExistSequence then
       begin
-        for LColumn in LObject.GetPrimaryKey do
+        LPrimaryKey := TMappingExplorer
+                         .GetInstance
+                           .GetMappingPrimaryKeyColumns(AObject.ClassType);
+        if LPrimaryKey = nil then
+          raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+        for LColumn in LPrimaryKey.Columns do
           SetAutoIncValueChilds(LObject, LColumn);
       end;
     end
@@ -649,12 +677,20 @@ end;
 
 procedure TRESTObjectSet.UpdateInternal(const AObject: TObject);
 var
+  LPrimaryKey: TPrimaryKeyColumnsMapping;
   LColumn: TColumnMapping;
   LKey: string;
 begin
   LKey := AObject.ClassName;
-  for LColumn in AObject.GetPrimaryKey do
-    LKey := LKey + '-' + VarToStr(LColumn.ColumnProperty.GetNullableValue(TObject(AObject)).AsVariant);
+  LPrimaryKey := TMappingExplorer
+                   .GetInstance
+                     .GetMappingPrimaryKeyColumns(AObject.ClassType);
+  if LPrimaryKey = nil then
+    raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+  for LColumn in LPrimaryKey.Columns do
+    LKey := LKey + '-' +
+            VarToStr(LColumn.ColumnProperty.GetNullableValue(TObject(AObject)).AsVariant);
   ///
   if FSession.ModifiedFields.ContainsKey(LKey) then
     if FSession.ModifiedFields.Items[LKey].Count > 0 then

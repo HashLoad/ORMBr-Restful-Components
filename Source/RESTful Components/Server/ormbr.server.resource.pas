@@ -65,7 +65,8 @@ uses
   ormbr.objects.helper,
   ormbr.mapping.explorer,
   ormbr.mapping.classes,
-  ormbr.rtti.helper;
+  ormbr.rtti.helper,
+  ormbr.core.consts;
 
 { TAppResourceBase }
 
@@ -121,6 +122,7 @@ end;
 function TAppResourceBase.ParseDelete(AQuery: TRESTQuery): String;
 var
   LObjectType: TRttiType;
+  LPrimaryKey: TPrimaryKeyColumnsMapping;
   LColumn: TColumnMapping;
   LObject: TObject;
   LClassType: TClass;
@@ -143,7 +145,13 @@ begin
         else
         if AQuery.ID <> Null then
         begin
-          for LColumn in LObject.GetPrimaryKey do
+          LPrimaryKey := TMappingExplorer
+                           .GetInstance
+                             .GetMappingPrimaryKeyColumns(LObject.ClassType);
+          if LPrimaryKey = nil then
+            raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+          for LColumn in LPrimaryKey.Columns do
           begin
             case LColumn.ColumnProperty.PropertyType.TypeKind of
               tkString, tkWString, tkUString, tkWChar, tkLString, tkChar:
@@ -199,6 +207,7 @@ end;
 
 function TAppResourceBase.ParseInsert(AQuery: TRESTQuery; AValue: String): String;
 var
+  LPrimaryKey: TPrimaryKeyColumnsMapping;
   LColumn: TColumnMapping;
   LObject: TObject;
   LClassType: TClass;
@@ -221,7 +230,13 @@ begin
                   + ' insert command executed successfully",'
                   + ' "params":[{%s}]}';
           LValues := '';
-          for LColumn in LObject.GetPrimaryKey do
+          LPrimaryKey := TMappingExplorer
+                           .GetInstance
+                             .GetMappingPrimaryKeyColumns(LObject.ClassType);
+          if LPrimaryKey = nil then
+            raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+          for LColumn in LPrimaryKey.Columns do
             LValues := LValues + '"'  + LColumn.ColumnProperty.Name
                                + '":' + VarToStr(LColumn.ColumnProperty.GetNullableValue(LObject).AsVariant)
                                + ',';
@@ -248,6 +263,7 @@ var
   LObjectNew: TObject;
   LClassType: TClass;
   LObjectSet: TRESTObjectSet;
+  LPrimaryKey: TPrimaryKeyColumnsMapping;
   LColumn: TColumnMapping;
   LWhere: String;
 begin
@@ -263,7 +279,13 @@ begin
         if LObjectNew <> nil then
         begin
           LWhere := '';
-          for LColumn in LObjectNew.GetPrimaryKey do
+          LPrimaryKey := TMappingExplorer
+                           .GetInstance
+                             .GetMappingPrimaryKeyColumns(LObjectNew.ClassType);
+          if LPrimaryKey = nil then
+            raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+          for LColumn in LPrimaryKey.Columns do
             LWhere := LWhere + '(' + LObjectNew.GetTable.Name + '.' + LColumn.ColumnName
                              + '=' + VarToStr(LColumn.ColumnProperty.GetNullableValue(LObjectNew).AsVariant) + ') AND ';
           LWhere := Copy(LWhere, 1, Length(LWhere) -5);

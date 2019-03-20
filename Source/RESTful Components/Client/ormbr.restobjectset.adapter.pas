@@ -55,7 +55,9 @@ type
 implementation
 
 uses
-  ormbr.session.rest;
+  ormbr.session.rest,
+  ormbr.mapping.explorer,
+  ormbr.core.consts;
 
 { TRESTObjectSetAdapter<M> }
 
@@ -116,6 +118,7 @@ end;
 
 procedure TRESTObjectSetAdapter<M>.Insert(const AObject: M);
 var
+  LPrimaryKey: TPrimaryKeyColumnsMapping;
   LColumn: TColumnMapping;
 begin
   inherited;
@@ -123,7 +126,13 @@ begin
     FSession.Insert(AObject);
     if FSession.ExistSequence then
     begin
-      for LColumn in AObject.GetPrimaryKey do
+      LPrimaryKey := TMappingExplorer
+                       .GetInstance
+                         .GetMappingPrimaryKeyColumns(AObject.ClassType);
+      if LPrimaryKey = nil then
+        raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+      for LColumn in LPrimaryKey.Columns do
         SetAutoIncValueChilds(AObject, LColumn);
     end;
   except

@@ -37,8 +37,8 @@ requires
   IndySystem,
   IndyProtocols,
   IndyCore,
-  {$IFDEF VER320}DMVC_IDE_Expert_D102Tokyo,   {$ENDIF} // Tokyo
-  {$IFDEF VER330}dmvcframeworkRT, loggerproRT,{$ENDIF} // Rio
+  dmvcframeworkRT,
+  loggerproRT,
   RestCoreClient;
 
 contains

@@ -69,7 +69,7 @@ type
     [Dictionary('client_id','Mensagem de validação','','','',taCenter)]
     property client_id: Integer read Fclient_id write Fclient_id;
 
-  [Enumeration(TEnumType.etInteger, '0, 1, 2, 9')]
+    [Enumeration(TEnumType.etInteger, '0, 1, 2, 9')]
     [Column('MyEnum', ftInteger)]
     property MyEnum: TMyEnum read FEnumer write FEnumer;
 
@@ -120,3 +120,4 @@ initialization
   TRegisterClass.RegisterEntity(Tmaster);
 
 end.
+

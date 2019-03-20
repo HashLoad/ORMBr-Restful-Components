@@ -86,7 +86,8 @@ uses
   ormbr.mapping.explorer,
   ormbr.mapping.rttiutils,
   ormbr.mapping.attributes,
-  ormbr.json.utils;
+  ormbr.json.utils,
+  ormbr.core.consts;
 
 { TSessionRest<M> }
 
@@ -176,6 +177,7 @@ end;
 procedure TSessionRest<M>.Delete(const AObject: M);
 var
   LColumn: TColumnMapping;
+  LPrimaryKey: TPrimaryKeyColumnsMapping;
 //  LSubResource: String;
 //  LURI: String;
 //  LResult: String;
@@ -184,8 +186,14 @@ var
 begin
 //  if not FServerUse then
 //  begin
-    for LColumn in AObject.GetPrimaryKey do
-      Delete(LColumn.ColumnProperty.GetValue(TObject(AObject)).AsInteger);
+    LPrimaryKey := TMappingExplorer
+                     .GetInstance
+                       .GetMappingPrimaryKeyColumns(AObject.ClassType);
+    if LPrimaryKey = nil then
+      raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+    LColumn := LPrimaryKey.Columns.Items[0];
+    Delete(LColumn.ColumnProperty.GetValue(TObject(AObject)).AsInteger);
 //    Exit;
 //  end;
 

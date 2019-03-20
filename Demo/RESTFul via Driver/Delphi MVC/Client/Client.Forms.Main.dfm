@@ -288,8 +288,9 @@ object Form3: TForm3
     MethodGETWhere = 'selectwhere'
     MethodGETNextPacket = 'nextpacket'
     MethodGETNextPacketWhere = 'nextpacketwhere'
+    APIContext = '/ormbr'
     ORMBrServerUse = True
-    Left = 106
-    Top = 52
+    Left = 141
+    Top = 51
   end
 end
