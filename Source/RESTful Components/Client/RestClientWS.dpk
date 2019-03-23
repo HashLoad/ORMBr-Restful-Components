@@ -36,13 +36,13 @@ requires
   CustomIPTransport,
   bindengine,
   bindcomp,
-  RESTComponents,
   RestCoreClient,
   IndyIPCommon,
   IndySystem,
   IndyProtocols,
   IndyCore,
-  IndyIPClient;
+  IndyIPClient,
+  RESTComponents;
 
 contains
   ormbr.client.ws in 'ormbr.client.ws.pas',

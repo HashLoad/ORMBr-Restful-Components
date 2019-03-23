@@ -4,6 +4,13 @@
 
 #define MyAppName "ORMBr - REST Server/Client Components"
 #define MyAppExeName "ORMBrInstall.exe"
+#define VersionApp "1.5"
+#define CopyRight "Copyright (C) 2018-2019 Isaque Pinhero, Inc."
+#define URL "https://www.ormbr.com.br"
+#define ProductName "ORMBr RESTful Components"
+#define Company "Tecsis Informática Ltda"
+#define Contact "ormbrframework@gmail.com (Isaque Pinheiro)"
+#define Phone "(27) 9 9903-6808"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -13,9 +20,23 @@ AppId={{BFA69BF5-A7EE-4956-810E-F2630B549AD5}
 OutputBaseFilename=Setup
 AppName={#MyAppName}
 DefaultGroupName={#MyAppName}
+AppCopyright={#CopyRight}
+AppPublisher={#Company}
+AppPublisherURL={#URL}
+AppSupportURL={#URL}
+AppUpdatesURL={#URL}
+AppContact={#Contact}
+AppVersion={#VersionApp}
+AppVerName={#MyAppName} {#VersionApp}
+UninstallDisplayName={#ProductName}
+VersionInfoVersion={#VersionApp}
+VersionInfoCompany={#Company}
+VersionInfoCopyright={#CopyRight}
+VersionInfoProductName={#ProductName}
+AppSupportPhone={#Phone}
 
 [Files]
-Source: "..\RESTful Install\ORMBrInstall.exe"; DestDir: "{app}"; Flags: ignoreversion replacesameversion
+Source: "..\RESTful Install\ORMBrInstall.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\Source\RESTful Components\Common\*.pas"; DestDir: "{app}\Source\RESTful Components\Common\"; Flags: ignoreversion
 Source: "..\..\Source\RESTful Components\Client\*.dres"; DestDir: "{app}\Source\RESTful Components\Client\"; Flags: ignoreversion
 Source: "..\..\Source\RESTful Components\Client\*.identcache"; DestDir: "{app}\Source\RESTful Components\Client\"; Flags: ignoreversion
@@ -49,4 +70,6 @@ Source: "..\..\Demo\RESTFul via Driver\WiRL\Server\*.*"; DestDir: "{app}\Demo\RE
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent runascurrentuser; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
+
+[Icons]
+Name: "{group}\{cm:UninstallProgram, {#MyAppName}}"; Filename: "{uninstallexe}"

@@ -1,20 +1,9 @@
-#define MyAppVersion "1.0"
-#define MyAppPublisher "ORMBr"
-#define MyAppURL "http://www.ormbr.com/"
-
 [Setup]
 PrivilegesRequired=admin
-AppVersion={#MyAppVersion}
-AppPublisher={#MyAppPublisher}
-AppPublisherURL={#MyAppURL}
-AppSupportURL={#MyAppURL}
-AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\ORMBr\
-SetupIconFile=D:\ORMBr\Projects\RESTful Install\ORMBrInstall_Icon.ico
+SetupIconFile=..\RESTful Install\ORMBrInstall_Icon.ico
 Compression=lzma/max
 SolidCompression=yes
-AppCopyright=Copyright (C) 2018-2018 Isaque Pinhero, Inc.
-AppContact=Isaque Pinheiro (isaquesp@gmail.com)
 UserInfoPage = yes
 
 [Languages]
@@ -56,6 +45,15 @@ var
   Url: string;
 begin
   Result := True;
+  if CurPageID = wpSelectDir then
+  begin
+    if not FileExists(WizardDirValue + 'Source\ormbr.inc') then
+    begin
+      MsgBox('Diretório selecionado, não é o mesmo dos fontes do ORMBr.', mbInformation, MB_OK);
+      Result := False;
+    end;
+  end
+  else
   if CurPageID = wpUserInfo then
   begin
     if not ValidateEmail(WizardForm.UserInfoNameEdit.Text) then
@@ -151,6 +149,15 @@ begin
       begin
         if (WizardForm.UserInfoNameEdit.Text <> 'rui_zoomtec@hotmail.com') or 
            (WizardForm.UserInfoOrgEdit.Text  <> '97504203000157') then
+        begin
+          Result := False;
+        end;
+      end
+      else
+      if WizardForm.UserInfoSerialEdit.Text = 'DBADC73B-FC50-45B3-B5C6-4ACD6F147FF2' then
+      begin
+        if (WizardForm.UserInfoNameEdit.Text <> 'gustavo@lojafacil.com.br') or 
+           (WizardForm.UserInfoOrgEdit.Text  <> '27842247838') then
         begin
           Result := False;
         end;

@@ -30,9 +30,13 @@ uses
   ormbr.client.methods,
 
   MARS.Client.CustomResource,
-  MARS.Client.Resource, MARS.Client.Resource.JSON, MARS.Client.Application,
-  MARS.Client.Client, MARS.Client.Client.Indy, MARS.Client.SubResource,
-  MARS.Client.SubResource.JSON, MARS.Client.Messaging.Resource, MARS.Core.Utils,
+  MARS.Client.Resource,
+  MARS.Client.Resource.JSON,
+  MARS.Client.Application,
+  MARS.Client.Client,
+  MARS.Client.Client.Indy,
+  MARS.Messaging.Resource,
+  MARS.Core.Utils,
   MARS.Client.Token;
 
 type
@@ -41,7 +45,7 @@ type
     FRESTClient: TMARSClient;
     FRESTClientApp: TMARSClientApplication;
     FRESTResource: TMARSClientResourceJSON;
-    FRESTSubResource: TMARSClientSubResourceJSON;
+    FRESTSubResource: TMARSClientResourceJSON;
     FRESTToken: TMARSClientToken;
     procedure SetProxyParamsClient;
     function RemoveContextServerUse(const Value: String): string;
@@ -80,7 +84,7 @@ begin
   FRESTClientApp.Client := FRESTClient;
   FRESTResource := TMARSClientResourceJSON.Create(Self);
   FRESTResource.Application := FRESTClientApp;
-  FRESTSubResource := TMARSClientSubResourceJSON.Create(Self);
+  FRESTSubResource := TMARSClientResourceJSON.Create(Self);
   FRESTSubResource.Application := FRESTClientApp;
   FRESTSubResource.ParentResource := FRESTResource;
   FRESTToken := TMARSClientToken.Create(Self);
