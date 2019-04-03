@@ -281,17 +281,17 @@ object Form3: TForm3
   object RESTClientMARS1: TRESTClientMARS
     ProxyParams.BasicAuthentication = False
     ProxyParams.ProxyPort = 0
-    ORMBrServerUse = False
     Protocol = Http
     Host = 'localhost'
     Port = 211
-    MethodSelectID = 'selectid'
-    MethodSelectWhere = 'selectwhere'
-    MethodNextPacket = 'nextpacket'
-    MethodNextPacketWhere = 'nextpacketwhere'
-    APIContext = 'default'
+    MethodGETId = 'selectid'
+    MethodGETWhere = 'selectwhere'
+    MethodGETNextPacket = 'nextpacket'
+    MethodGETNextPacketWhere = 'nextpacketwhere'
+    APIContext = 'default/ormbr'
     RESTContext = 'rest'
     MethodToken = 'token'
+    ORMBrServerUse = True
     Left = 62
     Top = 44
   end

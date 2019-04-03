@@ -56,13 +56,16 @@ uses
 
 procedure TRESTServerWiRL.AddResource;
 begin
-  if FWiRLEngine <> nil then
-    if FWiRLEngine.Applications.Count > 0 then
-      FWiRLEngine
-        .Applications
-          .Items[0]
-            .Application
-              .SetResources('ormbr.server.resource.wirl.TAppResource')
+  if FWiRLEngine = nil then
+    Exit;
+
+  if FWiRLEngine.Applications.Count = 0 then
+    Exit;
+
+  FWiRLEngine.Applications
+             .Items[0]
+             .Application
+             .SetResources('ormbr.server.resource.wirl.TAppResource');
 end;
 
 constructor TRESTServerWiRL.Create(AOwner: TComponent);

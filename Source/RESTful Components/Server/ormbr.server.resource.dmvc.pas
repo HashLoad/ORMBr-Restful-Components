@@ -33,21 +33,19 @@ type
   public
     [MVCPath('/($resource)')]
     [MVCHTTPMethod([httpGET])]
-    procedure select(ctx: TWebContext);
+    procedure select(Context: TWebContext);
 
-    [MVCPath('/($resource)/($value)')]
+    [MVCPath('/($resource)')]
     [MVCHTTPMethod([httpPOST])]
-    procedure insert(resource: String;
-                     value: String);
+    procedure insert(Context: TWebContext);
 
-    [MVCPath('/($resource)/($value)')]
+    [MVCPath('/($resource)')]
     [MVCHTTPMethod([httpPUT])]
-    procedure update(resource: String;
-                     value: String);
+    procedure update(Context: TWebContext);
 
     [MVCPath('/($resource)')]
     [MVCHTTPMethod([httpDELETE])]
-    procedure delete(ctx: TWebContext);
+    procedure delete(Context: TWebContext);
   end;
 
 implementation
@@ -57,7 +55,7 @@ uses
 
 { TAppResource }
 
-procedure TAppResource.select(ctx: TWebContext);
+procedure TAppResource.select(Context: TWebContext);
 var
   LAppResource: TAppResourceBase;
   LQuery: TRESTQuery;
@@ -67,14 +65,14 @@ begin
   LAppResource := TAppResourceBase.Create(TRESTServerDMVC.GetConnection);
   try
     /// <summary> Parse da Query passada na URI </summary>
-    LQuery.ParseQuery(ctx.Request.Params['resource']);
+    LQuery.ParseQuery(Context.Request.Params['resource']);
     if LQuery.ResourceName <> '' then
     begin
-      LQuery.SetFilter(ctx.Request.Params['$filter']);
-      LQuery.SetOrderBy(ctx.Request.Params['$orderby']);
-      LQuery.SetTop(ctx.Request.Params['$top']);
-      LQuery.SetSkip(ctx.Request.Params['$skip']);
-      LQuery.SetCount(ctx.Request.Params['$count']);
+      LQuery.SetFilter(Context.Request.Params['$filter']);
+      LQuery.SetOrderBy(Context.Request.Params['$orderby']);
+      LQuery.SetTop(Context.Request.Params['$top']);
+      LQuery.SetSkip(Context.Request.Params['$skip']);
+      LQuery.SetCount(Context.Request.Params['$count']);
       /// <summary> Retorno JSON </summary>
       LResult := LAppResource.ParseFind(LQuery);
       Render(LResult);
@@ -89,35 +87,37 @@ begin
   end;
 end;
 
-procedure TAppResource.insert(resource: String; value: String);
+procedure TAppResource.insert(Context: TWebContext);
 var
   LAppResource: TAppResourceBase;
   LResult: String;
 begin
   LAppResource := TAppResourceBase.Create(TRESTServerDMVC.GetConnection);
   try
-    LResult := LAppResource.insert(resource, value);
+    LResult := LAppResource.insert(Context.Request.Params['resource'],
+                                   Context.Request.Body);
     Render(LResult);
   finally
     LAppResource.Free;
   end;
 end;
 
-procedure TAppResource.update(resource: String; value: String);
+procedure TAppResource.update(Context: TWebContext);
 var
   LAppResource: TAppResourceBase;
   LResult: String;
 begin
   LAppResource := TAppResourceBase.Create(TRESTServerDMVC.GetConnection);
   try
-    LResult := LAppResource.update(resource, value);
+    LResult := LAppResource.update(Context.Request.Params['resource'],
+                                   Context.Request.Body);
     Render(LResult);
   finally
     LAppResource.Free;
   end;
 end;
 
-procedure TAppResource.delete(ctx: TWebContext);
+procedure TAppResource.delete(Context: TWebContext);
 var
   LAppResource: TAppResourceBase;
   LQuery: TRESTQuery;
@@ -127,10 +127,10 @@ begin
   LAppResource := TAppResourceBase.Create(TRESTServerDMVC.GetConnection);
   try
     /// <summary> Parse da Query passada na URI </summary>
-    LQuery.ParseQuery(ctx.Request.Params['resource']);
+    LQuery.ParseQuery(Context.Request.Params['resource']);
     if LQuery.ResourceName <> '' then
     begin
-      LQuery.SetFilter(ctx.Request.Params['$filter']);
+      LQuery.SetFilter(Context.Request.Params['$filter']);
       /// <summary> Retorno JSON </summary>
       LResult := LAppResource.ParseFind(LQuery);
       Render(LResult);

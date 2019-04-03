@@ -2,6 +2,6 @@
 <BorlandProject>
 	<Transactions/>
 	<Default.Personality>
-		<Projects ActiveProject="D:\ORMBr\Demo\RESTFul via Driver\MARS\Server\ORMBrServer.dproj"/>
+		<Projects ActiveProject="D:\ORMBr RESTful Components\Demo\RESTFul via Driver\MARS\Client\ORMBrClient.dproj"/>
 	</Default.Personality>
 </BorlandProject>

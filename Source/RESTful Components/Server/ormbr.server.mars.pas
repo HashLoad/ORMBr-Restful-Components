@@ -60,10 +60,14 @@ procedure TRESTServerMARS.AddResource;
 var
   LPair: TPair<string, TMARSApplication>;
 begin
-  if FMARSEngine <> nil then
-    if FMARSEngine.Applications.Count > 0 then
-      for LPair in FMARSEngine.Applications do
-        LPair.Value.AddResource('ormbr.server.resource.mars.TAppResource');
+  if FMARSEngine = nil then
+    Exit;
+
+  if FMARSEngine.Applications.Count = 0 then
+    Exit;
+
+  for LPair in FMARSEngine.Applications do
+    LPair.Value.AddResource('ormbr.server.resource.mars.TAppResource');
 end;
 
 constructor TRESTServerMARS.Create(AOwner: TComponent);

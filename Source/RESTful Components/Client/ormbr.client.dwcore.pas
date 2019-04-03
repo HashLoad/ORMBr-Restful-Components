@@ -49,8 +49,7 @@ type
     destructor Destroy; override;
     function Execute(const AResource, ASubResource: String;
       const ARequestMethod: TRESTRequestMethodType;
-      const AParamsProc: TProc = nil;
-      const AQueryParamsProc: TProc = nil): String;
+      const AParamsProc: TProc = nil): String;
   published
     property MethodGET;
     property MethodPOST;
@@ -126,6 +125,16 @@ begin
     ///
     FDWParams.Add(LJSONParam);
   end;
+  for LFor := 0 to FBodyParams.Count -1 do
+  begin
+    LJSONParam := TJSONParam.Create(FDWParams.Encoding);
+    LJSONParam.ParamName := FBodyParams.Items[LFor].Name;
+    LJSONParam.ObjectDirection := odIN;
+    LJSONParam.JsonMode := jmPureJSON;
+    LJSONParam.AsString := FBodyParams.Items[LFor].AsString;
+    ///
+    FDWParams.Add(LJSONParam);
+  end;
 end;
 
 procedure TRESTClientDWCore.ClearDWParams;
@@ -139,8 +148,7 @@ end;
 
 function TRESTClientDWCore.Execute(const AResource, ASubResource: String;
   const ARequestMethod: TRESTRequestMethodType;
-  const AParamsProc: TProc;
-  const AQueryParamsProc: TProc): String;
+  const AParamsProc: TProc): String;
 var
   LFor: Integer;
 begin
@@ -148,10 +156,6 @@ begin
   /// <summary> Executa a procedure de adição dos parâmetros </summary>
   if Assigned(AParamsProc) then
     AParamsProc();
-
-  /// <summary> Executa a procedure de adição dos parâmetros </summary>
-  if Assigned(AQueryParamsProc) then
-    AQueryParamsProc();
 
   /// <summary> Define dados do proxy </summary>
   SetProxyParamsClient;
@@ -175,7 +179,7 @@ begin
       TRESTRequestMethodType.rtPOST:
         begin
           FRequestMethod := 'POST';
-          if FParams.Count = 0 then
+          if FBodyParams.Count = 0 then
             raise Exception.Create('Não foi passado o parâmetro com os dados do insert!');
           try
             FResponseString := FRESTClient.SendEvent(ASubResource,
@@ -202,7 +206,7 @@ begin
       TRESTRequestMethodType.rtPUT:
         begin
           FRequestMethod := 'PUT';
-          if FParams.Count = 0 then
+          if FBodyParams.Count = 0 then
             raise Exception.Create('Não foi passado o parâmetro com os dados do update!');
           try
             FResponseString := FRESTClient.SendEvent(ASubResource,

@@ -57,8 +57,7 @@ type
     procedure AddQueryParam(AValue: String); override;
     function Execute(const AResource, ASubResource: String;
       const ARequestMethod: TRESTRequestMethodType;
-      const AParamsProc: TProc = nil;
-      const AQueryParamsProc: TProc = nil): String;
+      const AParamsProc: TProc = nil): String;
   published
     property APIContext;
     property RESTContext;
@@ -79,15 +78,15 @@ var
   LPos: Integer;
 begin
   LPos := Pos('=', AValue);
-  if LPos > 0 then
+  if LPos = 0 then
+    Exit;
+
+  with FQueryParams.Add as TParam do
   begin
-    with FQueryParams.Add as TParam do
-    begin
-      Name := Copy(AValue, 1, LPos -1);
-      DataType := ftString;
-      ParamType := ptInput;
-      Value := Copy(AValue, LPos +1, MaxInt);
-    end;
+    Name := Copy(AValue, 1, LPos -1);
+    DataType := ftString;
+    ParamType := ptInput;
+    Value := Copy(AValue, LPos +1, MaxInt);
   end;
 end;
 
@@ -123,8 +122,7 @@ end;
 
 function TRESTClientWS.Execute(const AResource, ASubResource: String;
   const ARequestMethod: TRESTRequestMethodType;
-  const AParamsProc: TProc;
-  const AQueryParamsProc: TProc): String;
+  const AParamsProc: TProc): String;
 var
   LFor: Integer;
 begin
@@ -132,10 +130,6 @@ begin
   /// <summary> Executa a procedure de adição dos parâmetros </summary>
   if Assigned(AParamsProc) then
     AParamsProc();
-
-  /// <summary> Executa a procedure de adição dos parâmetros </summary>
-  if Assigned(AQueryParamsProc) then
-    AQueryParamsProc();
 
   /// <summary> Define dados do proxy </summary>
   SetProxyParamsClient;
@@ -160,8 +154,8 @@ begin
           FRequestMethod := 'POST';
           FRESTRequest.Method := TRESTRequestMethod.rmPOST;
           try
-            for LFor := 0 to FParams.Count -1 do
-              FRESTRequest.Body.Add(FParams.Items[LFor].AsString, ContentTypeFromString('application/json'));
+            for LFor := 0 to FBodyParams.Count -1 do
+              FRESTRequest.Body.Add(FBodyParams.Items[LFor].AsString, ContentTypeFromString('application/json'));
             FRESTRequest.Execute;
             Result := (FRESTRequest.Response.JSONValue as TJSONArray).Items[0].ToJSON;
           except
@@ -182,8 +176,8 @@ begin
           FRequestMethod := 'PUT';
           FRESTRequest.Method := TRESTRequestMethod.rmPUT;
           try
-            for LFor := 0 to FParams.Count -1 do
-              FRESTRequest.Body.Add(FParams.Items[LFor].AsString, ContentTypeFromString('application/json'));
+            for LFor := 0 to FBodyParams.Count -1 do
+              FRESTRequest.Body.Add(FBodyParams.Items[LFor].AsString, ContentTypeFromString('application/json'));
             FRESTRequest.Execute;
           except
             on E: Exception do
@@ -267,13 +261,13 @@ begin
       TRESTRequestMethodType.rtPATCH: ;
     end;
     /// <summary>
-    /// Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
+    ///   Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
     /// </summary>
     FResponseString := Result;
     /// <summary> DoAfterCommand </summary>
     DoAfterCommand;
     /// <summary>
-    /// Pega de volta o JSON manipulado ou não no evento AfterCommand
+    ///   Pega de volta o JSON manipulado ou não no evento AfterCommand
     /// </summary>
     Result := FResponseString;
   finally

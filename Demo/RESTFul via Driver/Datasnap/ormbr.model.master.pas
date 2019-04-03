@@ -71,7 +71,7 @@ type
     [Restrictions([NoInsert, NoUpdate])]
     [Column('client_name', ftString, 60)]
     [JoinColumn('client_id', 'client', 'client_id', 'client_name', InnerJoin)]
-    [Dictionary('Nome do Cliente')]
+    [Dictionary('Nome do Cliente', '')]
     property client_name: string read fclient_name write fclient_name;
 
     [Association(OneToOne, 'client_id', 'client', 'client_id')]

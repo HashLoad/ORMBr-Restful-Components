@@ -103,45 +103,41 @@ end;
 
 procedure TRESTQuery.SetExpand(Value: String);
 begin
-  if Value <> '' then
-  begin
-    if FQueryTokens.ContainsKey('$expand') then
-      FQueryTokens.Items['$expand'] := Value
-    else
-      FQueryTokens.Add('$expand', Value);
-  end;
+  if Value = '' then
+    Exit;
+
+  if FQueryTokens.ContainsKey('$expand') then
+    FQueryTokens.Items['$expand'] := Value
+  else
+    FQueryTokens.Add('$expand', Value);
 end;
 
 function TRESTQuery.GetCount: Boolean;
 begin
+  Result := False;
   if FQueryTokens.ContainsKey('$count') then
-    Result := FQueryTokens.Items['$count'] = 'True'
-  else
-    Result := False;
+    Result := FQueryTokens.Items['$count'] = 'True';
 end;
 
 function TRESTQuery.GetExpand: String;
 begin
+  Result := '';
   if FQueryTokens.ContainsKey('$expand') then
-    Result := FQueryTokens.Items['$expand']
-  else
-    Result := '';
+    Result := FQueryTokens.Items['$expand'];
 end;
 
 function TRESTQuery.GetFilter: String;
 begin
+  Result := '';
   if FQueryTokens.ContainsKey('$filter') then
-    Result := FQueryTokens.Items['$filter']
-  else
-    Result := '';
+    Result := FQueryTokens.Items['$filter'];
 end;
 
 function TRESTQuery.GetOrderBy: String;
 begin
+  Result := '';
   if FQueryTokens.ContainsKey('$orderby') then
-    Result := FQueryTokens.Items['$orderby']
-  else
-    Result := '';
+    Result := FQueryTokens.Items['$orderby'];
 end;
 
 function TRESTQuery.GetResourceName: String;
@@ -151,34 +147,30 @@ end;
 
 function TRESTQuery.GetSearch: String;
 begin
+  Result := '';
   if FQueryTokens.ContainsKey('$search') then
-    Result := FQueryTokens.Items['$search']
-  else
-    Result := '';
+    Result := FQueryTokens.Items['$search'];
 end;
 
 function TRESTQuery.GetSelect: String;
 begin
+  Result := '';
   if FQueryTokens.ContainsKey('$select') then
-    Result := FQueryTokens.Items['$select']
-  else
-    Result := '';
+    Result := FQueryTokens.Items['$select'];
 end;
 
 function TRESTQuery.GetSkip: Integer;
 begin
+  Result := 0;
   if FQueryTokens.ContainsKey('$skip') then
-    Result := StrToIntDef(FQueryTokens.Items['$skip'], 0)
-  else
-    Result := 0;
+    Result := StrToIntDef(FQueryTokens.Items['$skip'], 0);
 end;
 
 function TRESTQuery.GetTop: Integer;
 begin
+  Result := 0;
   if FQueryTokens.ContainsKey('$top') then
-    Result := StrToIntDef(FQueryTokens.Items['$top'], 0)
-  else
-    Result := 0;
+    Result := StrToIntDef(FQueryTokens.Items['$top'], 0);
 end;
 
 procedure TRESTQuery.ParseQuery(const AURI: String);
@@ -187,21 +179,20 @@ var
   LParams: String;
 begin
   ParseClassNameAndID(AURI);
-
   FPath := AURI;
   LPos := Pos(cQUERY_INITIAL, FPath);
-  if LPos > 0 then
-  begin
-    LParams := Copy(FPath, LPos +1, MaxInt);
-    ///
-    FPathTokens := ParsePathTokens(FPath);
-//    LPos := Pos(cQUERY_INITIAL, FPathTokens[High(FPathTokens)]);
-//    if LPos > 0 then
-//      FResourceName := Copy(FPathTokens[High(FPathTokens)], 1, LPos -1);
-    FQuery := ParseOperator(LParams);
-    /// <summary> Dicionário </summary>
-    ParseQueryTokens;
-  end;
+  if LPos = 0 then
+    Exit;
+
+  LParams := Copy(FPath, LPos +1, MaxInt);
+  ///
+  FPathTokens := ParsePathTokens(FPath);
+//  LPos := Pos(cQUERY_INITIAL, FPathTokens[High(FPathTokens)]);
+//  if LPos > 0 then
+//    FResourceName := Copy(FPathTokens[High(FPathTokens)], 1, LPos -1);
+  FQuery := ParseOperator(LParams);
+  /// <summary> Dicionário </summary>
+  ParseQueryTokens;
 end;
 
 procedure TRESTQuery.ParseClassNameAndID(const AValue: String);
@@ -298,100 +289,100 @@ var
 begin
   FQueryTokens.Clear;
   FQueryTokens.TrimExcess;
-  if FQuery <> '' then
-  begin
-    LQuery := FQuery;
-    while StartsStr(LQuery, cQUERY_INITIAL) do
-      LQuery := RightStr(LQuery, Length(LQuery) - 1);
+  if FQuery = '' then
+    Exit;
 
-    LStrings := TStringList.Create;
-    try
-      LStrings.Delimiter := cQUERY_SEPARATOR;
-      LStrings.StrictDelimiter := True;
-      LStrings.DelimitedText := LQuery;
-      for LIndex := 0 to LStrings.Count - 1 do
-        FQueryTokens.Add(LStrings.Names[LIndex], LStrings.ValueFromIndex[LIndex]);
-    finally
-      LStrings.Free;
-    end;
+  LQuery := FQuery;
+  while StartsStr(LQuery, cQUERY_INITIAL) do
+    LQuery := RightStr(LQuery, Length(LQuery) - 1);
+
+  LStrings := TStringList.Create;
+  try
+    LStrings.Delimiter := cQUERY_SEPARATOR;
+    LStrings.StrictDelimiter := True;
+    LStrings.DelimitedText := LQuery;
+    for LIndex := 0 to LStrings.Count - 1 do
+      FQueryTokens.Add(LStrings.Names[LIndex], LStrings.ValueFromIndex[LIndex]);
+  finally
+    LStrings.Free;
   end;
 end;
 
 procedure TRESTQuery.SetCount(Value: Variant);
 begin
-  if Value <> '' then
-  begin
-    if FQueryTokens.ContainsKey('$count') then
-      FQueryTokens.Items['$count'] := VarToStr(Value)
-    else
-      FQueryTokens.Add('$count', VarToStr(Value));
-  end;
+  if Value = '' then
+    Exit;
+
+  if FQueryTokens.ContainsKey('$count') then
+    FQueryTokens.Items['$count'] := VarToStr(Value)
+  else
+    FQueryTokens.Add('$count', VarToStr(Value));
 end;
 
 procedure TRESTQuery.SetFilter(Value: String);
 begin
-  if Value <> '' then
-  begin
-    if FQueryTokens.ContainsKey('$filter') then
-      FQueryTokens.Items['$filter'] := ParseOperator(Value)
-    else
-      FQueryTokens.Add('$filter', ParseOperator(Value));
-  end;
+  if Value = '' then
+    Exit;
+
+  if FQueryTokens.ContainsKey('$filter') then
+    FQueryTokens.Items['$filter'] := ParseOperator(Value)
+  else
+    FQueryTokens.Add('$filter', ParseOperator(Value));
 end;
 
 procedure TRESTQuery.SetTop(Value: Variant);
 begin
-  if Value <> '' then
-  begin
-    if FQueryTokens.ContainsKey('$top') then
-      FQueryTokens.Items['$top'] := VarToStr(Value)
-    else
-      FQueryTokens.Add('$top', VarToStr(Value));
-  end;
+  if Value = '' then
+    Exit;
+
+  if FQueryTokens.ContainsKey('$top') then
+    FQueryTokens.Items['$top'] := VarToStr(Value)
+  else
+    FQueryTokens.Add('$top', VarToStr(Value));
 end;
 
 procedure TRESTQuery.SetSearch(Value: String);
 begin
-  if Value <> '' then
-  begin
-    if FQueryTokens.ContainsKey('$search') then
-      FQueryTokens.Items['$search'] := Value
-    else
-      FQueryTokens.Add('$search', Value);
-  end;
+  if Value = '' then
+    Exit;
+
+  if FQueryTokens.ContainsKey('$search') then
+    FQueryTokens.Items['$search'] := Value
+  else
+    FQueryTokens.Add('$search', Value);
 end;
 
 procedure TRESTQuery.SetSelect(Value: String);
 begin
-  if Value <> '' then
-  begin
-    if FQueryTokens.ContainsKey('$select') then
-      FQueryTokens.Items['$select'] := Value
-    else
-      FQueryTokens.Add('$select', Value);
-  end;
+  if Value = '' then
+    Exit;
+
+  if FQueryTokens.ContainsKey('$select') then
+    FQueryTokens.Items['$select'] := Value
+  else
+    FQueryTokens.Add('$select', Value);
 end;
 
 procedure TRESTQuery.SetSkip(Value: Variant);
 begin
-  if Value <> '' then
-  begin
-    if FQueryTokens.ContainsKey('$skip') then
-      FQueryTokens.Items['$skip'] := VarToStr(Value)
-    else
-      FQueryTokens.Add('$skip', VarToStr(Value));
-  end;
+  if Value = '' then
+    Exit;
+
+  if FQueryTokens.ContainsKey('$skip') then
+    FQueryTokens.Items['$skip'] := VarToStr(Value)
+  else
+    FQueryTokens.Add('$skip', VarToStr(Value));
 end;
 
 procedure TRESTQuery.SetOrderBy(Value: String);
 begin
-  if Value <> '' then
-  begin
-    if FQueryTokens.ContainsKey('$orderby') then
-      FQueryTokens.Items['$orderby'] := Value
-    else
-      FQueryTokens.Add('$orderby', Value);
-  end;
+  if Value = '' then
+    Exit;
+
+  if FQueryTokens.ContainsKey('$orderby') then
+    FQueryTokens.Items['$orderby'] := Value
+  else
+    FQueryTokens.Add('$orderby', Value);
 end;
 
 function TRESTQuery.SplitString(const AValue, ADelimiters: string): TStringDynArray;
@@ -403,30 +394,28 @@ var
   LFor: Integer;
 begin
   Result := nil;
+  if AValue = '' then
+    Exit;
 
-  if AValue <> '' then
-  begin
-    LSplitPoints := 0;
-    for LFor := 1 to AValue.Length do
-      if IsDelimiter(ADelimiters, AValue, LFor) then
-        Inc(LSplitPoints);
+  LSplitPoints := 0;
+  for LFor := 1 to AValue.Length do
+    if IsDelimiter(ADelimiters, AValue, LFor) then
+      Inc(LSplitPoints);
 
-    SetLength(Result, LSplitPoints +1);
+  SetLength(Result, LSplitPoints +1);
+  LStartIdx := 1;
+  LCurrentSplit := 0;
+  repeat
+    LFoundIdx := FindDelimiter(ADelimiters, AValue, LStartIdx);
+    if LFoundIdx <> 0 then
+    begin
+      Result[LCurrentSplit] := Copy(AValue, LStartIdx, LFoundIdx - LStartIdx);
+      Inc(LCurrentSplit);
+      LStartIdx := LFoundIdx +1;
+    end;
+  until LCurrentSplit = LSplitPoints;
 
-    LStartIdx := 1;
-    LCurrentSplit := 0;
-    repeat
-      LFoundIdx := FindDelimiter(ADelimiters, AValue, LStartIdx);
-      if LFoundIdx <> 0 then
-      begin
-        Result[LCurrentSplit] := Copy(AValue, LStartIdx, LFoundIdx - LStartIdx);
-        Inc(LCurrentSplit);
-        LStartIdx := LFoundIdx +1;
-      end;
-    until LCurrentSplit = LSplitPoints;
-
-    Result[LSplitPoints] := Copy(AValue, LStartIdx, AValue.Length - LStartIdx +1);
-  end;
+  Result[LSplitPoints] := Copy(AValue, LStartIdx, AValue.Length - LStartIdx +1);
 end;
 
 end.

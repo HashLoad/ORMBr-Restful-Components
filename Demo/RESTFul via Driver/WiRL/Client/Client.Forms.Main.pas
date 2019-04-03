@@ -135,7 +135,7 @@ begin
       .SetCommandMonitor(TCommandMonitor.GetInstance);
 
   oDTSManager := TManagerDataSet.Create(RESTClientWiRL1.AsConnection);
-  oDTSManager.AddAdapter<Tmaster>(FDMaster)
+  oDTSManager.AddAdapter<Tmaster>(FDMaster, 5)
              .AddAdapter<Tdetail, Tmaster>(FDDetail)
              .AddAdapter<Tclient, Tmaster>(FDClient)
              .AddAdapter<Tlookup>(FDLookup)

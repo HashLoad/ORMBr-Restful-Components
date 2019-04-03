@@ -76,20 +76,20 @@ procedure TRESTServerDataSnap.AddResource;
 var
   LStarted: Boolean;
 begin
-  if FDSServer <> nil then
-  begin
-    LStarted := FDSServer.Started;
+  if FDSServer = nil then
+    Exit;
+
+  LStarted := FDSServer.Started;
+  if LStarted then
+    FDSServer.Stop;
+  try
+    TSimpleServerClass.Create(Self,
+                              FDSServer,
+                              ormbr.server.resource.datasnap.ormbr,
+                              TDSLifeCycle.Server);
+  finally
     if LStarted then
-      FDSServer.Stop;
-    try
-      TSimpleServerClass.Create(Self,
-                                FDSServer,
-                                ormbr.server.resource.datasnap.ormbr,
-                                TDSLifeCycle.Server);
-    finally
-      if LStarted then
-        FDSServer.Start;
-    end;
+      FDSServer.Start;
   end;
 end;
 

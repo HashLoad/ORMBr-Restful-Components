@@ -128,48 +128,49 @@ var
   LClassType: TClass;
   LObjectSet: TRESTObjectSet;
 begin
+  Result := '';
   LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
-  try
-    if LClassType <> nil then
-    begin
-      LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
-      LObject := LClassType.Create;
-      LObject.MethodCall('Create', []);
-      try
-        if Length(AQuery.Filter) > 0  then
-        begin
-//          if LObject.GetType(LObjectType) then
-//            LObjectType.GetProperty()
-          LObject := LObjectSet.FindOne(AQuery.Filter)
-        end
-        else
-        if AQuery.ID <> Null then
-        begin
-          LPrimaryKey := TMappingExplorer
-                           .GetInstance
-                             .GetMappingPrimaryKeyColumns(LObject.ClassType);
-          if LPrimaryKey = nil then
-            raise Exception.Create(cMESSAGEPKNOTFOUND);
+  if LClassType = nil then
+    Exit;
 
-          for LColumn in LPrimaryKey.Columns do
-          begin
-            case LColumn.ColumnProperty.PropertyType.TypeKind of
-              tkString, tkWString, tkUString, tkWChar, tkLString, tkChar:
-                begin
-                  LColumn.ColumnProperty.SetValue(LObject, TValue.From<String>(AQuery.ID));
-                end;
-              tkInteger, tkSet, tkInt64:
-                begin
-                  LColumn.ColumnProperty.SetValue(LObject, TValue.From<Integer>(AQuery.ID));
-                end;
-            end;
+  try
+    LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
+    LObject := LClassType.Create;
+    LObject.MethodCall('Create', []);
+    try
+      if Length(AQuery.Filter) > 0  then
+      begin
+//        if LObject.GetType(LObjectType) then
+//          LObjectType.GetProperty()
+        LObject := LObjectSet.FindOne(AQuery.Filter)
+      end
+      else
+      if AQuery.ID <> Null then
+      begin
+        LPrimaryKey := TMappingExplorer
+                         .GetInstance
+                           .GetMappingPrimaryKeyColumns(LObject.ClassType);
+        if LPrimaryKey = nil then
+          raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+        for LColumn in LPrimaryKey.Columns do
+        begin
+          case LColumn.ColumnProperty.PropertyType.TypeKind of
+            tkString, tkWString, tkUString, tkWChar, tkLString, tkChar:
+              begin
+                LColumn.ColumnProperty.SetValue(LObject, TValue.From<String>(AQuery.ID));
+              end;
+            tkInteger, tkSet, tkInt64:
+              begin
+                LColumn.ColumnProperty.SetValue(LObject, TValue.From<Integer>(AQuery.ID));
+              end;
           end;
         end;
-        LObjectSet.Delete(LObject);
-        Result := '{"result":"Class ' + AQuery.ResourceName + ' delete command executed successfully"}';
-      finally
-        LObject.MethodCall('Destroy', []);
       end;
+      LObjectSet.Delete(LObject);
+      Result := '{"result":"Class ' + AQuery.ResourceName + ' delete command executed successfully"}';
+    finally
+      LObject.MethodCall('Destroy', []);
     end;
   except
     on E: Exception do
@@ -185,23 +186,23 @@ var
   LObjectSet: TRESTObjectSet;
 begin
   LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
-  if LClassType <> nil then
-  begin
-    LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
-    try
-      if AQuery.Top > 0 then
-        Result := ResolverFindToSkip(LObjectSet, AQuery)
-      else
-      if Length(AQuery.Filter) > 0  then
-        Result := ResolverFindFilter(LObjectSet, AQuery)
-      else
-      if AQuery.ID <> Null then
-        Result := ResolverFindID(LObjectSet, AQuery)
-      else
-        Result := ResolverFindAll(LObjectSet);
-    finally
-      LObjectSet.Free;
-    end;
+  if LClassType = nil then
+    Exit;
+
+  LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
+  try
+    if AQuery.Top > 0 then
+      Result := ResolverFindToSkip(LObjectSet, AQuery)
+    else
+    if Length(AQuery.Filter) > 0  then
+      Result := ResolverFindFilter(LObjectSet, AQuery)
+    else
+    if AQuery.ID <> Null then
+      Result := ResolverFindID(LObjectSet, AQuery)
+    else
+      Result := ResolverFindAll(LObjectSet);
+  finally
+    LObjectSet.Free;
   end;
 end;
 
@@ -214,40 +215,41 @@ var
   LObjectSet: TRESTObjectSet;
   LValues: String;
 begin
+  LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
+  if LClassType = nil then
+    Exit;
+
   try
-    LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
-    if LClassType <> nil then
-    begin
-      LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
-      LObject := LClassType.Create;
-      LObject.MethodCall('Create', []);
-      try
-        TORMBrJson.JsonToObject(AValue, LObject);
-        if LObject <> nil then
-        begin
-          LObjectSet.Insert(LObject);
-          Result := '{"result":"Class ' + AQuery.ResourceName
-                  + ' insert command executed successfully",'
-                  + ' "params":[{%s}]}';
-          LValues := '';
-          LPrimaryKey := TMappingExplorer
-                           .GetInstance
-                             .GetMappingPrimaryKeyColumns(LObject.ClassType);
-          if LPrimaryKey = nil then
-            raise Exception.Create(cMESSAGEPKNOTFOUND);
+    LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
+    LObject := LClassType.Create;
+    LObject.MethodCall('Create', []);
 
-          for LColumn in LPrimaryKey.Columns do
-            LValues := LValues + '"'  + LColumn.ColumnProperty.Name
-                               + '":' + VarToStr(LColumn.ColumnProperty.GetNullableValue(LObject).AsVariant)
-                               + ',';
+    TORMBrJson.JsonToObject(AValue, LObject);
+    if LObject = nil then
+      Exit;
 
-          LValues[Length(LValues)] := ' ';
-          Result := Format(Result, [Trim(LValues)]);
-        end
-      finally
-        LObject.MethodCall('Destroy', []);
-        LObjectSet.Free;
-      end;
+    try
+      LObjectSet.Insert(LObject);
+      Result := '{"result":"Class ' + AQuery.ResourceName
+              + ' insert command executed successfully",'
+              + ' "params":[{%s}]}';
+      LValues := '';
+      LPrimaryKey := TMappingExplorer
+                       .GetInstance
+                         .GetMappingPrimaryKeyColumns(LObject.ClassType);
+      if LPrimaryKey = nil then
+        raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+      for LColumn in LPrimaryKey.Columns do
+        LValues := LValues + '"'  + LColumn.ColumnProperty.Name
+                           + '":' + VarToStr(LColumn.ColumnProperty.GetNullableValue(LObject).AsVariant)
+                           + ',';
+
+      LValues[Length(LValues)] := ' ';
+      Result := Format(Result, [Trim(LValues)]);
+    finally
+      LObject.MethodCall('Destroy', []);
+      LObjectSet.Free;
     end;
   except
     on E: Exception do
@@ -267,44 +269,45 @@ var
   LColumn: TColumnMapping;
   LWhere: String;
 begin
-  try
-    LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
-    if LClassType <> nil then
-    begin
-      LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
-      LObjectNew := LClassType.Create;
-      LObjectNew.MethodCall('Create', []);
-      try
-        TORMBrJson.JsonToObject(AValue, LObjectNew);
-        if LObjectNew <> nil then
-        begin
-          LWhere := '';
-          LPrimaryKey := TMappingExplorer
-                           .GetInstance
-                             .GetMappingPrimaryKeyColumns(LObjectNew.ClassType);
-          if LPrimaryKey = nil then
-            raise Exception.Create(cMESSAGEPKNOTFOUND);
+  LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
+  if LClassType = nil then
+    Exit;
 
-          for LColumn in LPrimaryKey.Columns do
-            LWhere := LWhere + '(' + LObjectNew.GetTable.Name + '.' + LColumn.ColumnName
-                             + '=' + VarToStr(LColumn.ColumnProperty.GetNullableValue(LObjectNew).AsVariant) + ') AND ';
-          LWhere := Copy(LWhere, 1, Length(LWhere) -5);
-          LObjectOld := LObjectSet.FindOne(LWhere);
-          if LObjectOld <> nil then
-          begin
-            try
-              LObjectSet.Modify(LObjectOld);
-              LObjectSet.Update(LObjectNew);
-              Result := '{"result":"Class ' + AQuery.ResourceName + ' update command executed successfully"}';
-            finally
-              LObjectOld.Free;
-            end;
-          end;
-        end
+  try
+    LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
+    LObjectNew := LClassType.Create;
+    LObjectNew.MethodCall('Create', []);
+
+    TORMBrJson.JsonToObject(AValue, LObjectNew);
+    if LObjectNew = nil then
+      Exit;
+
+    try
+      LWhere := '';
+      LPrimaryKey := TMappingExplorer
+                       .GetInstance
+                         .GetMappingPrimaryKeyColumns(LObjectNew.ClassType);
+      if LPrimaryKey = nil then
+        raise Exception.Create(cMESSAGEPKNOTFOUND);
+
+      for LColumn in LPrimaryKey.Columns do
+        LWhere := LWhere + '(' + LObjectNew.GetTable.Name + '.' + LColumn.ColumnName
+                         + '=' + VarToStr(LColumn.ColumnProperty.GetNullableValue(LObjectNew).AsVariant) + ') AND ';
+      LWhere := Copy(LWhere, 1, Length(LWhere) -5);
+      LObjectOld := LObjectSet.FindOne(LWhere);
+      if LObjectOld = nil then
+        Exit;
+
+      try
+        LObjectSet.Modify(LObjectOld);
+        LObjectSet.Update(LObjectNew);
+        Result := '{"result":"Class ' + AQuery.ResourceName + ' update command executed successfully"}';
       finally
-        LObjectNew.MethodCall('Destroy', []);
-        LObjectSet.Free;
+        LObjectOld.Free;
       end;
+    finally
+      LObjectNew.MethodCall('Destroy', []);
+      LObjectSet.Free;
     end;
   except
     on E: Exception do

@@ -51,11 +51,18 @@ type
     procedure SetClassNotServerUse(const Value: Boolean); override;
     procedure AddParam(const AValue: String); override;
     procedure AddQueryParam(const AValue: String); override;
+    procedure AddBodyParam(const AValue: String); override;
   end;
 
 implementation
 
 { TDriverRestWiRL }
+
+procedure TDriverRestWiRL.AddBodyParam(const AValue: String);
+begin
+  inherited;
+  FConnection.AddBodyParam(AValue);
+end;
 
 procedure TDriverRestWiRL.AddParam(const AValue: String);
 begin

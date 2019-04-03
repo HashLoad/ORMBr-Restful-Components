@@ -54,6 +54,7 @@ type
     procedure SetCommandMonitor(AMonitor: ICommandMonitor);
     procedure SetClassNotServerUse(const Value: Boolean);
     procedure AddParam(AValue: String); virtual;
+    procedure AddBodyParam(AValue: String); virtual;
     procedure AddQueryParam(AValue: String); virtual;
     function CommandMonitor: ICommandMonitor;
     function Execute(const AResource, ASubResource: String;
@@ -90,6 +91,11 @@ begin
   if Assigned(FDriverConnection) then
     FDriverConnection.Free;
   inherited;
+end;
+
+procedure TFactoryRestConnection.AddBodyParam(AValue: String);
+begin
+  FDriverConnection.AddBodyParam(AValue);
 end;
 
 procedure TFactoryRestConnection.AddParam(AValue: String);

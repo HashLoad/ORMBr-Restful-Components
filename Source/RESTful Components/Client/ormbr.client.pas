@@ -70,6 +70,7 @@ type
   protected
     FProtocol: TRestProtocol;
     FParams: TParams;
+    FBodyParams: TParams;
     FQueryParams: TParams;
     FBaseURL: String;
     FAPIContext: String;
@@ -101,6 +102,7 @@ type
     destructor Destroy; override;
     procedure SetClassNotServerUse(const Value: Boolean);
     procedure AddParam(AValue: String); virtual;
+    procedure AddBodyParam(AValue: String); virtual;
     procedure AddQueryParam(AValue: String); virtual;
     property MethodGET: String read GetMethodGET write SetMethodGET;
     property MethodPOST: String read GetMethodPOST write SetMethodPOST;
@@ -145,6 +147,7 @@ begin
   MessageDlg('Esta é uma versão de demonstração do ORMBr - REST Client Components. Adquira a versão completa pelo E-mail ormbrframework@gmail.com', mtInformation, [mbOk], 0);
   {$ENDIF}
   FParams := TParams.Create(Self);
+  FBodyParams := TParams.Create(Self);
   FQueryParams := TParams.Create(Self);
   FServerUse := False;
   FClassNotServerUse := False;
@@ -173,6 +176,8 @@ destructor TORMBrClient.Destroy;
 begin
   FParams.Clear;
   FParams.Free;
+  FBodyParams.Clear;
+  FBodyParams.Free;
   FQueryParams.Clear;
   FQueryParams.Free;
   inherited;
@@ -188,6 +193,17 @@ procedure TORMBrClient.DoBeforeCommand;
 begin
   if Assigned(FBeforeCommand) then
     FBeforeCommand(FRequestMethod);
+end;
+
+procedure TORMBrClient.AddBodyParam(AValue: String);
+begin
+  with FBodyParams.Add as TParam do
+  begin
+    Name := 'param_' + IntToStr(FBodyParams.Count -1);
+    DataType := ftString;
+    ParamType := ptInput;
+    Value := AValue;
+  end;
 end;
 
 procedure TORMBrClient.AddParam(AValue: String);
@@ -293,12 +309,12 @@ end;
 
 procedure TORMBrClient.SetAPIContext(const Value: String);
 begin
-  if FAPIContext <> Value then
-  begin
-    FAPIContext := Value;
-    /// <summary> Monta a URL base </summary>
-    SetBaseURL;
-  end;
+  if FAPIContext = Value then
+    Exit;
+
+  FAPIContext := Value;
+  /// <summary> Monta a URL base </summary>
+  SetBaseURL;
 end;
 
 procedure TORMBrClient.SetMethodDELETE(const Value: String);
@@ -309,12 +325,12 @@ end;
 
 procedure TORMBrClient.SetHost(const Value: String);
 begin
-  if FHost <> Value then
-  begin
-    FHost := Value;
-    /// <summary> Monta a URL base </summary>
-    SetBaseURL;
-  end;
+  if FHost = Value then
+    Exit;
+
+  FHost := Value;
+  /// <summary> Monta a URL base </summary>
+  SetBaseURL;
 end;
 
 procedure TORMBrClient.SetMethodPOST(const Value: String);
@@ -337,47 +353,47 @@ end;
 
 procedure TORMBrClient.SetPort(const Value: Integer);
 begin
-  if FPort <> Value then
-  begin
-    FPort := Value;
-    /// <summary> Monta a URL base </summary>
-    SetBaseURL;
-  end;
+  if FPort = Value then
+    Exit;
+
+  FPort := Value;
+  /// <summary> Monta a URL base </summary>
+  SetBaseURL;
 end;
 
 procedure TORMBrClient.SetProtocol(const Value: TRestProtocol);
 begin
-  if FProtocol <> Value then
-  begin
-    FProtocol := Value;
-    /// <summary> Monta a URL base </summary>
-    SetBaseURL;
-  end;
+  if FProtocol = Value then
+    Exit;
+
+  FProtocol := Value;
+  /// <summary> Monta a URL base </summary>
+  SetBaseURL;
 end;
 
 procedure TORMBrClient.SetRESTContext(const Value: String);
 begin
-  if FRESTContext <> Value then
-  begin
-    FRESTContext := Value;
-    /// <summary> Monta a URL base </summary>
-    SetBaseURL;
-  end;
+  if FRESTContext = Value then
+    Exit;
+
+  FRESTContext := Value;
+  /// <summary> Monta a URL base </summary>
+  SetBaseURL;
 end;
 
 procedure TORMBrClient.SetServerUse(const Value: Boolean);
 begin
-  if FServerUse <> Value then
+  if FServerUse = Value then
+    Exit;
+
+  FServerUse := Value;
+  if FServerUse then
   begin
-    FServerUse := Value;
-    if FServerUse then
-    begin
-      if Pos('/ORMBR', UpperCase(FAPIContext)) = 0 then
-        FAPIContext := FAPIContext + '/ormbr';
-    end
-    else
-      FAPIContext := ReplaceStr(FAPIContext, '/ormbr', '');
-  end;
+    if Pos('/ORMBR', UpperCase(FAPIContext)) = 0 then
+      FAPIContext := FAPIContext + '/ormbr';
+  end
+  else
+    FAPIContext := ReplaceStr(FAPIContext, '/ormbr', '');
 end;
 
 procedure TORMBrClient.SetMethodGET(const Value: String);

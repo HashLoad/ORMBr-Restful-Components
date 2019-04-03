@@ -6,7 +6,11 @@ uses
   ormbr.model.client in '..\ormbr.model.client.pas',
   ormbr.model.detail in '..\ormbr.model.detail.pas',
   ormbr.model.lookup in '..\ormbr.model.lookup.pas',
-  ormbr.model.master in '..\ormbr.model.master.pas';
+  ormbr.model.master in '..\ormbr.model.master.pas',
+  ormbr.client.wirl in '..\..\..\..\Source\RESTful Components\Client\ormbr.client.wirl.pas',
+  ormbr.driver.rest.wirl in '..\..\..\..\Source\RESTful Components\Client\ormbr.driver.rest.wirl.pas',
+  ormbr.factory.rest.wirl in '..\..\..\..\Source\RESTful Components\Client\ormbr.factory.rest.wirl.pas',
+  ormbr.bind.source.interfaces in 'D:\ORMBr\Components\ormbr.bind.source.interfaces.pas';
 
 {$R *.res}
 

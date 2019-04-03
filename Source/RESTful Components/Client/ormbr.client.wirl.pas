@@ -54,8 +54,7 @@ type
     destructor Destroy; override;
     function Execute(const AResource, ASubResource: String;
       const ARequestMethod: TRESTRequestMethodType;
-      const AParamsProc: TProc = nil;
-      const AQueryParamsProc: TProc = nil): String;
+      const AParamsProc: TProc = nil): String;
   published
     property APIContext;
     property RESTContext;
@@ -110,8 +109,7 @@ end;
 
 function TRESTClientWiRL.Execute(const AResource, ASubResource: String;
   const ARequestMethod: TRESTRequestMethodType;
-  const AParamsProc: TProc;
-  const AQueryParamsProc: TProc): String;
+  const AParamsProc: TProc): String;
 var
   LFor: Integer;
   LParams: String;
@@ -121,10 +119,6 @@ begin
   /// <summary> Executa a procedure de adição dos parâmetros </summary>
   if Assigned(AParamsProc) then
     AParamsProc();
-
-  /// <summary> Executa a procedure de adição dos querys parâmetros </summary>
-  if Assigned(AQueryParamsProc) then
-    AQueryParamsProc();
 
   /// <summary> Define dados do proxy </summary>
   SetProxyParamsClient;
@@ -152,11 +146,11 @@ begin
       TRESTRequestMethodType.rtPOST:
         begin
           FRequestMethod := 'POST';
-          if FParams.Count = 0 then
+          if FBodyParams.Count = 0 then
             raise Exception.Create('Não foi passado o parâmetro com os dados do insert!');
 
-          for LFor := 0 to FParams.Count -1 do
-            LParams := LParams + FParams.Items[LFor].AsString;
+          for LFor := 0 to FBodyParams.Count -1 do
+            LParams := LParams + FBodyParams.Items[LFor].AsString;
           FRESTSubResource.POST(procedure(AContent: TMemoryStream)
                                 var
                                   LWriter: TStreamWriter;
@@ -189,11 +183,11 @@ begin
       TRESTRequestMethodType.rtPUT:
         begin
           FRequestMethod := 'PUT';
-          if FParams.Count = 0 then
+          if FBodyParams.Count = 0 then
             raise Exception.Create('Não foi passado o parâmetro com os dados do update!');
 
-          for LFor := 0 to FParams.Count -1 do
-            LParams := LParams + FParams.Items[LFor].AsString;
+          for LFor := 0 to FBodyParams.Count -1 do
+            LParams := LParams + FBodyParams.Items[LFor].AsString;
           FRESTSubResource.PUT(procedure(AContent: TMemoryStream)
                                var
                                  LWriter: TStreamWriter;

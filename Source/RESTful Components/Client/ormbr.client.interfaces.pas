@@ -49,6 +49,7 @@ type
       const AParams: TProc = nil): String; overload;
     procedure AddParam(AValue: String);
     procedure AddQueryParam(AValue: String);
+    procedure AddBodyParam(AValue: String);
     property BaseURL: String read GetBaseURL;
     property Username: String read GetUsername;
     property Password: String read GetPassword;

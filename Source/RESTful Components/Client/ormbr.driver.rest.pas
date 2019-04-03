@@ -51,6 +51,7 @@ type
       const AParams: TProc = nil): String; overload; virtual; abstract;
     procedure SetClassNotServerUse(const Value: Boolean); virtual; abstract;
     procedure AddParam(const AValue: String); virtual; abstract;
+    procedure AddBodyParam(const AValue: String); virtual; abstract;
     procedure AddQueryParam(const AValue: String); virtual; abstract;
   end;
 

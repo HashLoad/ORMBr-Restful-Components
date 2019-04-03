@@ -107,8 +107,8 @@ begin
 end;
 
 procedure TForm3.FormCreate(Sender: TObject);
-var
-  LMaster: TMaster;
+//var
+//  LMaster: TMaster;
 begin
   RESTClientDelphiMVC1.AsConnection.SetCommandMonitor(TCommandMonitor.GetInstance);
 

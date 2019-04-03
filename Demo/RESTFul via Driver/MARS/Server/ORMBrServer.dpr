@@ -9,8 +9,8 @@ uses
   ormbr.model.detail in '..\ormbr.model.detail.pas',
   ormbr.model.lookup in '..\ormbr.model.lookup.pas',
   ormbr.model.master in '..\ormbr.model.master.pas',
-  ormbr.server.mars in '..\..\..\..\Source\Drivers RESTFul\Component Server\ormbr.server.mars.pas',
-  ormbr.server.resource.mars in '..\..\..\..\Source\Drivers RESTFul\Component Server\ormbr.server.resource.mars.pas';
+  ormbr.server.mars in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.mars.pas',
+  ormbr.server.resource.mars in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.resource.mars.pas';
 
 {$R *.res}
 

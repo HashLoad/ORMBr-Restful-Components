@@ -4,9 +4,7 @@ object DataModuleServer: TDataModuleServer
   Width = 341
   object FDConnection1: TFDConnection
     Params.Strings = (
-      
-        'Database=D:\ORMBr\Demo\RESTFul via Driver\Datasnap\Database\data' +
-        'base.db3'
+      'Database=..\..\..\Data\Database\database.db3'
       'LockingMode=Normal'
       'DriverID=SQLite')
     LoginPrompt = False

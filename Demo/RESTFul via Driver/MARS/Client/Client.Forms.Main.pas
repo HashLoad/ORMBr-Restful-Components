@@ -113,7 +113,7 @@ begin
   RESTClientMARS1.AsConnection.SetCommandMonitor(TCommandMonitor.GetInstance);
 
   oManager := TManagerDataSet.Create(RESTClientMARS1.AsConnection);
-  oManager.AddAdapter<Tmaster>(FDMaster, 2)
+  oManager.AddAdapter<Tmaster>(FDMaster, 5)
           .AddAdapter<Tdetail, Tmaster>(FDDetail)
           .AddAdapter<Tclient, Tmaster>(FDClient)
           .AddAdapter<Tlookup>(FDLookup)

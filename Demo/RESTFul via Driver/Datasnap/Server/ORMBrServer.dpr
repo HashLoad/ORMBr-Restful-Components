@@ -14,13 +14,8 @@ uses
   ormbr.model.master in '..\ormbr.model.master.pas',
   uLookupServerModule in 'uLookupServerModule.pas' {apilookup: TDSServerModule},
   uDataModuleServer in 'uDataModuleServer.pas' {DataModuleServer: TDataModule},
-  ormbr.rest.query.parse in '..\..\..\..\Source\RESTful Components\Server\ormbr.rest.query.parse.pas',
   ormbr.server.datasnap in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.datasnap.pas',
-  ormbr.server.resource.datasnap in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.resource.datasnap.pas',
-  ormbr.server.resource in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.resource.pas',
-  ormbr.server.rest.manager in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.rest.manager.pas',
-  ormbr.server.rest.objectset in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.rest.objectset.pas',
-  ormbr.server.rest.session in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.rest.session.pas';
+  ormbr.server.resource.datasnap in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.resource.datasnap.pas';
 
 {$R *.res}
 

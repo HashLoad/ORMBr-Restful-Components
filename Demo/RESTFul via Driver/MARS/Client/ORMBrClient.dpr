@@ -6,7 +6,10 @@ uses
   ormbr.model.client in '..\ormbr.model.client.pas',
   ormbr.model.detail in '..\ormbr.model.detail.pas',
   ormbr.model.lookup in '..\ormbr.model.lookup.pas',
-  ormbr.model.master in '..\ormbr.model.master.pas';
+  ormbr.model.master in '..\ormbr.model.master.pas',
+  ormbr.client.mars in '..\..\..\..\Source\RESTful Components\Client\ormbr.client.mars.pas',
+  ormbr.driver.rest.mars in '..\..\..\..\Source\RESTful Components\Client\ormbr.driver.rest.mars.pas',
+  ormbr.factory.rest.mars in '..\..\..\..\Source\RESTful Components\Client\ormbr.factory.rest.mars.pas';
 
 {$R *.res}
 

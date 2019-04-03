@@ -35,7 +35,6 @@ uses
   MARS.Client.Application,
   MARS.Client.Client,
   MARS.Client.Client.Indy,
-  MARS.Messaging.Resource,
   MARS.Core.Utils,
   MARS.Client.Token;
 
@@ -45,7 +44,6 @@ type
     FRESTClient: TMARSClient;
     FRESTClientApp: TMARSClientApplication;
     FRESTResource: TMARSClientResourceJSON;
-    FRESTSubResource: TMARSClientResourceJSON;
     FRESTToken: TMARSClientToken;
     procedure SetProxyParamsClient;
     function RemoveContextServerUse(const Value: String): string;
@@ -57,8 +55,7 @@ type
     destructor Destroy; override;
     function Execute(const AResource, ASubResource: String;
       const ARequestMethod: TRESTRequestMethodType;
-      const AParamsProc: TProc = nil;
-      const AQueryParamsProc: TProc = nil): String;
+      const AParamsProc: TProc = nil): String;
   published
     property APIContext;
     property RESTContext;
@@ -84,20 +81,18 @@ begin
   FRESTClientApp.Client := FRESTClient;
   FRESTResource := TMARSClientResourceJSON.Create(Self);
   FRESTResource.Application := FRESTClientApp;
-  FRESTSubResource := TMARSClientResourceJSON.Create(Self);
-  FRESTSubResource.Application := FRESTClientApp;
-  FRESTSubResource.ParentResource := FRESTResource;
   FRESTToken := TMARSClientToken.Create(Self);
   FRESTToken.Application := FRESTClientApp;
   FAPIContext := 'default';
   FRESTContext := 'rest';
-  /// <summary> Monta a URL base </summary>
+  /// <summary>
+  ///   Monta a URL base
+  // </summary>
   SetBaseURL;
 end;
 
 destructor TRESTClientMARS.Destroy;
 begin
-  FRESTSubResource.Free;
   FRESTResource.Free;
   FRESTClientApp.Free;
   FRESTClient.Free;
@@ -112,8 +107,7 @@ end;
 
 function TRESTClientMARS.Execute(const AResource, ASubResource: String;
   const ARequestMethod: TRESTRequestMethodType;
-  const AParamsProc: TProc;
-  const AQueryParamsProc: TProc): String;
+  const AParamsProc: TProc): String;
 var
   LFor: Integer;
   LParams: String;
@@ -124,26 +118,23 @@ begin
   if Assigned(AParamsProc) then
     AParamsProc();
 
-  /// <summary> Executa a procedure de adição dos querys parâmetros </summary>
-  if Assigned(AQueryParamsProc) then
-    AQueryParamsProc();
-
   /// <summary> Define dados do proxy </summary>
   SetProxyParamsClient;
 
   FRESTClientApp.AppName := FAPIContext;
   /// <summary>
-  /// Trata a URL Base caso o componente esteja para usar o servidor,
-  /// mas a classe não.
+  ///   Trata a URL Base caso o componente esteja para usar o servidor,
+  ///   mas a classe não.
   /// </summary>
   if (FServerUse) and (FClassNotServerUse) then
     FRESTClientApp.AppName := RemoveContextServerUse(FRESTClientApp.AppName);
 
   FRESTClient.MARSEngineURL := GetBaseURL;
+  FRESTResource.QueryParams.Clear;
   FRESTResource.Resource := AResource;
-  FRESTSubResource.Resource := ASubResource;
-  FRESTSubResource.PathParamsValues.Clear;
-  FRESTSubResource.QueryParams.Clear;
+  if Length(ASubResource) > 0 then
+    FRESTResource.Resource := FRESTResource.Resource + '/' + ASubResource;
+
   FRESTToken.UserName := FAuthenticator.Username;
   FRESTToken.Password := FAuthenticator.Password;
   try
@@ -154,49 +145,110 @@ begin
       TRESTRequestMethodType.rtPOST:
         begin
           FRequestMethod := 'POST';
-          if FParams.Count = 0 then
+          if FBodyParams.Count = 0 then
             raise Exception.Create('Não foi passado o parâmetro com os dados do insert!');
 
-          for LFor := 0 to FParams.Count -1 do
-            LParams := LParams + FParams.Items[LFor].AsString;
-          FRESTSubResource.POST(procedure(AContent: TMemoryStream)
-                                var
-                                  LWriter: TStreamWriter;
-                                begin
-                                  LWriter := TStreamWriter.Create(AContent);
-                                  try
-                                    LWriter.Write(LParams);
-                                    AContent.Position := 0;
-                                  finally
-                                    LWriter.Free;
-                                  end;
-                                end,
-                                procedure(AResponse: TStream)
-                                begin
-                                  AResponse.Position := 0;
-                                  FResponseString := StreamToString(AResponse);
-                                end,
-                                procedure(E: Exception)
-                                begin
-                                  raise ERESTConnectionError
-                                          .Create(FRESTClient.MARSEngineURL,
-                                                  AResource,
-                                                  ASubResource,
-                                                  E.Message,
-                                                  FRequestMethod,
-                                                  FRESTClient.ResponseStatusCode);
-                                end );
+          for LFor := 0 to FBodyParams.Count -1 do
+            LParams := LParams + FBodyParams.Items[LFor].AsString;
+          FRESTResource.POST(procedure(AContent: TMemoryStream)
+                             var
+                               LWriter: TStreamWriter;
+                             begin
+                               LWriter := TStreamWriter.Create(AContent);
+                               try
+                                 LWriter.Write(LParams);
+                                 AContent.Position := 0;
+                               finally
+                                 LWriter.Free;
+                               end;
+                             end,
+                             procedure(AResponse: TStream)
+                             begin
+                               AResponse.Position := 0;
+                               FResponseString := StreamToString(AResponse);
+                             end,
+                             procedure(E: Exception)
+                             begin
+                               raise ERESTConnectionError
+                                       .Create(FRESTClient.MARSEngineURL,
+                                               AResource,
+                                               ASubResource,
+                                               E.Message,
+                                               FRequestMethod,
+                                               FRESTClient.ResponseStatusCode);
+                             end );
           Result := FResponseString;
         end;
       TRESTRequestMethodType.rtPUT:
         begin
           FRequestMethod := 'POST';
-          if FParams.Count = 0 then
+          if FBodyParams.Count = 0 then
             raise Exception.Create('Não foi passado o parâmetro com os dados do update!');
 
+          for LFor := 0 to FBodyParams.Count -1 do
+            LParams := LParams + FBodyParams.Items[LFor].AsString;
+          FRESTResource.PUT(procedure(AContent: TMemoryStream)
+                            var
+                              LWriter: TStreamWriter;
+                            begin
+                              LWriter := TStreamWriter.Create(AContent);
+                              try
+                                LWriter.Write(LParams);
+                                AContent.Position := 0;
+                              finally
+                                LWriter.Free;
+                              end;
+                            end,
+                            procedure(AResponse: TStream)
+                            begin
+                              AResponse.Position := 0;
+                              FResponseString := StreamToString(AResponse);
+                            end,
+                            procedure(E: Exception)
+                            begin
+                              raise ERESTConnectionError
+                                      .Create(FRESTClient.MARSEngineURL,
+                                              AResource,
+                                              ASubResource,
+                                              FRequestMethod,
+                                              E.Message,
+                                              FRESTClient.ResponseStatusCode);
+                            end );
+          Result := FResponseString;
+        end;
+      TRESTRequestMethodType.rtGET:
+        begin
+          FRequestMethod := 'GET';
+          /// <summary> Params </summary>
           for LFor := 0 to FParams.Count -1 do
-            LParams := LParams + FParams.Items[LFor].AsString;
-          FRESTSubResource.PUT(procedure(AContent: TMemoryStream)
+            FRESTResource.PathParamsValues.Add(FParams.Items[LFor].AsString);
+          /// <summary> Query Params </summary>
+          for LFor := 0 to FQueryParams.Count -1 do
+            FRESTResource.QueryParams.Add(FQueryParams.Items[LFor].AsString);
+          /// <summary> Query GET </summary>
+          Result := FRESTResource.GETAsString(nil, nil,
+                                              procedure(E: Exception)
+                                              begin
+                                                raise ERESTConnectionError
+                                                        .Create(FRESTClient.MARSEngineURL,
+                                                                AResource,
+                                                                ASubResource,
+                                                                FRequestMethod,
+                                                                E.Message,
+                                                                FRESTClient.ResponseStatusCode);
+                                              end);
+        end;
+      TRESTRequestMethodType.rtDELETE:
+        begin
+          FRequestMethod := 'DELETE';
+          /// <summary> Params </summary>
+          for LFor := 0 to FParams.Count -1 do
+            FRESTResource.PathParamsValues.Add(FParams.Items[LFor].AsString);
+          /// <summary> Query Params </summary>
+          for LFor := 0 to FQueryParams.Count -1 do
+            FRESTResource.QueryParams.Add(FQueryParams.Items[LFor].AsString);
+          /// <summary> DELETE </summary>
+          FRESTResource.DELETE(procedure(AContent: TMemoryStream)
                                var
                                  LWriter: TStreamWriter;
                                begin
@@ -222,80 +274,19 @@ begin
                                                  FRequestMethod,
                                                  E.Message,
                                                  FRESTClient.ResponseStatusCode);
-                               end );
-          Result := FResponseString;
-        end;
-      TRESTRequestMethodType.rtGET:
-        begin
-          FRequestMethod := 'GET';
-          /// <summary> Params </summary>
-          for LFor := 0 to FParams.Count -1 do
-            FRESTSubResource.PathParamsValues.Add(FParams.Items[LFor].AsString);
-          /// <summary> Query Params </summary>
-          for LFor := 0 to FQueryParams.Count -1 do
-            FRESTSubResource.QueryParams.Add(FQueryParams.Items[LFor].AsString);
-          /// <summary> Query GET </summary>
-          Result := FRESTSubResource.GETAsString(nil, nil,
-                                                 procedure(E: Exception)
-                                                 begin
-                                                   raise ERESTConnectionError
-                                                           .Create(FRESTClient.MARSEngineURL,
-                                                                   AResource,
-                                                                   ASubResource,
-                                                                   FRequestMethod,
-                                                                   E.Message,
-                                                                   FRESTClient.ResponseStatusCode);
-                                                 end );
-        end;
-      TRESTRequestMethodType.rtDELETE:
-        begin
-          FRequestMethod := 'DELETE';
-          /// <summary> Params </summary>
-          for LFor := 0 to FParams.Count -1 do
-            FRESTSubResource.PathParamsValues.Add(FParams.Items[LFor].AsString);
-          /// <summary> Query Params </summary>
-          for LFor := 0 to FQueryParams.Count -1 do
-            FRESTSubResource.QueryParams.Add(FQueryParams.Items[LFor].AsString);
-          /// <summary> DELETE </summary>
-          FRESTSubResource.DELETE(procedure(AContent: TMemoryStream)
-                                  var
-                                    LWriter: TStreamWriter;
-                                  begin
-                                    LWriter := TStreamWriter.Create(AContent);
-                                    try
-                                      LWriter.Write(LParams);
-                                      AContent.Position := 0;
-                                    finally
-                                      LWriter.Free;
-                                    end;
-                                  end,
-                                  procedure(AResponse: TStream)
-                                  begin
-                                    AResponse.Position := 0;
-                                    FResponseString := StreamToString(AResponse);
-                                  end,
-                                  procedure(E: Exception)
-                                  begin
-                                    raise ERESTConnectionError
-                                            .Create(FRESTClient.MARSEngineURL,
-                                                    AResource,
-                                                    ASubResource,
-                                                    FRequestMethod,
-                                                    E.Message,
-                                                    FRESTClient.ResponseStatusCode);
-                                  end );
+                               end);
           Result := FResponseString;
         end;
       TRESTRequestMethodType.rtPATCH: ;
     end;
     /// <summary>
-    /// Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
+    ///   Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
     /// </summary>
     FResponseString := Result;
     /// <summary> DoAfterCommand </summary>
     DoAfterCommand;
     /// <summary>
-    /// Pega de volta o JSON manipulado ou não no evento AfterCommand
+    ///   Pega de volta o JSON manipulado ou não no evento AfterCommand
     /// </summary>
     Result := FResponseString;
   finally

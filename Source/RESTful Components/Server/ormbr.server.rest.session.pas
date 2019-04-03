@@ -186,50 +186,47 @@ begin
     begin
       if LProperty.IsNoUpdate then
         Continue;
+
+      if LProperty.PropertyType.TypeKind in cPROPERTYTYPES_1 then
+        Continue;
+
+      if not FModifiedFields.ContainsKey(AKey) then
+        FModifiedFields.Add(AKey, TList<string>.Create);
       /// <summary>
-      /// Validação para entrar no IF somente propriedades que o tipo não
-      /// esteja na lista de tipos.
+      ///   Se o tipo da property for tkRecord provavelmente tem Nullable nela
+      ///   Se não for tkRecord entra no ELSE e pega o valor de forma direta
       /// </summary>
-      if not (LProperty.PropertyType.TypeKind in cPROPERTYTYPES_1) then
+      if LProperty.PropertyType.TypeKind in [tkRecord] then // Nullable ou TBlob
       begin
-        if not FModifiedFields.ContainsKey(AKey) then
-          FModifiedFields.Add(AKey, TList<string>.Create);
-        /// <summary>
-        /// Se o tipo da property for tkRecord provavelmente tem Nullable nela
-        /// Se não for tkRecord entra no ELSE e pega o valor de forma direta
-        /// </summary>
-        if LProperty.PropertyType.TypeKind in [tkRecord] then // Nullable ou TBlob
+        if LProperty.IsBlob then
         begin
-          if LProperty.IsBlob then
-          begin
-            if LProperty.GetValue(AObjectSource).AsType<TBlob>.ToSize <>
-               LProperty.GetValue(AObjectUpdate).AsType<TBlob>.ToSize then
-            begin
-              LColumn := LProperty.GetColumn;
-              if LColumn <> nil then
-                FModifiedFields.Items[AKey].Add(Column(LColumn).ColumnName);
-            end;
-          end
-          else
-          begin
-            if LProperty.GetNullableValue(AObjectSource).AsType<Variant> <>
-               LProperty.GetNullableValue(AObjectUpdate).AsType<Variant> then
-            begin
-              LColumn := LProperty.GetColumn;
-              if LColumn <> nil then
-                FModifiedFields.Items[AKey].Add(Column(LColumn).ColumnName);
-            end;
-          end;
-        end
-        else
-        begin
-          if LProperty.GetValue(AObjectSource).AsType<Variant> <>
-             LProperty.GetValue(AObjectUpdate).AsType<Variant> then
+          if LProperty.GetValue(AObjectSource).AsType<TBlob>.ToSize <>
+             LProperty.GetValue(AObjectUpdate).AsType<TBlob>.ToSize then
           begin
             LColumn := LProperty.GetColumn;
             if LColumn <> nil then
               FModifiedFields.Items[AKey].Add(Column(LColumn).ColumnName);
           end;
+        end
+        else
+        begin
+          if LProperty.GetNullableValue(AObjectSource).AsType<Variant> <>
+             LProperty.GetNullableValue(AObjectUpdate).AsType<Variant> then
+          begin
+            LColumn := LProperty.GetColumn;
+            if LColumn <> nil then
+              FModifiedFields.Items[AKey].Add(Column(LColumn).ColumnName);
+          end;
+        end;
+      end
+      else
+      begin
+        if LProperty.GetValue(AObjectSource).AsType<Variant> <>
+           LProperty.GetValue(AObjectUpdate).AsType<Variant> then
+        begin
+          LColumn := LProperty.GetColumn;
+          if LColumn <> nil then
+            FModifiedFields.Items[AKey].Add(Column(LColumn).ColumnName);
         end;
       end;
     end;
@@ -241,36 +238,34 @@ end;
 function TRESTObjectSetSession.NextPacketList(const AWhere, AOrderBy: String;
   const APageSize, APageNext: Integer): TObjectList<TObject>;
 begin
+  Result := nil;
   if not FManager.FetchingRecords then
-    Result := FManager.NextPacketList(AWhere, AOrderBy, APageSize, APageNext)
-  else
-    Result := nil;
+    Result := FManager.NextPacketList(AWhere, AOrderBy, APageSize, APageNext);
 end;
 
 function TRESTObjectSetSession.NextPacketList: TObjectList<TObject>;
 begin
-  if not FManager.FetchingRecords then
-  begin
-    FPageNext := FPageNext + FPageSize;
-    if FFindWhereUsed then
-      Result := FManager.NextPacketList(FWhere, FOrderBy, FPageSize, FPageNext)
-    else
-      Result := FManager.NextPacketList(FPageSize, FPageNext);
-  end
+  Result := nil;
+  if FManager.FetchingRecords then
+    Exit;
+
+  FPageNext := FPageNext + FPageSize;
+  if FFindWhereUsed then
+    Result := FManager.NextPacketList(FWhere, FOrderBy, FPageSize, FPageNext)
   else
-    Result := nil;
+    Result := FManager.NextPacketList(FPageSize, FPageNext);
 end;
 
 procedure TRESTObjectSetSession.NextPacketList(const AObjectList: TObjectList<TObject>);
 begin
-  if not FManager.FetchingRecords then
-  begin
-    FPageNext := FPageNext + FPageSize;
-    if FFindWhereUsed then
-      FManager.NextPacketList(AObjectList, FWhere, FOrderBy, FPageSize, FPageNext)
-    else
-      FManager.NextPacketList(AObjectList, FPageSize, FPageNext);
-  end;
+  if FManager.FetchingRecords then
+    Exit;
+
+  FPageNext := FPageNext + FPageSize;
+  if FFindWhereUsed then
+    FManager.NextPacketList(AObjectList, FWhere, FOrderBy, FPageSize, FPageNext)
+  else
+    FManager.NextPacketList(AObjectList, FPageSize, FPageNext);
 end;
 
 function TRESTObjectSetSession.ResultParams: TParams;
@@ -291,10 +286,9 @@ end;
 function TRESTObjectSetSession.NextPacketList(const APageSize,
   APageNext: Integer): TObjectList<TObject>;
 begin
+  Result := nil;
   if not FManager.FetchingRecords then
-    Result := FManager.NextPacketList(APageSize, APageNext)
-  else
-    Result := nil;
+    Result := FManager.NextPacketList(APageSize, APageNext);
 end;
 
 end.

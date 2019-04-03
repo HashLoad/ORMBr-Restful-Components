@@ -132,7 +132,7 @@ begin
   FObjectInternal := AClassType.Create;
   FObjectInternal.MethodCall('Create', []);
   /// <summary>
-  /// Fabrica de comandos SQL
+  ///   Fabrica de comandos SQL
   /// </summary>
   FDMLCommandFactory := TDMLCommandFactory.Create(FObjectInternal,
                                                   AConnection,
@@ -175,26 +175,26 @@ var
   LAssociation: TAssociationMapping;
 begin
   /// <summary>
-  /// Se o driver selecionado for do tipo de banco NoSQL,
-  /// o atributo Association deve ser ignorado.
+  ///   Se o driver selecionado for do tipo de banco NoSQL,
+  ///   o atributo Association deve ser ignorado.
   /// </summary>
-  if FConnection.GetDriverName <> dnMongoDB then
+  if FConnection.GetDriverName = dnMongoDB then
+    Exit;
+
+  LAssociationList := FExplorer.GetMappingAssociation(AObject.ClassType);
+  if LAssociationList = nil then
+    Exit;
+
+  for LAssociation in LAssociationList do
   begin
-    LAssociationList := FExplorer.GetMappingAssociation(AObject.ClassType);
-    if LAssociationList <> nil then
-    begin
-      for LAssociation in LAssociationList do
-      begin
-         if not LAssociation.Lazy then
-         begin
-           if LAssociation.Multiplicity in [OneToOne, ManyToOne] then
-              ExecuteOneToOne(AObject, LAssociation.PropertyRtti, LAssociation)
-           else
-           if LAssociation.Multiplicity in [OneToMany, ManyToMany] then
-              ExecuteOneToMany(AObject, LAssociation.PropertyRtti, LAssociation);
-         end;
-      end;
-    end;
+     if LAssociation.Lazy then
+       Continue;
+
+     if LAssociation.Multiplicity in [OneToOne, ManyToOne] then
+        ExecuteOneToOne(AObject, LAssociation.PropertyRtti, LAssociation)
+     else
+     if LAssociation.Multiplicity in [OneToMany, ManyToMany] then
+        ExecuteOneToMany(AObject, LAssociation.PropertyRtti, LAssociation);
   end;
 end;
 
@@ -204,29 +204,29 @@ var
   LAssociation: TAssociationMapping;
 begin
   /// <summary>
-  /// Se o driver selecionado for do tipo de banco NoSQL,
-  /// o atributo Association deve ser ignorado.
+  ///   Se o driver selecionado for do tipo de banco NoSQL,
+  ///   o atributo Association deve ser ignorado.
   /// </summary>
-  if FConnection.GetDriverName <> dnMongoDB then
+  if FConnection.GetDriverName = dnMongoDB then
+    Exit;
+
+  LAssociationList := FExplorer.GetMappingAssociation(AOwner.ClassType);
+  if LAssociationList = nil then
+    Exit;
+
+  for LAssociation in LAssociationList do
   begin
-    LAssociationList := FExplorer.GetMappingAssociation(AOwner.ClassType);
-    if LAssociationList <> nil then
-    begin
-      for LAssociation in LAssociationList do
-      begin
-         if LAssociation.Lazy then
-         begin
-           if Pos(LAssociation.ClassNameRef, AObject.ClassName) > 0 then
-           begin
-             if LAssociation.Multiplicity in [OneToOne, ManyToOne] then
-                ExecuteOneToOne(AOwner, LAssociation.PropertyRtti, LAssociation)
-             else
-             if LAssociation.Multiplicity in [OneToMany, ManyToMany] then
-                ExecuteOneToMany(AOwner, LAssociation.PropertyRtti, LAssociation);
-           end;
-         end;
-      end;
-    end;
+     if not LAssociation.Lazy then
+       Continue;
+
+     if Pos(LAssociation.ClassNameRef, AObject.ClassName) = 0 then
+       Continue;
+
+     if LAssociation.Multiplicity in [OneToOne, ManyToOne] then
+        ExecuteOneToOne(AOwner, LAssociation.PropertyRtti, LAssociation)
+     else
+     if LAssociation.Multiplicity in [OneToMany, ManyToMany] then
+        ExecuteOneToMany(AOwner, LAssociation.PropertyRtti, LAssociation);
   end;
 end;
 
@@ -276,22 +276,22 @@ begin
     while LResultSet.NotEof do
     begin
       /// <summary>
-      /// Instancia o objeto do tipo definido na lista
+      ///   Instancia o objeto do tipo definido na lista
       /// </summary>
       LObjectCreate := LPropertyType.AsInstance.MetaclassType.Create;
       LObjectCreate.MethodCall('Create', []);
       /// <summary>
-      /// Popula o objeto com os dados do ResultSet
+      ///   Popula o objeto com os dados do ResultSet
       /// </summary>
       TBindObject
         .GetInstance
           .SetFieldToProperty(LResultSet, LObjectCreate);
       /// <summary>
-      /// Alimenta registros das associações existentes 1:1 ou 1:N
+      ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
       FillAssociation(LObjectCreate);
       /// <summary>
-      /// Adiciona o objeto a lista
+      ///   Adiciona o objeto a lista
       /// </summary>
       LObjectList := AProperty.GetNullableValue(AObject).AsObject;
       if LObjectList <> nil then
@@ -346,7 +346,7 @@ begin
         .GetInstance
           .SetFieldToProperty(LResultSet, LObjectList.Last);
       /// <summary>
-      /// Alimenta registros das associações existentes 1:1 ou 1:N
+      ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
       FillAssociation(LObjectList.Last);
     end;
@@ -389,7 +389,7 @@ begin
         .GetInstance
           .SetFieldToProperty(LResultSet, LObjectList.Last);
       /// <summary>
-      /// Alimenta registros das associações existentes 1:1 ou 1:N
+      ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
       FillAssociation(LObjectList.Last);
     end;
@@ -416,7 +416,7 @@ begin
         .GetInstance
           .SetFieldToProperty(LResultSet, AObjectList.Last);
       /// <summary>
-      /// Alimenta registros das associações existentes 1:1 ou 1:N
+      ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
       FillAssociation(AObjectList.Last);
     end;
@@ -442,7 +442,7 @@ begin
         .GetInstance
           .SetFieldToProperty(LResultSet, AObjectList.Last);
       /// <summary>
-      /// Alimenta registros das associações existentes 1:1 ou 1:N
+      ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
       FillAssociation(AObjectList.Last);
     end;
@@ -470,7 +470,7 @@ begin
         .GetInstance
           .SetFieldToProperty(LResultSet, LObjectList.Last);
       /// <summary>
-      /// Alimenta registros das associações existentes 1:1 ou 1:N
+      ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
       FillAssociation(LObjectList.Last);
     end;
@@ -521,7 +521,7 @@ begin
         .GetInstance
           .SetFieldToProperty(LResultSet, Result.Items[Result.Add(LObject)]);
       /// <summary>
-      /// Alimenta registros das associações existentes 1:1 ou 1:N
+      ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
       FillAssociation(Result.Items[Result.Count -1]);
     end;
@@ -549,7 +549,7 @@ begin
         .GetInstance
           .SetFieldToProperty(LResultSet, Result);
       /// <summary>
-      /// Alimenta registros das associações existentes 1:1 ou 1:N
+      ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
       FillAssociation(Result);
     end
@@ -575,7 +575,7 @@ begin
         .GetInstance
           .SetFieldToProperty(LResultSet, LObject);
       /// <summary>
-      /// Alimenta registros das associações existentes 1:1 ou 1:N
+      ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
       FillAssociation(LObject);
       Result := LObject;
