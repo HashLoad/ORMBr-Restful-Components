@@ -242,6 +242,7 @@ begin
   finally
     FResponseString := '';
     FParams.Clear;
+    FBodyParams.Clear;
     FQueryParams.Clear;
   end;
 end;

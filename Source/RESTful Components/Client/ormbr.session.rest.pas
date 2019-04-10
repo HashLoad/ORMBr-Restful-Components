@@ -460,7 +460,7 @@ begin
                                  rtPOST,
                                  procedure
                                  begin
-                                   FConnection.AddParam(LJSON);
+                                   FConnection.AddBodyParam(LJSON);
                                  end);
   FResultParams.Clear;
   /// <summary>

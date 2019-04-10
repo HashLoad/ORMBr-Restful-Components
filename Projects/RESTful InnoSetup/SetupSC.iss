@@ -4,7 +4,7 @@
 
 #define MyAppName "ORMBr - REST Server/Client Components"
 #define MyAppExeName "ORMBrInstall.exe"
-#define VersionApp "1.5"
+#define VersionApp "1.5.1"
 #define CopyRight "Copyright (C) 2018-2019 Isaque Pinhero, Inc."
 #define URL "https://www.ormbr.com.br"
 #define ProductName "ORMBr RESTful Components"
