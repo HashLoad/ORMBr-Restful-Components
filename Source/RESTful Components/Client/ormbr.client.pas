@@ -32,6 +32,12 @@ type
   TAfterCommandEvent = procedure (AStatusCode: Integer;
                               var AResponseString: String;
                                   ARequestMethod: String) of object;
+  TErrorCommandEvent = procedure (const AURLBase: String;
+                                  const AResource: String;
+                                  const ASubResource: String;
+                                  const ARequestMethod: String;
+                                  const AMessage: String;
+                                  const AResponseCode: Integer) of object;
 
   TRestProtocol = (Http, Https);
 
@@ -68,6 +74,7 @@ type
     function GetProtocol: TRestProtocol;
     procedure SetProtocol(const Value: TRestProtocol);
   protected
+    FErrorCommand: TErrorCommandEvent;
     FProtocol: TRestProtocol;
     FParams: TParams;
     FBodyParams: TParams;
@@ -123,6 +130,7 @@ type
     property BaseURL: String read GetBaseURL;
     property BeforeCommand: TBeforeCommandEvent read FBeforeCommand write FBeforeCommand;
     property AfterCommand: TAfterCommandEvent read FAfterCommand write FAfterCommand;
+    property OnErrorCommand: TErrorCommandEvent read FErrorCommand write FErrorCommand;
   end;
 
 implementation
