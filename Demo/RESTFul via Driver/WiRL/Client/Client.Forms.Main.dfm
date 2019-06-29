@@ -299,6 +299,7 @@ object Form3: TForm3
   object RESTClientWiRL1: TRESTClientWiRL
     ProxyParams.BasicAuthentication = False
     ProxyParams.ProxyPort = 0
+    Authenticator.AuthenticatorType = atNoAuth
     Protocol = Http
     Host = 'localhost'
     Port = 211
@@ -306,10 +307,10 @@ object Form3: TForm3
     MethodGETWhere = 'selectwhere'
     MethodGETNextPacket = 'nextpacket'
     MethodGETNextPacketWhere = 'nextpacketwhere'
-    APIContext = 'app/ormbr'
+    APIContext = 'app'
     RESTContext = 'rest'
     MethodToken = 'token'
-    ORMBrServerUse = True
+    ORMBrServerUse = False
     Left = 86
     Top = 48
   end

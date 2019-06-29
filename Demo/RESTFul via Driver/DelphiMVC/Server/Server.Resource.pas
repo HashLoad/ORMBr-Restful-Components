@@ -98,7 +98,7 @@ type
 implementation
 
 uses
-  Server.Data.Module;
+  Server.Data.Module, IdURI;
 
 procedure TMasterController.delete(AID: Integer);
 var

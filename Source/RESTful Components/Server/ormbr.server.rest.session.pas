@@ -27,6 +27,7 @@ uses
   ormbr.core.consts,
   ormbr.rtti.helper,
   ormbr.types.blob,
+  ormbr.mapping.classes,
   ormbr.mapping.attributes,
   ormbr.factory.interfaces,
   ormbr.server.rest.manager;
@@ -37,7 +38,7 @@ type
     FConnection: IDBConnection;
     FPageSize: Integer;
     FPageNext: Integer;
-    FModifiedFields: TDictionary<string, TList<string>>;
+    FModifiedFields: TDictionary<string, TDictionary<string, string>>;
     FDeleteList: TObjectList<TObject>;
     FManager: TRESTObjectManager;
     FResultParams: TParams;
@@ -49,7 +50,7 @@ type
       const APageSize: Integer = -1); virtual;
     destructor Destroy; override;
     function ExistSequence: Boolean; virtual;
-    function ModifiedFields: TDictionary<string, TList<string>>; virtual;
+    function ModifiedFields: TDictionary<string, TDictionary<string, string>>; virtual;
     /// <summary>
     /// ObjectSet
     /// </summary>
@@ -81,6 +82,7 @@ type
 implementation
 
 uses
+  ormbr.mapping.explorer,
   ormbr.objects.helper;
 
 { TRESTObjectSetSession<M> }
@@ -88,7 +90,7 @@ constructor TRESTObjectSetSession.Create(const AConnection: IDBConnection;
   const AClassType: TClass; const APageSize: Integer = -1);
 begin
   FPageSize := APageSize;
-  FModifiedFields := TObjectDictionary<string, TList<string>>.Create([doOwnsValues]);
+  FModifiedFields := TObjectDictionary<string, TDictionary<string, string>>.Create([doOwnsValues]);
   FDeleteList := TObjectList<TObject>.Create;
   FResultParams := TParams.Create;
   FManager := TRESTObjectManager.Create(Self, AConnection, AClassType, APageSize);
@@ -97,7 +99,7 @@ begin
   /// </summary>
   FModifiedFields.Clear;
   FModifiedFields.TrimExcess;
-  FModifiedFields.Add(AClassType.ClassName, TList<string>.Create);
+  FModifiedFields.Add(AClassType.ClassName, TDictionary<string, string>.Create);
 end;
 
 destructor TRESTObjectSetSession.Destroy;
@@ -112,7 +114,7 @@ begin
   inherited;
 end;
 
-function TRESTObjectSetSession.ModifiedFields: TDictionary<string, TList<string>>;
+function TRESTObjectSetSession.ModifiedFields: TDictionary<string, TDictionary<string, string>>;
 begin
   Result := FModifiedFields;
 end;
@@ -176,62 +178,53 @@ end;
 procedure TRESTObjectSetSession.ModifyFieldsCompare(const AKey: string;
   const AObjectSource, AObjectUpdate: TObject);
 var
-  LRttiType: TRttiType;
+  LColumn: TColumnMapping;
+  LColumns: TColumnMappingList;
   LProperty: TRttiProperty;
-  LColumn: TCustomAttribute;
 begin
-  AObjectSource.GetType(LRttiType);
-  try
-    for LProperty in LRttiType.GetProperties do
+  LColumns := TMappingExplorer
+                .GetInstance
+                  .GetMappingColumn(AObjectSource.ClassType);
+  for LColumn in LColumns do
+  begin
+    LProperty := LColumn.ColumnProperty;
+    if LProperty.IsNoUpdate then
+      Continue;
+    if LProperty.PropertyType.TypeKind in cPROPERTYTYPES_1 then
+      Continue;
+    if not FModifiedFields.ContainsKey(AKey) then
+      FModifiedFields.Add(AKey, TDictionary<string, string>.Create);
+    /// <summary>
+    ///   Se o tipo da property for tkRecord provavelmente tem Nullable nela
+    ///   Se não for tkRecord entra no ELSE e pega o valor de forma direta
+    /// </summary>
+    if LProperty.PropertyType.TypeKind in [tkRecord] then // Nullable ou TBlob
     begin
-      if LProperty.IsNoUpdate then
-        Continue;
-
-      if LProperty.PropertyType.TypeKind in cPROPERTYTYPES_1 then
-        Continue;
-
-      if not FModifiedFields.ContainsKey(AKey) then
-        FModifiedFields.Add(AKey, TList<string>.Create);
-      /// <summary>
-      ///   Se o tipo da property for tkRecord provavelmente tem Nullable nela
-      ///   Se não for tkRecord entra no ELSE e pega o valor de forma direta
-      /// </summary>
-      if LProperty.PropertyType.TypeKind in [tkRecord] then // Nullable ou TBlob
+      if LProperty.IsBlob then
       begin
-        if LProperty.IsBlob then
+        if LProperty.GetValue(AObjectSource).AsType<TBlob>.ToSize <>
+           LProperty.GetValue(AObjectUpdate).AsType<TBlob>.ToSize then
         begin
-          if LProperty.GetValue(AObjectSource).AsType<TBlob>.ToSize <>
-             LProperty.GetValue(AObjectUpdate).AsType<TBlob>.ToSize then
-          begin
-            LColumn := LProperty.GetColumn;
-            if LColumn <> nil then
-              FModifiedFields.Items[AKey].Add(Column(LColumn).ColumnName);
-          end;
-        end
-        else
-        begin
-          if LProperty.GetNullableValue(AObjectSource).AsType<Variant> <>
-             LProperty.GetNullableValue(AObjectUpdate).AsType<Variant> then
-          begin
-            LColumn := LProperty.GetColumn;
-            if LColumn <> nil then
-              FModifiedFields.Items[AKey].Add(Column(LColumn).ColumnName);
-          end;
+          FModifiedFields.Items[AKey].Add(LProperty.Name, LColumn.ColumnName);
         end;
       end
       else
       begin
-        if LProperty.GetValue(AObjectSource).AsType<Variant> <>
-           LProperty.GetValue(AObjectUpdate).AsType<Variant> then
+        if LProperty.GetNullableValue(AObjectSource).AsType<Variant> <>
+           LProperty.GetNullableValue(AObjectUpdate).AsType<Variant> then
         begin
-          LColumn := LProperty.GetColumn;
-          if LColumn <> nil then
-            FModifiedFields.Items[AKey].Add(Column(LColumn).ColumnName);
+          FModifiedFields.Items[AKey].Add(LProperty.Name, LColumn.ColumnName);
         end;
       end;
+    end
+    else
+    begin
+      if LProperty.GetValue(AObjectSource).AsType<Variant> <>
+         LProperty.GetValue(AObjectUpdate).AsType<Variant> then
+      begin
+        FModifiedFields.Items[AKey].Add(LProperty.Name, LColumn.ColumnName);
+      end;
     end;
-  except
-    raise;
   end;
 end;
 

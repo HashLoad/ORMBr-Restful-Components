@@ -5,7 +5,7 @@
                           All rights reserved.
 }
 
-{ 
+{
   @abstract(REST Componentes)
   @created(20 Jun 2018)
   @author(Isaque Pinheiro <isaquepsp@gmail.com>)
@@ -14,7 +14,7 @@
   @abstract(Telagram : https://t.me/ormbr)
 }
 
-unit ormbr.server.wirl;
+unit ormbr.server.dwcore;
 
 interface
 
@@ -22,19 +22,18 @@ uses
   Classes,
   SysUtils,
   ormbr.rest.classes,
+  uRESTDWBase,
   /// ORMBr Conexão
-  ormbr.factory.interfaces,
-  /// WiRL
-  WiRL.Core.Engine;
+  ormbr.factory.interfaces;
 
 type
-  TRESTServerWiRL = class(TORMBrComponent)
+  TRESTServerDWCore = class(TORMBrComponent)
   private
     class var
     FConnection: IDBConnection;
   private
-    FWiRLEngine: TWiRLEngine;
-    procedure SetWiRLEngine(const Value: TWiRLEngine);
+    FRESTServicePooler: TRESTServicePooler;
+    procedure SetRESTServicePooler(const Value: TRESTServicePooler);
     procedure SetConnection(const AConnection: IDBConnection);
     procedure AddResource;
   public
@@ -42,7 +41,7 @@ type
     destructor Destroy; override;
     class function GetConnection: IDBConnection;
     property Connection: IDBConnection read GetConnection write SetConnection;
-    property WiRLEngine: TWiRLEngine read FWiRLEngine write SetWiRLEngine;
+    property RESTServicePooler: TRESTServicePooler read FRESTServicePooler write SetRESTServicePooler;
   published
 
   end;
@@ -50,48 +49,41 @@ type
 implementation
 
 uses
-  ormbr.server.resource.wirl;
+  ormbr.server.resource.dwcore;
 
-{ TRESTServerWiRL }
+{ TRESTServerDWCore }
 
-procedure TRESTServerWiRL.AddResource;
+procedure TRESTServerDWCore.AddResource;
 begin
-  if FWiRLEngine = nil then
-    Exit;
-  if FWiRLEngine.Applications.Count = 0 then
-    Exit;
-  FWiRLEngine.Applications
-             .Items[0]
-             .Application
-             .SetResources('ormbr.server.resource.wirl.TAppResource');
+  FRESTServicePooler.ServerMethodClass := TServerMethods;
 end;
 
-constructor TRESTServerWiRL.Create(AOwner: TComponent);
+constructor TRESTServerDWCore.Create(AOwner: TComponent);
 begin
   inherited;
 end;
 
-destructor TRESTServerWiRL.Destroy;
+destructor TRESTServerDWCore.Destroy;
 begin
-  FWiRLEngine := nil;
+  FRESTServicePooler := nil;
   inherited;
 end;
 
-class function TRESTServerWiRL.GetConnection: IDBConnection;
+class function TRESTServerDWCore.GetConnection: IDBConnection;
 begin
   Result := FConnection;
 end;
 
-procedure TRESTServerWiRL.SetConnection(const AConnection: IDBConnection);
+procedure TRESTServerDWCore.SetConnection(const AConnection: IDBConnection);
 begin
   FConnection := AConnection;
 end;
 
-procedure TRESTServerWiRL.SetWiRLEngine(const Value: TWiRLEngine);
+procedure TRESTServerDWCore.SetRESTServicePooler(const Value: TRESTServicePooler);
 begin
   /// <summary> Atualiza o valor da VAR </summary>
-  FWiRLEngine := Value;
-  /// <summary> Adiciona a App REST no WiRL </summary>
+  FRESTServicePooler := Value;
+  /// <summary> Adiciona a App REST no DWCore </summary>
   AddResource;
 end;
 

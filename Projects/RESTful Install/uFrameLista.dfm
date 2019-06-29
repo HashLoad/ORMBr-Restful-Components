@@ -191,7 +191,7 @@ object framePacotes: TframePacotes
       Height = 14
       Shape = bsTopLine
     end
-    object Label7: TLabel
+    object RestClientDatasnap_Label: TLabel
       Left = 308
       Top = 56
       Width = 151
@@ -204,8 +204,9 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      Visible = False
     end
-    object Label8: TLabel
+    object RestClientWiRL_Label: TLabel
       Left = 308
       Top = 79
       Width = 129
@@ -218,8 +219,9 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      Visible = False
     end
-    object Label9: TLabel
+    object RestClientMARS_Label: TLabel
       Left = 308
       Top = 102
       Width = 133
@@ -232,8 +234,9 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      Visible = False
     end
-    object Label10: TLabel
+    object RestClientDelphiMVC_Label: TLabel
       Left = 308
       Top = 125
       Width = 214
@@ -246,8 +249,9 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      Visible = False
     end
-    object Label11: TLabel
+    object RestClientDWCore_Label: TLabel
       Left = 308
       Top = 148
       Width = 148
@@ -260,6 +264,7 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      Visible = False
     end
     object Label1: TLabel
       Left = 308
@@ -337,6 +342,7 @@ object framePacotes: TframePacotes
       Height = 17
       Caption = 'REST Client Component (DataSnap)'
       TabOrder = 1
+      Visible = False
     end
     object RestClientWiRL_dpk: TCheckBox
       Left = 12
@@ -345,6 +351,7 @@ object framePacotes: TframePacotes
       Height = 17
       Caption = 'REST Client Component (WiRL)'
       TabOrder = 2
+      Visible = False
     end
     object RestClientMARS_dpk: TCheckBox
       Left = 12
@@ -353,6 +360,7 @@ object framePacotes: TframePacotes
       Height = 17
       Caption = 'REST Client Component (MARS)'
       TabOrder = 3
+      Visible = False
     end
     object RestClientDelphiMVC_dpk: TCheckBox
       Left = 12
@@ -361,6 +369,7 @@ object framePacotes: TframePacotes
       Height = 17
       Caption = 'REST Client Component (Delphi MVC Framework)'
       TabOrder = 4
+      Visible = False
     end
     object RestClientDWCore_dpk: TCheckBox
       Left = 12
@@ -369,6 +378,7 @@ object framePacotes: TframePacotes
       Height = 17
       Caption = 'REST Client Component (DW Core)'
       TabOrder = 5
+      Visible = False
     end
     object RestCoreClient_dpk: TCheckBox
       Left = 12

@@ -32,8 +32,8 @@ type
   private
     FPath: String;
     FQuery: String;
-    FPathTokens: TArray<string>;
-    FQueryTokens: TDictionary<string, string>;
+    FPathTokens: TArray<String>;
+    FQueryTokens: TDictionary<String, String>;
     FResourceName: String;
     FID: Variant;
     function GetSelect: String;
@@ -45,10 +45,10 @@ type
     function GetTop: Integer;
     function GetCount: Boolean;
     function GetResourceName: String;
-    function ParseOperator(AParams: String): string;
-    function ParseOperatorReverse(AParams: String): string;
-    function ParsePathTokens(const APath: string): TArray<string>;
-    function SplitString(const AValue, ADelimiters: string): TStringDynArray;
+    function ParseOperator(AParams: String): String;
+    function ParseOperatorReverse(AParams: String): String;
+    function ParsePathTokens(const APath: String): TArray<String>;
+    function SplitString(const AValue, ADelimiters: String): TStringDynArray;
     procedure ParseClassNameAndID(const AValue: String);
     procedure ParseQueryTokens;
   protected
@@ -89,7 +89,7 @@ implementation
 
 constructor TRESTQuery.Create;
 begin
-  FQueryTokens := TDictionary<string, string>.Create;
+  FQueryTokens := TDictionary<String, String>.Create;
   FResourceName := '';
   FID := Null;
 end;

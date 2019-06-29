@@ -166,13 +166,21 @@ begin
           except
             on E: Exception do
             begin
-              raise ERESTConnectionError
-                      .Create(FRESTClient.BaseURL,
+              if Assigned(FErrorCommand) then
+                FErrorCommand(GetBaseURL,
                               AResource,
                               ASubResource,
                               FRequestMethod,
-                              FRESTRequest.Response.Content,
-                              FRESTRequest.Response.StatusCode);
+                              E.Message,
+                              FRESTRequest.Response.StatusCode)
+              else
+                raise ERESTConnectionError
+                        .Create(FRESTClient.BaseURL,
+                                AResource,
+                                ASubResource,
+                                FRequestMethod,
+                                FRESTRequest.Response.Content,
+                                FRESTRequest.Response.StatusCode);
             end;
           end;
         end;
@@ -187,13 +195,21 @@ begin
           except
             on E: Exception do
             begin
-              raise ERESTConnectionError
-                      .Create(FRESTClient.BaseURL,
+              if Assigned(FErrorCommand) then
+                FErrorCommand(GetBaseURL,
                               AResource,
                               ASubResource,
                               FRequestMethod,
-                              FRESTRequest.Response.Content,
-                              FRESTRequest.Response.StatusCode);
+                              E.Message,
+                              FRESTRequest.Response.StatusCode)
+              else
+                raise ERESTConnectionError
+                        .Create(FRESTClient.BaseURL,
+                                AResource,
+                                ASubResource,
+                                FRequestMethod,
+                                FRESTRequest.Response.Content,
+                                FRESTRequest.Response.StatusCode);
             end;
           end;
         end;
@@ -218,13 +234,21 @@ begin
           except
             on E: Exception do
             begin
-              raise ERESTConnectionError
-                      .Create(FRESTClient.BaseURL,
+              if Assigned(FErrorCommand) then
+                FErrorCommand(GetBaseURL,
                               AResource,
                               ASubResource,
                               FRequestMethod,
-                              FRESTRequest.Response.Content,
-                              FRESTRequest.Response.StatusCode);
+                              E.Message,
+                              FRESTRequest.Response.StatusCode)
+              else
+                raise ERESTConnectionError
+                        .Create(FRESTClient.BaseURL,
+                                AResource,
+                                ASubResource,
+                                FRequestMethod,
+                                FRESTRequest.Response.Content,
+                                FRESTRequest.Response.StatusCode);
             end;
           end;
         end;
@@ -250,13 +274,21 @@ begin
           except
             on E: Exception do
             begin
-              raise ERESTConnectionError
-                      .Create(FRESTClient.BaseURL,
+              if Assigned(FErrorCommand) then
+                FErrorCommand(GetBaseURL,
                               AResource,
                               ASubResource,
                               FRequestMethod,
-                              FRESTRequest.Response.Content,
-                              FRESTRequest.Response.StatusCode);
+                              E.Message,
+                              FRESTRequest.Response.StatusCode)
+              else
+                raise ERESTConnectionError
+                        .Create(FRESTClient.BaseURL,
+                                AResource,
+                                ASubResource,
+                                FRequestMethod,
+                                FRESTRequest.Response.Content,
+                                FRESTRequest.Response.StatusCode);
             end;
           end;
         end;
@@ -276,6 +308,7 @@ begin
     FResponseString := '';
     FParams.Clear;
     FQueryParams.Clear;
+    FBodyParams.Clear;
   end;
 end;
 

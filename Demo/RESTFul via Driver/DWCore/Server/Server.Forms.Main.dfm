@@ -1065,8 +1065,11 @@ object ServerForm: TServerForm
   end
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'DriverID=SQLite'
-      'Database=..\..\..\Data\Database\database.db3')
+      'Database=D:\ORMBr\Demo\Data\Database\database.fdb'
+      'User_Name=SYSDBA'
+      'Password=masterkey'
+      'CharacterSet=WIN1252'
+      'DriverID=FB')
     LoginPrompt = False
     Left = 58
     Top = 144

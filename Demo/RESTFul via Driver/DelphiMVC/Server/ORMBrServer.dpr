@@ -103,7 +103,6 @@ begin
 end;
 
 begin
-  ReportMemoryLeaksOnShutdown := DebugHook <> 0;
   IsMultiThread := True;
   try
     if WebRequestHandler <> nil then

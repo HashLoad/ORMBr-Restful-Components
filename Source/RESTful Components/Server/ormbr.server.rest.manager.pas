@@ -72,7 +72,7 @@ type
     ///   Procedures
     /// </summary>
     procedure InsertInternal(const AObject: TObject);
-    procedure UpdateInternal(const AObject: TObject; const AModifiedFields: TList<string>);
+    procedure UpdateInternal(const AObject: TObject; const AModifiedFields: TDictionary<string, string>);
     procedure DeleteInternal(const AObject: TObject);
     procedure LoadLazy(const AOwner, AObject: TObject);
     procedure NextPacketList(const AObjectList: TObjectList<TObject>;
@@ -130,7 +130,6 @@ begin
   FConnection := AConnection;
   FExplorer := TMappingExplorer.GetInstance;
   FObjectInternal := AClassType.Create;
-  FObjectInternal.MethodCall('Create', []);
   /// <summary>
   ///   Fabrica de comandos SQL
   /// </summary>
@@ -486,7 +485,7 @@ begin
 end;
 
 procedure TRESTObjectManager.UpdateInternal(const AObject: TObject;
-  const AModifiedFields: TList<string>);
+  const AModifiedFields: TDictionary<string, string>);
 begin
   FDMLCommandFactory.GeneratorUpdate(AObject, AModifiedFields);
 end;

@@ -52,12 +52,6 @@
     <Transaction>2018/06/26 17:32:40.000.216,=D:\ORMBr\Source\Drivers RESTFul\Component Client\Images\wirl.bmp</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
-    <File Path="Images"/>
-    <File Path="Images\wirl.bmp"/>
-    <File Path="ormbr.client.wirl.pas"/>
-    <File Path="ormbr.client.wirl.reg.pas"/>
-    <File Path="ormbr.driver.rest.wirl.pas"/>
-    <File Path="ormbr.factory.rest.wirl.pas"/>
     <File Path="dbrtl.dcp"/>
     <File Path="IndyCore.dcp"/>
     <File Path="IndyProtocols.dcp"/>
@@ -65,5 +59,11 @@
     <File Path="RestCoreClient.dcp"/>
     <File Path="rtl.dcp"/>
     <File Path="WiRLRunTime.dcp"/>
+    <File Path="Images"/>
+    <File Path="Images\wirl.bmp"/>
+    <File Path="ormbr.client.wirl.pas"/>
+    <File Path="ormbr.client.wirl.reg.pas"/>
+    <File Path="ormbr.driver.rest.wirl.pas"/>
+    <File Path="ormbr.factory.rest.wirl.pas"/>
   </ProjectSortOrder>
 </BorlandProject>

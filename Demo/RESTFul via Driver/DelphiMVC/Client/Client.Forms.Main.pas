@@ -107,13 +107,14 @@ begin
 end;
 
 procedure TForm3.FormCreate(Sender: TObject);
-//var
-//  LMaster: TMaster;
+var
+  LMaster: TMaster;
+  LMasterList: TObjectList<TMaster>;
 begin
   RESTClientDelphiMVC1.AsConnection.SetCommandMonitor(TCommandMonitor.GetInstance);
 
   oManager := TManagerDataSet.Create(RESTClientDelphiMVC1.AsConnection);
-  oManager.AddAdapter<Tmaster>(FDMaster, 10);
+  oManager.AddAdapter<Tmaster>(FDMaster, 2);
   oManager.AddAdapter<Tdetail, Tmaster>(FDDetail);
   oManager.AddAdapter<Tclient, Tmaster>(FDClient);
   oManager.AddAdapter<Tlookup>(FDLookup);
@@ -123,8 +124,34 @@ begin
                                             'lookup_description',
                                             'Descrição Lookup');
   oManager.Open<Tmaster>;
+//  oManager.OpenWhere<Tmaster>('master_id=22');
 
-//  oManager.FindWhere<Tmaster>('master_id=83');
+
+  /// <summary>
+  ///   Neste exemplo eu trago a lista para a VAR LMasterList, e passo a ser reponsável por ela.
+  /// </summary>
+  oManager.OwnerNestedList := False;
+  LMasterList := oManager.Find<Tmaster>;
+  try
+    if LMasterList.Count > 0 then
+    begin
+      for LMaster in LMasterList do
+      begin
+        if LMaster <> nil then
+          Memo1.Lines.Add(TORMBrJson.ObjectToJsonString(LMaster));
+      end;
+    end;
+  finally
+    LMasterList.Free;
+  end;
+
+
+  /// <summary>
+  ///   Neste exemplo o ORMBr preenche a lista interna dele e ele tem o controle de libera-la.
+  /// </summary>
+
+//  oManager.OwnerNestedList := True; // Valor já é Padrão
+//  oManager.Find<Tmaster>;
 //  if oManager.NestedList<Tmaster>.Count > 0 then
 //  begin
 //    oManager.NestedList<Tmaster>.First;

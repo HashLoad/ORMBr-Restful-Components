@@ -9,8 +9,7 @@ uses
   ormbr.model.master in '..\ormbr.model.master.pas',
   ormbr.client.wirl in '..\..\..\..\Source\RESTful Components\Client\ormbr.client.wirl.pas',
   ormbr.driver.rest.wirl in '..\..\..\..\Source\RESTful Components\Client\ormbr.driver.rest.wirl.pas',
-  ormbr.factory.rest.wirl in '..\..\..\..\Source\RESTful Components\Client\ormbr.factory.rest.wirl.pas',
-  ormbr.bind.source.interfaces in 'D:\ORMBr\Components\ormbr.bind.source.interfaces.pas';
+  ormbr.factory.rest.wirl in '..\..\..\..\Source\RESTful Components\Client\ormbr.factory.rest.wirl.pas';
 
 {$R *.res}
 

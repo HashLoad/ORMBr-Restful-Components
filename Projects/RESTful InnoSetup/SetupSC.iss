@@ -52,12 +52,12 @@ Source: "..\..\Source\RESTful Components\Client\*.groupproj"; DestDir: "{app}\So
 Source: "..\..\Source\RESTful Components\Client\Images\*.*"; DestDir: "{app}\Source\RESTful Components\Client\Images\"; Flags: ignoreversion
 Source: "..\..\Source\RESTful Components\Server\*.pas"; DestDir: "{app}\Source\RESTful Components\Server\"; Flags: ignoreversion
 Source: "..\..\Demo\RESTFul via Driver\Datasnap\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\Datasnap\"; Flags: ignoreversion
-Source: "..\..\Demo\RESTFul via Driver\Datasnap\Database\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\Datasnap\Database\"; Flags: ignoreversion
+Source: "..\..\Demo\Data\Database\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\Datasnap\Database\"; Flags: ignoreversion
 Source: "..\..\Demo\RESTFul via Driver\Datasnap\Client\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\Datasnap\Client\"; Flags: ignoreversion
 Source: "..\..\Demo\RESTFul via Driver\Datasnap\Server\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\Datasnap\Server\"; Flags: ignoreversion
-Source: "..\..\Demo\RESTFul via Driver\Delphi MVC\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\Delphi MVC\"; Flags: ignoreversion
-Source: "..\..\Demo\RESTFul via Driver\Delphi MVC\Client\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\Delphi MVC\Client\"; Flags: ignoreversion
-Source: "..\..\Demo\RESTFul via Driver\Delphi MVC\Server\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\Delphi MVC\Server\"; Flags: ignoreversion
+Source: "..\..\Demo\RESTFul via Driver\DelphiMVC\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\Delphi MVC\"; Flags: ignoreversion
+Source: "..\..\Demo\RESTFul via Driver\DelphiMVC\Client\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\Delphi MVC\Client\"; Flags: ignoreversion
+Source: "..\..\Demo\RESTFul via Driver\DelphiMVC\Server\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\Delphi MVC\Server\"; Flags: ignoreversion
 Source: "..\..\Demo\RESTFul via Driver\DWCore\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\DWCore\"; Flags: ignoreversion
 Source: "..\..\Demo\RESTFul via Driver\DWCore\Client\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\DWCore\Client\"; Flags: ignoreversion
 Source: "..\..\Demo\RESTFul via Driver\DWCore\Server\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\DWCore\Server\"; Flags: ignoreversion

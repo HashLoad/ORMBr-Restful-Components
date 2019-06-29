@@ -59,7 +59,7 @@ type
       const APageSize: Integer = -1);
     destructor Destroy; override;
     function ExistSequence: Boolean;
-    function ModifiedFields: TDictionary<string, TList<string>>; virtual;
+    function ModifiedFields: TDictionary<string, TDictionary<string, string>>; virtual;
     function Find: TObjectList<TObject>; overload; virtual;
     function Find(const AID: Integer): TObject; overload; virtual;
     function Find(const AID: string): TObject; overload; virtual;
@@ -379,7 +379,7 @@ begin
   FSession.LoadLazy(AOwner, AObject);
 end;
 
-function TRESTObjectSet.ModifiedFields: TDictionary<string, TList<string>>;
+function TRESTObjectSet.ModifiedFields: TDictionary<string, TDictionary<string, string>>;
 begin
   Result := FSession.ModifiedFields;
 end;

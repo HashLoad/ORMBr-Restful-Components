@@ -1,7 +1,7 @@
 object frmPrincipal: TfrmPrincipal
   Left = 359
   Top = 202
-  ActiveControl = wizPgInicio
+  ActiveControl = framePacotes1
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Instalador ORMBr - REST Client  Components'
@@ -24,7 +24,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 0
     Width = 718
     Height = 612
-    ActivePage = wizPgInicio
+    ActivePage = wizPgPacotes
     ButtonBarHeight = 42
     ButtonStart.Caption = 'Para o in'#237'cio'
     ButtonStart.NumGlyphs = 1
@@ -1069,10 +1069,6 @@ object frmPrincipal: TfrmPrincipal
       Color = clWhite
       Caption = 'Configura'#231#245'es'
       OnNextButtonClick = wizPgConfiguracaoNextButtonClick
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label4: TLabel
         Left = 17
         Top = 68
@@ -1223,10 +1219,6 @@ object frmPrincipal: TfrmPrincipal
       Header.Subtitle.Font.Name = 'Tahoma'
       Header.Subtitle.Font.Style = []
       Caption = 'Pacotes'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inline framePacotes1: TframePacotes
         Left = 0
         Top = 0
@@ -1277,6 +1269,21 @@ object frmPrincipal: TfrmPrincipal
             Enabled = False
             State = cbChecked
           end
+          inherited RestClientDatasnap_dpk: TCheckBox
+            Visible = True
+          end
+          inherited RestClientWiRL_dpk: TCheckBox
+            Visible = True
+          end
+          inherited RestClientMARS_dpk: TCheckBox
+            Visible = True
+          end
+          inherited RestClientDelphiMVC_dpk: TCheckBox
+            Visible = True
+          end
+          inherited RestClientDWCore_dpk: TCheckBox
+            Visible = True
+          end
         end
       end
     end
@@ -1305,10 +1312,6 @@ object frmPrincipal: TfrmPrincipal
       Caption = 'Instala'#231#227'o'
       OnEnterPage = wizPgInstalacaoEnterPage
       OnNextButtonClick = wizPgInstalacaoNextButtonClick
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object btnInstalar: TSpeedButton
         Left = 430
         Top = 463
@@ -1395,10 +1398,6 @@ object frmPrincipal: TfrmPrincipal
       VisibleButtons = [bkFinish]
       Color = clWhite
       Caption = 'Fim'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label3: TLabel
         Left = 39
         Top = 58

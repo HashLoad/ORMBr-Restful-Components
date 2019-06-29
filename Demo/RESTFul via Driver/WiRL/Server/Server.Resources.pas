@@ -35,6 +35,7 @@ uses
   ormbr.types.database,
   ormbr.factory.firedac,
   ormbr.factory.interfaces,
+  ormbr.dml.generator.firebird,
   /// ORMBr
   ormbr.container.objectset,
   ormbr.container.objectset.interfaces,
@@ -125,7 +126,7 @@ uses
 
 constructor TMasterResource.Create;
 begin
-  FConnection := TFactoryFireDAC.Create(ServerDataModule.FDConnection1, dnSQLite);
+  FConnection := TFactoryFireDAC.Create(ServerDataModule.FDConnection1, dnFirebird);
   FMaster := TContainerObjectSet<Tmaster>.Create(FConnection);
 end;
 

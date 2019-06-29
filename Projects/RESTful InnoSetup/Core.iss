@@ -49,8 +49,8 @@ begin
   begin
     if not FileExists(WizardDirValue + 'Source\ormbr.inc') then
     begin
-      MsgBox('Diretório selecionado, não é o mesmo dos fontes do ORMBr.', mbInformation, MB_OK);
-      Result := False;
+//      MsgBox('Diretório selecionado, não é o mesmo dos fontes do ORMBr.', mbInformation, MB_OK);
+//      Result := False;
     end;
   end
   else
@@ -149,6 +149,15 @@ begin
       begin
         if (WizardForm.UserInfoNameEdit.Text <> 'rui_zoomtec@hotmail.com') or 
            (WizardForm.UserInfoOrgEdit.Text  <> '97504203000157') then
+        begin
+          Result := False;
+        end;
+      end
+      else
+      if WizardForm.UserInfoSerialEdit.Text = '77358A65-A8AC-4E1E-889A-DE82DD7038DB' then
+      begin
+        if (WizardForm.UserInfoNameEdit.Text <> 'jmsistemas@msn.com') or 
+           (WizardForm.UserInfoOrgEdit.Text  <> '08878633000109') then
         begin
           Result := False;
         end;

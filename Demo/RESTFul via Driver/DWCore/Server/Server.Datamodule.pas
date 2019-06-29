@@ -29,16 +29,18 @@ uses
   FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.SQLite,
   FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs, FireDAC.VCLUI.Wait, Data.DB,
-  FireDAC.Comp.Client, FireDAC.Comp.UI, uRESTDWPoolerDB, uRESTDWServerContext;
+  FireDAC.Comp.Client, FireDAC.Comp.UI,
+  uRESTDWPoolerDB, uRESTDWServerContext;
 
 type
 {$METHODINFO ON}
   TServerDataModule = class(TServerMethodDataModule)
     FDConnection1: TFDConnection;
-    Master: TDWServerEvents;
-    Lookup: TDWServerEvents;
     FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    Master: TDWServerEvents;
+    Lookup: TDWServerEvents;
+    ServerEvents: TDWServerEvents;
     procedure MasterEventsselectidReplyEvent(
       var Params: TDWParams; var Result: string);
     procedure MasterEventsselectwhereReplyEvent(
@@ -49,8 +51,6 @@ type
       var Result: string);
     procedure MasterEventsdeleteReplyEvent(var Params: TDWParams;
       var Result: string);
-    procedure LookupEventsselectReplyEvent(var Params: TDWParams;
-      var Result: string);
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
     procedure MasterEventsnextpacketwhereReplyEvent(var Params: TDWParams;
@@ -59,6 +59,12 @@ type
       var Result: string);
     procedure MasterEventsselectReplyEvent(var Params: TDWParams;
       var Result: string);
+    procedure LookupEventsselectReplyEventByType(var Params: TDWParams;
+      var Result: string; const RequestType: TRequestType;
+      var StatusCode: Integer; RequestHeader: TStringList);
+    procedure DWServerEvents1EventsapiReplyEventByType(var Params: TDWParams;
+      var Result: string; const RequestType: TRequestType;
+      var StatusCode: Integer; RequestHeader: TStringList);
   private
     { Private declarations }
     FMasterResource: TMasterResource;
@@ -85,6 +91,13 @@ procedure TServerDataModule.DataModuleDestroy(Sender: TObject);
 begin
   FMasterResource.Free;
   inherited;
+end;
+
+procedure TServerDataModule.DWServerEvents1EventsapiReplyEventByType(
+  var Params: TDWParams; var Result: string; const RequestType: TRequestType;
+  var StatusCode: Integer; RequestHeader: TStringList);
+begin
+  Result := '';
 end;
 
 procedure TServerDataModule.MasterEventsdeleteReplyEvent(
@@ -171,8 +184,9 @@ begin
   end;
 end;
 
-procedure TServerDataModule.LookupEventsselectReplyEvent(
-  var Params: TDWParams; var Result: string);
+procedure TServerDataModule.LookupEventsselectReplyEventByType(
+  var Params: TDWParams; var Result: string; const RequestType: TRequestType;
+  var StatusCode: Integer; RequestHeader: TStringList);
 begin
   Result := FMasterResource
               .selectlookup.ToJSON;

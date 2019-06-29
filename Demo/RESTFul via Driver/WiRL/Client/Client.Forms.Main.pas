@@ -144,22 +144,23 @@ begin
                                                'lookup_id',
                                                'lookup_description',
                                                'Descrição Lookup')
-  .Open<Tmaster>;
+//  .Open<Tmaster>;
+  .OpenWhere<Tmaster>('description like ''IB%''');
 
-  oOBJManager := TManagerObjectSet.Create(RESTClientWiRL1.AsConnection);
-  oOBJManager.AddAdapter<Tmaster>(2);
-  oOBJManager.Find<Tmaster>;
+//  oOBJManager := TManagerObjectSet.Create(RESTClientWiRL1.AsConnection);
+//  oOBJManager.AddAdapter<Tmaster>(2);
+//  oOBJManager.Find<Tmaster>;
 
-  oOBJManager.FindWhere<Tmaster>('master_id = 6');
-  if oOBJManager.NestedList<Tmaster>.Count > 0 then
-  begin
-    oOBJManager.NestedList<Tmaster>.First;
-    for LMaster in oOBJManager.NestedList<Tmaster> do
-    begin
-      if LMaster <> nil then
-        Memo1.Lines.Add(TORMBrJson.ObjectToJsonString(LMaster));
-    end;
-  end;
+//  oOBJManager.FindWhere<Tmaster>('master_id = 6');
+//  if oOBJManager.NestedList<Tmaster>.Count > 0 then
+//  begin
+//    oOBJManager.NestedList<Tmaster>.First;
+//    for LMaster in oOBJManager.NestedList<Tmaster> do
+//    begin
+//      if LMaster <> nil then
+//        Memo1.Lines.Add(TORMBrJson.ObjectToJsonString(LMaster));
+//    end;
+//  end;
 end;
 
 procedure TForm3.FormDestroy(Sender: TObject);

@@ -147,9 +147,8 @@ begin
       else
       if AQuery.ID <> Null then
       begin
-        LPrimaryKey := TMappingExplorer
-                         .GetInstance
-                           .GetMappingPrimaryKeyColumns(LObject.ClassType);
+        LPrimaryKey := TMappingExplorer.GetInstance
+                         .GetMappingPrimaryKeyColumns(LObject.ClassType);
         if LPrimaryKey = nil then
           raise Exception.Create(cMESSAGEPKNOTFOUND);
 
@@ -234,9 +233,8 @@ begin
               + ' insert command executed successfully",'
               + ' "params":[{%s}]}';
       LValues := '';
-      LPrimaryKey := TMappingExplorer
-                       .GetInstance
-                         .GetMappingPrimaryKeyColumns(LObject.ClassType);
+      LPrimaryKey := TMappingExplorer.GetInstance
+                       .GetMappingPrimaryKeyColumns(LObject.ClassType);
       if LPrimaryKey = nil then
         raise Exception.Create(cMESSAGEPKNOTFOUND);
 
@@ -248,7 +246,7 @@ begin
       LValues[Length(LValues)] := ' ';
       Result := Format(Result, [Trim(LValues)]);
     finally
-      LObject.MethodCall('Destroy', []);
+      LObject.Free;// MethodCall('Destroy', []);
       LObjectSet.Free;
     end;
   except
@@ -272,7 +270,6 @@ begin
   LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
   if LClassType = nil then
     Exit;
-
   try
     LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
     LObjectNew := LClassType.Create;
@@ -284,9 +281,8 @@ begin
 
     try
       LWhere := '';
-      LPrimaryKey := TMappingExplorer
-                       .GetInstance
-                         .GetMappingPrimaryKeyColumns(LObjectNew.ClassType);
+      LPrimaryKey := TMappingExplorer.GetInstance
+                       .GetMappingPrimaryKeyColumns(LObjectNew.ClassType);
       if LPrimaryKey = nil then
         raise Exception.Create(cMESSAGEPKNOTFOUND);
 

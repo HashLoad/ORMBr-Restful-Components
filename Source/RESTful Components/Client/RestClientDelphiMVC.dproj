@@ -166,7 +166,6 @@
         <DCCReference Include="IndyProtocols.dcp"/>
         <DCCReference Include="IndyCore.dcp"/>
         <DCCReference Include="dmvcframeworkRT.dcp"/>
-        <DCCReference Include="loggerproRT.dcp"/>
         <DCCReference Include="RestCoreClient.dcp"/>
         <DCCReference Include="ormbr.client.dmvc.pas"/>
         <DCCReference Include="ormbr.client.dmvc.reg.pas"/>

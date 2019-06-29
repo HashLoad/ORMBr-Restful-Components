@@ -1,4 +1,4 @@
-{
+﻿{
       ORM Brasil é um ORM simples e descomplicado para quem utiliza Delphi
 
                    Copyright (c) 2018, Isaque Pinheiro

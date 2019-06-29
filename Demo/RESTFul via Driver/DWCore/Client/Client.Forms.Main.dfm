@@ -283,6 +283,7 @@ object Form3: TForm3
     ProxyParams.ProxyPort = 0
     Authenticator.Username = 'testserver'
     Authenticator.Password = 'testserver'
+    Authenticator.AuthenticatorType = atNoAuth
     Protocol = Http
     Host = 'localhost'
     Port = 8082
@@ -294,8 +295,9 @@ object Form3: TForm3
     MethodPOST = 'insert'
     MethodPUT = 'update'
     MethodDELETE = 'delete'
-    APIContext = 'restdataware'
-    Left = 126
-    Top = 38
+    APIContext = 'restdataware/ormbr/api'
+    ORMBrServerUse = True
+    Left = 72
+    Top = 45
   end
 end

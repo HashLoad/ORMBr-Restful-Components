@@ -18,12 +18,9 @@ uses
   ormbr.mapping.register;
 
 type
-//  [Enumeration(TEnumType.etInteger, '0, 1, 2, 9')]
-//  TMyEnum = (fmsEmitente, fmsTerceiros, fmsDestinatario, fmsSemFrete);
-
   [Entity]
   [Table('master','')]
-  [Resource('master')]
+  [Resource('master')] // ContextName do TDWServerEvents
   [PrimaryKey('master_id', AutoInc, NoSort, True, 'Chave primária')]
   [Sequence('seq_master')]
   [OrderBy('master_id')]
@@ -38,7 +35,6 @@ type
     Fclient_name: string;
     Fdetail: TObjectList<Tdetail>;
     Fclient: Tclient;
-//    FEnumer: TMyEnum;
     function GetTotal: Double;
   public
     { Public declarations }
@@ -69,9 +65,6 @@ type
     [ForeignKey('FK_IDCLIENT', 'client_id', 'client', 'client_id')]
     [Dictionary('client_id','Mensagem de validação','','','',taCenter)]
     property client_id: Integer read Fclient_id write Fclient_id;
-
-//    [Column('MyEnum', ftInteger)]
-//    property MyEnum: TMyEnum read FEnumer write FEnumer;
 
     [Restrictions([NoInsert, NoUpdate])]
     [Column('client_name', ftString, 60)]

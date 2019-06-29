@@ -18,7 +18,9 @@ uses
 
   ormbr.factory.interfaces,
   ormbr.factory.firedac,
-//  ormbr.server.dw,
+  ormbr.server.dwcore,
+  ormbr.dml.generator.sqlite,
+  ormbr.dml.generator.firebird,
 
   uRESTDWBase,
   uDWAbout,
@@ -26,7 +28,8 @@ uses
   FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.SQLite,
   FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs, FireDAC.VCLUI.Wait,
-  FireDAC.Comp.UI, Data.DB, FireDAC.Comp.Client;
+  FireDAC.Comp.UI, Data.DB, FireDAC.Comp.Client, uDWJSONObject, uDWConsts,
+  FireDAC.Phys.FB, FireDAC.Phys.FBDef;
 
 type
   TServerForm = class(TForm)
@@ -53,8 +56,8 @@ type
     procedure ButtonStartClick(Sender: TObject);
   private
     { Private declarations }
-//    RESTServerDW: TRESTServerDW;
-//    FConnection: IDBConnection;
+    RESTServerDWCore: TRESTServerDWCore;
+    FConnection: IDBConnection;
   public
     { Public declarations }
   end;
@@ -65,7 +68,7 @@ var
 implementation
 
 uses
-  Server.DataModule;
+  Server.DataModule, ormbr.server.resource.dwcore;
 
 {$R *.dfm}
 
@@ -92,13 +95,13 @@ end;
 
 procedure TServerForm.FormCreate(Sender: TObject);
 begin
-  RESTServicePooler1.ServerMethodClass := TServerDataModule;
+  RESTServicePooler1.ServerMethodClass := TServerMethods;
 
-//  FConnection := TFactoryFireDAC.Create(FDConnection1, dnSQLite);
+  FConnection := TFactoryFireDAC.Create(FDConnection1, dnFirebird);
 
-//  RESTServerDW := TRESTServerDW.Create(Self);
-//  RESTServerDW.RESTServicePooler := RESTServicePooler1;
-//  RESTServerDW.Connection := FConnection;
+  RESTServerDWCore := TRESTServerDWCore.Create(Self);
+  RESTServerDWCore.RESTServicePooler := RESTServicePooler1;
+  RESTServerDWCore.Connection := FConnection;
 end;
 
 end.

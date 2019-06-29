@@ -5,7 +5,7 @@
                           All rights reserved.
 }
 
-{ 
+{
   @abstract(REST Componentes)
   @created(20 Jun 2018)
   @author(Isaque Pinheiro <isaquepsp@gmail.com>)
@@ -132,7 +132,8 @@ begin
     begin
       LQuery.SetFilter(Context.Request.Params['$filter']);
       /// <summary> Retorno JSON </summary>
-      LResult := LAppResource.ParseFind(LQuery);
+      LResult := LAppResource.ParseDelete(LQuery);
+      /// <summary> Retorno JSON </summary>
       Render(LResult);
     end
     else

@@ -3,7 +3,7 @@ object ServerDataModule: TServerDataModule
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   Encoding = esASCII
-  Height = 233
+  Height = 286
   Width = 267
   object FDConnection1: TFDConnection
     Params.Strings = (
@@ -13,81 +13,68 @@ object ServerDataModule: TServerDataModule
     Left = 68
     Top = 42
   end
+  object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
+    Left = 162
+    Top = 40
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 118
+    Top = 100
+  end
   object Master: TDWServerEvents
     IgnoreInvalidParams = False
     Events = <
       item
         Routes = [crAll]
-        DWParams = <
-          item
-            TypeObject = toParam
-            ObjectDirection = odINOUT
-            ObjectValue = ovString
-            ParamName = 'dwparam1'
-            Encoded = True
-          end
-          item
-            TypeObject = toParam
-            ObjectDirection = odINOUT
-            ObjectValue = ovString
-            ParamName = 'dwparam2'
-            Encoded = True
-          end>
+        DWParams = <>
         JsonMode = jmPureJSON
         Name = 'select'
-        OnReplyEvent = MasterEventsselectReplyEvent
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'selectid'
-        OnReplyEvent = MasterEventsselectidReplyEvent
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'selectwhere'
-        OnReplyEvent = MasterEventsselectwhereReplyEvent
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'insert'
-        OnReplyEvent = MasterEventsinsertReplyEvent
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'update'
-        OnReplyEvent = MasterEventsupdateReplyEvent
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'delete'
-        OnReplyEvent = MasterEventsdeleteReplyEvent
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'nextpacket'
-        OnReplyEvent = MasterEventsnextpacketReplyEvent
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'nextpacketwhere'
-        OnReplyEvent = MasterEventsnextpacketwhereReplyEvent
       end>
     ContextName = 'master'
-    Left = 28
+    Left = 37
     Top = 158
   end
   object Lookup: TDWServerEvents
@@ -98,19 +85,22 @@ object ServerDataModule: TServerDataModule
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'select'
-        OnReplyEvent = LookupEventsselectReplyEvent
       end>
     ContextName = 'lookup'
     Left = 204
     Top = 160
   end
-  object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
-    Left = 162
-    Top = 40
-  end
-  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
-    Provider = 'Forms'
-    Left = 118
-    Top = 100
+  object ServerEvents: TDWServerEvents
+    IgnoreInvalidParams = False
+    Events = <
+      item
+        Routes = [crAll]
+        DWParams = <>
+        JsonMode = jmPureJSON
+        Name = 'api'
+      end>
+    ContextName = 'ormbr'
+    Left = 130
+    Top = 201
   end
 end

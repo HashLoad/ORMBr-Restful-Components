@@ -169,13 +169,21 @@ begin
                              end,
                              procedure(E: Exception)
                              begin
-                               raise ERESTConnectionError
-                                       .Create(FRESTClient.MARSEngineURL,
+                               if Assigned(FErrorCommand) then
+                                 FErrorCommand(GetBaseURL,
                                                AResource,
                                                ASubResource,
-                                               E.Message,
                                                FRequestMethod,
-                                               FRESTClient.ResponseStatusCode);
+                                               E.Message,
+                                               FRESTClient.ResponseStatusCode)
+                               else
+                                 raise ERESTConnectionError
+                                         .Create(FRESTClient.MARSEngineURL,
+                                                 AResource,
+                                                 ASubResource,
+                                                 E.Message,
+                                                 FRequestMethod,
+                                                 FRESTClient.ResponseStatusCode);
                              end );
           Result := FResponseString;
         end;
@@ -206,13 +214,21 @@ begin
                             end,
                             procedure(E: Exception)
                             begin
-                              raise ERESTConnectionError
-                                      .Create(FRESTClient.MARSEngineURL,
+                              if Assigned(FErrorCommand) then
+                                FErrorCommand(GetBaseURL,
                                               AResource,
                                               ASubResource,
                                               FRequestMethod,
                                               E.Message,
-                                              FRESTClient.ResponseStatusCode);
+                                              FRESTClient.ResponseStatusCode)
+                              else
+                                raise ERESTConnectionError
+                                        .Create(FRESTClient.MARSEngineURL,
+                                                AResource,
+                                                ASubResource,
+                                                FRequestMethod,
+                                                E.Message,
+                                                FRESTClient.ResponseStatusCode);
                             end );
           Result := FResponseString;
         end;
@@ -229,13 +245,21 @@ begin
           Result := FRESTResource.GETAsString(nil, nil,
                                               procedure(E: Exception)
                                               begin
-                                                raise ERESTConnectionError
-                                                        .Create(FRESTClient.MARSEngineURL,
+                                                if Assigned(FErrorCommand) then
+                                                  FErrorCommand(GetBaseURL,
                                                                 AResource,
                                                                 ASubResource,
                                                                 FRequestMethod,
                                                                 E.Message,
-                                                                FRESTClient.ResponseStatusCode);
+                                                                FRESTClient.ResponseStatusCode)
+                                                else
+                                                  raise ERESTConnectionError
+                                                          .Create(FRESTClient.MARSEngineURL,
+                                                                  AResource,
+                                                                  ASubResource,
+                                                                  FRequestMethod,
+                                                                  E.Message,
+                                                                  FRESTClient.ResponseStatusCode);
                                               end);
         end;
       TRESTRequestMethodType.rtDELETE:
@@ -267,13 +291,21 @@ begin
                                end,
                                procedure(E: Exception)
                                begin
-                                 raise ERESTConnectionError
-                                         .Create(FRESTClient.MARSEngineURL,
+                                 if Assigned(FErrorCommand) then
+                                   FErrorCommand(GetBaseURL,
                                                  AResource,
                                                  ASubResource,
                                                  FRequestMethod,
                                                  E.Message,
-                                                 FRESTClient.ResponseStatusCode);
+                                                 FRESTClient.ResponseStatusCode)
+                                 else
+                                   raise ERESTConnectionError
+                                           .Create(FRESTClient.MARSEngineURL,
+                                                   AResource,
+                                                   ASubResource,
+                                                   FRequestMethod,
+                                                   E.Message,
+                                                   FRESTClient.ResponseStatusCode);
                                end);
           Result := FResponseString;
         end;
@@ -293,6 +325,7 @@ begin
     FResponseString := '';
     FParams.Clear;
     FQueryParams.Clear;
+    FBodyParams.Clear;
   end;
 end;
 

@@ -15,7 +15,7 @@ uses
 type
   [Entity]
   [Table('lookup','')]
-  [Resource('lookup')]
+  [Resource('lookup')] // ContextName do TDWServerEvents
   [PrimaryKey('lookup_id', 'Chave primária')]
   [Indexe('idx_lookup_description','lookup_description')]
   Tlookup = class

@@ -27,15 +27,20 @@ uses
   ormbr.client.interfaces;
 
 type
+  TAuthenticatorType = (atNoAuth, atBasicAuth, atBearerToken, atOAuth1, atOAuth2);
+
   TAuthenticator = class(TPersistent)
   private
     FUsername: String;
     FPassword: String;
     FToken: String;
+    FAuthenticatorType: TAuthenticatorType;
     function GetUsername: String;
     procedure SetUsername(const Value: String);
     function GetPassword: String;
     procedure SetPassword(const Value: String);
+    function GetAuthenticatorType: TAuthenticatorType;
+    procedure SetAuthenticatorType(const Value: TAuthenticatorType);
   public
     constructor Create;
     destructor Destroy; override;
@@ -43,6 +48,7 @@ type
   published
     property Username: String read GetUsername write SetUsername;
     property Password: String read GetPassword write SetPassword;
+    property AuthenticatorType: TAuthenticatorType read GetAuthenticatorType write SetAuthenticatorType;
   end;
 
   TRestProxyInfo = class(TPersistent)
@@ -149,6 +155,11 @@ begin
   inherited;
 end;
 
+function TAuthenticator.GetAuthenticatorType: TAuthenticatorType;
+begin
+  Result := FAuthenticatorType;
+end;
+
 function TAuthenticator.GetPassword: String;
 begin
   Result := FPassword;
@@ -157,6 +168,11 @@ end;
 function TAuthenticator.GetUsername: String;
 begin
   Result := FUsername;
+end;
+
+procedure TAuthenticator.SetAuthenticatorType(const Value: TAuthenticatorType);
+begin
+  FAuthenticatorType := Value;
 end;
 
 procedure TAuthenticator.SetPassword(const Value: String);

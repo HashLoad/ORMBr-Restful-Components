@@ -13,9 +13,12 @@ object ServerDataModule: TServerDataModule
   end
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'DriverID=SQLite'
-      'Database=..\..\..\data\database\database.db3'
-      'LockingMode=Normal')
+      
+        'Database=D:\ORMBr RESTful Components\Demo\Data\Database\database' +
+        '.fdb'
+      'User_Name=SYSDBA'
+      'Password=masterkey'
+      'DriverID=FB')
     LoginPrompt = False
     Left = 86
     Top = 40

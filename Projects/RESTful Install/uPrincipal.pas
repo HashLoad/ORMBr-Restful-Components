@@ -1,5 +1,11 @@
 unit uPrincipal;
 
+{$DEFINE RESTFULDATASNAP}
+{$DEFINE RESTFULWIRL}
+{$DEFINE RESTFULMARS}
+{$DEFINE RESTFULDELPHIMVC}
+{$DEFINE RESTFULDWCORE}
+
 interface
 
 uses
@@ -383,7 +389,8 @@ begin
   Copiar('*.inc');
 end;
 
-procedure TfrmPrincipal.AddLibraryPathToDelphiPath(const APath: String; const AProcurarRemover: String);
+procedure TfrmPrincipal.AddLibraryPathToDelphiPath(const APath: String;
+  const AProcurarRemover: String);
 const
   cs: PChar = 'Environment Variables';
 var
@@ -494,7 +501,7 @@ end;
 // adicionar o paths ao library path do delphi
 procedure TfrmPrincipal.AddLibrarySearchPath;
 begin
-  FindDirs(IncludeTrailingPathDelimiter(sDirRoot) + 'Source');
+  FindDirs(IncludeTrailingPathDelimiter(sDirRoot) + 'Source\RESTful Components');
 
   // --
   with oORMBr.Installations[iVersion] do
@@ -678,6 +685,42 @@ begin
   end;
 
   LerConfiguracoes;
+
+//  {$IFDEF RESTFULDATASNAP}
+//  framePacotes1.RestClientDatasnap_dpk.Visible := True;
+//  framePacotes1.RestClientDatasnap_Label.Visible := True;
+//  framePacotes1.RestClientDatasnap_Label.Top := 56;
+//  framePacotes1.RestClientDatasnap_dpk.Checked := True;
+//  framePacotes1.RestClientDatasnap_dpk.Top := 55;
+//  {$ENDIF}
+//  {$IFDEF RESTFULWIRL}
+//  framePacotes1.RestClientWiRL_dpk.Visible := True;
+//  framePacotes1.RestClientWiRL_Label.Visible := True;
+//  framePacotes1.RestClientWiRL_Label.Top := 56;
+//  framePacotes1.RestClientWiRL_dpk.Checked := True;
+//  framePacotes1.RestClientWiRL_dpk.Top := 55;
+//  {$ENDIF}
+//  {$IFDEF RESTFULMARS}
+//  framePacotes1.RestClientMARS_dpk.Visible := True;
+//  framePacotes1.RestClientMARS_Label.Visible := True;
+//  framePacotes1.RestClientMARS_Label.Top := 56;
+//  framePacotes1.RestClientMARS_dpk.Checked := True;
+//  framePacotes1.RestClientMARS_dpk.Top := 55;
+//  {$ENDIF}
+//  {$IFDEF RESTFULDELPHIMVC}
+//  framePacotes1.RestClientDelphiMVC_dpk.Visible := True;
+//  framePacotes1.RestClientDelphiMVC_Label.Visible := True;
+//  framePacotes1.RestClientDelphiMVC_Label.Top := 56;
+//  framePacotes1.RestClientDelphiMVC_dpk.Checked := True;
+//  framePacotes1.RestClientDelphiMVC_dpk.Top := 55;
+//  {$ENDIF}
+//  {$IFDEF RESTFULDWCORE}
+//  framePacotes1.RestClientDWCore_dpk.Visible := True;
+//  framePacotes1.RestClientDWCore_Label.Visible := True;
+//  framePacotes1.RestClientDWCore_Label.Top := 56;
+//  framePacotes1.RestClientDWCore_dpk.Checked := True;
+//  framePacotes1.RestClientDWCore_dpk.Top := 55;
+//  {$ENDIF}
 end;
 
 procedure TfrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -686,6 +729,8 @@ begin
 end;
 
 procedure TfrmPrincipal.RemoverDiretoriosEPacotesAntigos;
+const
+  PATH = 'RESTFUL COMPONENTS';
 var
   ListaPaths: TStringList;
   I: Integer;
@@ -701,7 +746,7 @@ begin
       ListaPaths.DelimitedText := RawLibrarySearchPath[tPlatform];
       for I := ListaPaths.Count - 1 downto 0 do
       begin
-        if Pos('ORMBR', AnsiUpperCase(ListaPaths[I])) > 0 then
+        if Pos(PATH, AnsiUpperCase(ListaPaths[I])) > 0 then
           ListaPaths.Delete(I);
       end;
       RawLibrarySearchPath[tPlatform] := ListaPaths.DelimitedText;
@@ -710,7 +755,7 @@ begin
       ListaPaths.DelimitedText := RawLibraryBrowsingPath[tPlatform];
       for I := ListaPaths.Count - 1 downto 0 do
       begin
-        if Pos('ORMBR', AnsiUpperCase(ListaPaths[I])) > 0 then
+        if Pos(PATH, AnsiUpperCase(ListaPaths[I])) > 0 then
           ListaPaths.Delete(I);
       end;
       RawLibraryBrowsingPath[tPlatform] := ListaPaths.DelimitedText;
@@ -719,14 +764,14 @@ begin
       ListaPaths.DelimitedText := RawDebugDCUPath[tPlatform];
       for I := ListaPaths.Count - 1 downto 0 do
       begin
-        if Pos('ORMBR', AnsiUpperCase(ListaPaths[I])) > 0 then
+        if Pos(PATH, AnsiUpperCase(ListaPaths[I])) > 0 then
           ListaPaths.Delete(I);
       end;
       RawDebugDCUPath[tPlatform] := ListaPaths.DelimitedText;
       // remover pacotes antigos
       for I := IdePackages.Count - 1 downto 0 do
       begin
-        if Pos('ORMBR', AnsiUpperCase(IdePackages.PackageFileNames[I])) > 0 then
+        if Pos(PATH, AnsiUpperCase(IdePackages.PackageFileNames[I])) > 0 then
           IdePackages.RemovePackage(IdePackages.PackageFileNames[I]);
       end;
     end;
@@ -958,6 +1003,9 @@ begin
 
             for iDpk := 0 to framePacotes1.Pacotes.Count - 1 do
             begin
+              if not framePacotes1.Pacotes[iDpk].Visible then
+                Continue;
+
               NomePacote := ReplaceStr(framePacotes1.Pacotes[iDpk].Name, '_', '.');
 
               // Busca diretório do pacote
@@ -1265,8 +1313,11 @@ begin
 end;
 
 procedure TfrmPrincipal.clbDelphiVersionClick(Sender: TObject);
+var
+  LVersion: String;
 begin
-  if MatchText(oORMBr.Installations[clbDelphiVersion.ItemIndex].VersionNumberStr, ['d3','d4','d5','d6','d7','d9','d10','d11','d12','d13']) then
+  LVersion := oORMBr.Installations[clbDelphiVersion.ItemIndex].VersionNumberStr;
+  if MatchText(LVersion, ['d3','d4','d5','d6','d7','d9','d10','d11','d12','d13']) then
   begin
     Application.MessageBox(
       'Versão do delphi não suportada pelo ORMBr REST Components.',

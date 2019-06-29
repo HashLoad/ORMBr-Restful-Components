@@ -9,7 +9,8 @@ uses
   FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs, FireDAC.VCLUI.Wait, Data.DB,
   FireDAC.Comp.Client,
 
-  ormbr.dml.generator.sqlite, FireDAC.Comp.UI;
+  FireDAC.Comp.UI, FireDAC.Phys.FB,
+  FireDAC.Phys.FBDef;
 
 type
   TServerDataModule = class(TDataModule)

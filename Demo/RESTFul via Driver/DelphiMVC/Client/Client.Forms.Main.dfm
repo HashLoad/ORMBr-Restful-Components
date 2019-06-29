@@ -281,6 +281,7 @@ object Form3: TForm3
   object RESTClientDelphiMVC1: TRESTClientDelphiMVC
     ProxyParams.BasicAuthentication = False
     ProxyParams.ProxyPort = 0
+    Authenticator.AuthenticatorType = atBasicAuth
     Protocol = Http
     Host = 'localhost'
     Port = 211

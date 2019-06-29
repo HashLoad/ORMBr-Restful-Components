@@ -25,9 +25,8 @@ uses
   /// ORMBr Models
   ormbr.model.master,
   ormbr.model.detail,
-  ormbr.model.lookup,
+  ormbr.model.lookup;
   /// ORMBr banco usado
-  ormbr.dml.generator.sqlite;
 
 type
   TMasterResource = class

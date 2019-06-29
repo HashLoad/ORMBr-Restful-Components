@@ -44,7 +44,14 @@ type
     FRESTResource: TWiRLClientResourceJSON;
     FRESTSubResource: TWiRLClientSubResourceJSON;
     FRESTToken: TWiRLClientToken;
-    procedure SetProxyParamsClient;
+    procedure SetProxyParamsClientValue;
+    procedure SetProxyParamsBodyValue(var AParams: String);
+    procedure SetAuthenticatorTypeValues;
+    procedure SetParamValues;
+    function DoGET(const AResource, ASubResource: String): String;
+    function DoPOST(const AResource, ASubResource: String): String;
+    function DoPUT(const AResource, ASubResource: String): String;
+    function DoDELETE(const AResource, ASubResource: String): String;
     function RemoveContextServerUse(const Value: String): string;
   protected
     procedure DoAfterCommand; override;
@@ -107,12 +114,182 @@ begin
   inherited;
 end;
 
+function TRESTClientWiRL.DoDELETE(const AResource, ASubResource: String): String;
+begin
+  FRequestMethod := 'DELETE';
+  /// <summary> Define valores dos parâmetros </summary>
+  SetParamValues;
+  /// <summary> DELETE </summary>
+  FRESTSubResource.DELETE(nil,
+                          procedure
+                          begin
+                            FResponseString := FRESTResource.Response.ToJSON;
+                          end,
+                          procedure(E: Exception)
+                          begin
+                            if Assigned(FErrorCommand) then
+                              FErrorCommand(GetBaseURL,
+                                            AResource,
+                                            ASubResource,
+                                            FRequestMethod,
+                                            E.Message,
+                                            FRESTClient.Response.StatusCode)
+                            else
+                              raise ERESTConnectionError
+                                      .Create(FRESTClient.WiRLEngineURL,
+                                              AResource,
+                                              ASubResource,
+                                              FRequestMethod,
+                                              E.Message,
+                                              FRESTClient.Response.StatusCode);
+                          end );
+  Result := FResponseString;
+  //          FRESTClient.Response.ReasonString;
+end;
+
+function TRESTClientWiRL.DoGET(const AResource, ASubResource: String): String;
+begin
+  FRequestMethod := 'GET';
+  /// <summary> Define valores dos parâmetros </summary>
+  SetParamValues;
+  /// <summary> GET </summary>
+  Result := FRESTSubResource.GETAsString(nil, nil,
+                                         procedure(E: Exception)
+                                         begin
+                                           if Assigned(FErrorCommand) then
+                                             FErrorCommand(GetBaseURL,
+                                                           AResource,
+                                                           ASubResource,
+                                                           FRequestMethod,
+                                                           E.Message,
+                                                           FRESTClient.Response.StatusCode)
+                                           else
+                                             raise ERESTConnectionError
+                                                     .Create(FRESTClient.WiRLEngineURL,
+                                                             AResource,
+                                                             ASubResource,
+                                                             FRequestMethod,
+                                                             E.Message,
+                                                             FRESTClient.Response.StatusCode);
+                                         end );
+end;
+
+function TRESTClientWiRL.DoPOST(const AResource, ASubResource: String): String;
+var
+  LParams: String;
+begin
+  FRequestMethod := 'POST';
+  /// <summary> Define valores dos parâmetros </summary>
+  SetProxyParamsBodyValue(LParams);
+  /// <summary> POST </summary>
+  FRESTSubResource.POST(procedure(AContent: TMemoryStream)
+                        var
+                          LWriter: TStreamWriter;
+                        begin
+                          LWriter := TStreamWriter.Create(AContent);
+                          try
+                            LWriter.Write(LParams);
+                            AContent.Position := 0;
+                          finally
+                            LWriter.Free;
+                          end;
+                        end,
+                        procedure (AResponse: TStream)
+                        begin
+                          AResponse.Position := 0;
+                          FResponseString := StreamToString(AResponse);
+                        end,
+                        procedure(E: Exception)
+                        begin
+                          if Assigned(FErrorCommand) then
+                            FErrorCommand(GetBaseURL,
+                                          AResource,
+                                          ASubResource,
+                                          FRequestMethod,
+                                          E.Message,
+                                          FRESTClient.Response.StatusCode)
+                          else
+                            raise ERESTConnectionError
+                                    .Create(FRESTClient.WiRLEngineURL,
+                                            AResource,
+                                            ASubResource,
+                                            FRequestMethod,
+                                            E.Message,
+                                            FRESTClient.Response.StatusCode);
+                        end );
+  Result := FResponseString;
+end;
+
+function TRESTClientWiRL.DoPUT(const AResource, ASubResource: String): String;
+var
+  LParams: String;
+begin
+  FRequestMethod := 'PUT';
+  /// <summary> Define valores dos parâmetros </summary>
+  SetProxyParamsBodyValue(LParams);
+  /// <summary> PUT </summary>
+  FRESTSubResource.PUT(procedure(AContent: TMemoryStream)
+                       var
+                         LWriter: TStreamWriter;
+                       begin
+                         LWriter := TStreamWriter.Create(AContent);
+                         try
+                           LWriter.Write(LParams);
+                           AContent.Position := 0;
+                         finally
+                           LWriter.Free;
+                         end;
+                       end,
+                       procedure (AResponse: TStream)
+                       begin
+                         AResponse.Position := 0;
+                         FResponseString := StreamToString(AResponse);
+                       end,
+                       procedure(E: Exception)
+                       begin
+                         if Assigned(FErrorCommand) then
+                           FErrorCommand(GetBaseURL,
+                                         AResource,
+                                         ASubResource,
+                                         FRequestMethod,
+                                         E.Message,
+                                         FRESTClient.Response.StatusCode)
+                         else
+                           raise ERESTConnectionError
+                                   .Create(FRESTClient.WiRLEngineURL,
+                                           AResource,
+                                           ASubResource,
+                                           FRequestMethod,
+                                           E.Message,
+                                           FRESTClient.Response.StatusCode);
+                       end );
+  Result := FResponseString;
+end;
+
 function TRESTClientWiRL.Execute(const AResource, ASubResource: String;
   const ARequestMethod: TRESTRequestMethodType;
   const AParamsProc: TProc): String;
 var
   LFor: Integer;
   LParams: String;
+
+  procedure SetURLValue;
+  begin
+    FRESTClientApp.AppName := FAPIContext;
+    /// <summary>
+    ///   Trata a URL Base caso o componente esteja para usar o servidor,
+    ///   mas a classe não.
+    /// </summary>
+    if (FServerUse) and (FClassNotServerUse) then
+      FRESTClientApp.AppName := RemoveContextServerUse(FRESTClientApp.AppName);
+
+    FRESTClient.WiRLEngineURL := GetBaseURL;
+    FRESTResource.Resource := AResource;
+    FRESTSubResource.Resource := ASubResource;
+    FRESTSubResource.PathParamsValues.Clear;
+    FRESTSubResource.QueryParams.Clear;
+  end;
+
 begin
   Result := '';
   LParams := '';
@@ -120,24 +297,14 @@ begin
   if Assigned(AParamsProc) then
     AParamsProc();
 
+  /// <summary> Define valor da URL </summary>
+  SetURLValue;
+
   /// <summary> Define dados do proxy </summary>
-  SetProxyParamsClient;
+  SetProxyParamsClientValue;
 
-  FRESTClientApp.AppName := FAPIContext;
-  /// <summary>
-  /// Trata a URL Base caso o componente esteja para usar o servidor,
-  /// mas a classe não.
-  /// </summary>
-  if (FServerUse) and (FClassNotServerUse) then
-    FRESTClientApp.AppName := RemoveContextServerUse(FRESTClientApp.AppName);
-
-  FRESTClient.WiRLEngineURL := GetBaseURL;
-  FRESTResource.Resource := AResource;
-  FRESTSubResource.Resource := ASubResource;
-  FRESTSubResource.PathParamsValues.Clear;
-  FRESTSubResource.QueryParams.Clear;
-  FRESTToken.UserName := FAuthenticator.Username;
-  FRESTToken.Password := FAuthenticator.Password;
+  /// <summary> Define valores de autenticação </summary>
+  SetAuthenticatorTypeValues;
   try
     /// <summary> DoBeforeCommand </summary>
     DoBeforeCommand;
@@ -145,144 +312,37 @@ begin
     case ARequestMethod of
       TRESTRequestMethodType.rtPOST:
         begin
-          FRequestMethod := 'POST';
-          if FBodyParams.Count = 0 then
-            raise Exception.Create('Não foi passado o parâmetro com os dados do insert!');
-
-          for LFor := 0 to FBodyParams.Count -1 do
-            LParams := LParams + FBodyParams.Items[LFor].AsString;
-          FRESTSubResource.POST(procedure(AContent: TMemoryStream)
-                                var
-                                  LWriter: TStreamWriter;
-                                begin
-                                  LWriter := TStreamWriter.Create(AContent);
-                                  try
-                                    LWriter.Write(LParams);
-                                    AContent.Position := 0;
-                                  finally
-                                    LWriter.Free;
-                                  end;
-                                end,
-                                procedure (AResponse: TStream)
-                                begin
-                                  AResponse.Position := 0;
-                                  FResponseString := StreamToString(AResponse);
-                                end,
-                                procedure(E: Exception)
-                                begin
-                                  raise ERESTConnectionError
-                                          .Create(FRESTClient.WiRLEngineURL,
-                                                  AResource,
-                                                  ASubResource,
-                                                  FRequestMethod,
-                                                  E.Message,
-                                                  FRESTClient.Response.StatusCode);
-                                end );
-          Result := FResponseString;
+          Result := DoPOST(AResource, ASubResource);
         end;
       TRESTRequestMethodType.rtPUT:
         begin
-          FRequestMethod := 'PUT';
-          if FBodyParams.Count = 0 then
-            raise Exception.Create('Não foi passado o parâmetro com os dados do update!');
-
-          for LFor := 0 to FBodyParams.Count -1 do
-            LParams := LParams + FBodyParams.Items[LFor].AsString;
-          FRESTSubResource.PUT(procedure(AContent: TMemoryStream)
-                               var
-                                 LWriter: TStreamWriter;
-                               begin
-                                 LWriter := TStreamWriter.Create(AContent);
-                                 try
-                                   LWriter.Write(LParams);
-                                   AContent.Position := 0;
-                                 finally
-                                   LWriter.Free;
-                                 end;
-                               end,
-                               procedure (AResponse: TStream)
-                               begin
-                                 AResponse.Position := 0;
-                                 FResponseString := StreamToString(AResponse);
-                               end,
-                               procedure(E: Exception)
-                               begin
-                                 raise ERESTConnectionError
-                                         .Create(FRESTClient.WiRLEngineURL,
-                                                 AResource,
-                                                 ASubResource,
-                                                 FRequestMethod,
-                                                 E.Message,
-                                                 FRESTClient.Response.StatusCode);
-                               end );
-          Result := FResponseString;
+          Result := DoPUT(AResource, ASubResource);
         end;
       TRESTRequestMethodType.rtGET:
         begin
-          FRequestMethod := 'GET';
-          /// <summary> Params </summary>
-          for LFor := 0 to FParams.Count -1 do
-            FRESTSubResource.PathParamsValues.Add(FParams.Items[LFor].AsString);
-          /// <summary> Query Params </summary>
-          for LFor := 0 to FQueryParams.Count -1 do
-            FRESTSubResource.QueryParams.Add(FQueryParams.Items[LFor].AsString);
-          /// <summary> GET </summary>
-          Result := FRESTSubResource.GETAsString(nil, nil,
-                                                 procedure(E: Exception)
-                                                 begin
-                                                   raise ERESTConnectionError
-                                                           .Create(FRESTClient.WiRLEngineURL,
-                                                                   AResource,
-                                                                   ASubResource,
-                                                                   FRequestMethod,
-                                                                   E.Message,
-                                                                   FRESTClient.Response.StatusCode);
-                                                 end );
+          Result := DoGET(AResource, ASubResource);
         end;
       TRESTRequestMethodType.rtDELETE:
         begin
-          FRequestMethod := 'DELETE';
-          /// <summary> Params </summary>
-          for LFor := 0 to FParams.Count -1 do
-            FRESTSubResource.PathParamsValues.Add(FParams.Items[LFor].AsString);
-          /// <summary> Query Params </summary>
-          for LFor := 0 to FQueryParams.Count -1 do
-            FRESTSubResource.QueryParams.Add(FQueryParams.Items[LFor].AsString);
-          /// <summary> DELETE </summary>
-          FRESTSubResource.DELETE(nil,
-                                  procedure
-                                  begin
-                                    FResponseString := FRESTResource.Response.ToJSON;
-                                  end,
-                                  procedure(E: Exception)
-                                  begin
-                                    raise ERESTConnectionError
-                                            .Create(FRESTClient.WiRLEngineURL,
-                                                    AResource,
-                                                    ASubResource,
-                                                    FRequestMethod,
-                                                    E.Message,
-                                                    FRESTClient.Response.StatusCode);
-                                  end );
-          Result := FResponseString;
-//          FRESTClient.Response.ReasonString;
+          Result := DoDELETE(AResource, ASubResource);
         end;
       TRESTRequestMethodType.rtPATCH: ;
     end;
     /// <summary>
-    /// Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
+    ///   Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
     /// </summary>
     FResponseString := Result;
     /// <summary> DoAfterCommand </summary>
     DoAfterCommand;
     /// <summary>
-    /// Pega de volta o JSON manipulado ou não no evento AfterCommand
+    ///   Pega de volta o JSON manipulado ou não no evento AfterCommand
     /// </summary>
     Result := FResponseString;
   finally
     FResponseString := '';
     FParams.Clear;
     FQueryParams.Clear;
+    FBodyParams.Clear;
   end;
 end;
 
@@ -292,13 +352,63 @@ begin
   Result := ReplaceStr(Value, '/ormbr', '');
 end;
 
+procedure TRESTClientWiRL.SetAuthenticatorTypeValues;
+begin
+  case FAuthenticator.AuthenticatorType of
+    atNoAuth:
+      ;
+    atBasicAuth:
+      begin
+        FRESTToken.UserName := FAuthenticator.Username;
+        FRESTToken.Password := FAuthenticator.Password;
+      end;
+    atBearerToken:
+      begin
+        FRESTClient.Request.HeaderFields.AddPair('username', FAuthenticator.Username);
+        FRESTClient.Request.HeaderFields.AddPair('password', FAuthenticator.Password);
+        FRESTClient.Request.HeaderFields.AddPair('bearertoken', FAuthenticator.Token);
+      end;
+    atOAuth1:
+      begin
+
+      end;
+    atOAuth2:
+      begin
+
+      end;
+  end;
+end;
+
 procedure TRESTClientWiRL.SetBaseURL;
 begin
   inherited;
   FBaseURL := FBaseURL + FRESTContext;
 end;
 
-procedure TRESTClientWiRL.SetProxyParamsClient;
+procedure TRESTClientWiRL.SetParamValues;
+var
+  LFor: Integer;
+begin
+  /// <summary> Params </summary>
+  for LFor := 0 to FParams.Count -1 do
+    FRESTSubResource.PathParamsValues.Add(FParams.Items[LFor].AsString);
+  /// <summary> Query Params </summary>
+  for LFor := 0 to FQueryParams.Count -1 do
+    FRESTSubResource.QueryParams.Add(FQueryParams.Items[LFor].AsString);
+end;
+
+procedure TRESTClientWiRL.SetProxyParamsBodyValue(var AParams: String);
+var
+  LFor: Integer;
+begin
+  if FBodyParams.Count = 0 then
+    raise Exception.Create('Não foi passado o parâmetro com os dados do insert!');
+
+  for LFor := 0 to FBodyParams.Count -1 do
+    AParams := AParams + FBodyParams.Items[LFor].AsString;
+end;
+
+procedure TRESTClientWiRL.SetProxyParamsClientValue;
 begin
   FRESTClient.ProxyParams.BasicAuthentication := FProxyParams.BasicAuthentication;
   FRESTClient.ProxyParams.ProxyServer := FProxyParams.ProxyServer;

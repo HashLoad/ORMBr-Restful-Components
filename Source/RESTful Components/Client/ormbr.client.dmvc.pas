@@ -5,7 +5,7 @@
                           All rights reserved.
 }
 
-{ 
+{
   @abstract(REST Componentes)
   @created(20 Jun 2018)
   @author(Isaque Pinheiro <isaquepsp@gmail.com>)
@@ -36,9 +36,17 @@ type
   private
     FRESTClient: TRESTClient;
     FRESTResponse: IRESTResponse;
-    FBeforeCommand: TBeforeCommandEvent;
-    FAfterCommand: TAfterCommandEvent;
-    procedure SetProxyParamsClient;
+    procedure SetProxyParamsClientValues;
+    procedure SetAuthenticatorTypeValues;
+    procedure SetParamValues(AParams: PClientParam);
+    function DoGET(const AURL, AResource, ASubResource: String;
+      const AParams: array of string): String;
+    function DoPOST(const AURL, AResource, ASubResource: String;
+      const AParams: array of string): String;
+    function DoPUT(const AURL, AResource, ASubResource: String;
+      const AParams: array of string): String;
+    function DoDELETE(const AURL, AResource, ASubResource: String;
+      const AParams: array of string): String;
     function RemoveContextServerUse(const Value: String): string;
   protected
     procedure DoAfterCommand; override;
@@ -51,8 +59,6 @@ type
   published
     property APIContext;
     property ORMBrServerUse;
-    property BeforeCommand: TBeforeCommandEvent read FBeforeCommand write FBeforeCommand;
-    property AfterCommand: TAfterCommandEvent read FAfterCommand write FAfterCommand;
   end;
 
 implementation
@@ -85,63 +91,184 @@ begin
   inherited;
 end;
 
+function TRESTClientDelphiMVC.DoDELETE(const AURL, AResource,
+  ASubResource: String; const AParams: array of string): String;
+begin
+  FRequestMethod := 'DELETE';
+  try
+    FRESTResponse := FRESTClient.doDELETE(AURL, AParams);
+    Result := FRESTResponse.BodyAsString;
+    if FRESTResponse.HasError then
+      raise Exception.Create(FRESTResponse.Error.ExceptionMessage);
+  except
+    on E: Exception do
+    begin
+      if Assigned(FErrorCommand) then
+        FErrorCommand(GetBaseURL,
+                      AResource,
+                      ASubResource,
+                      FRequestMethod,
+                      E.Message,
+                      FRESTResponse.ResponseCode)
+      else
+        raise ERESTConnectionError.Create(GetBaseURL,
+                                          AResource,
+                                          ASubResource,
+                                          FRequestMethod,
+                                          E.Message,
+                                          FRESTResponse.ResponseCode);
+    end;
+  end;
+end;
+
+function TRESTClientDelphiMVC.DoGET(const AURL, AResource, ASubResource: String;
+      const AParams: array of string): String;
+begin
+  FRequestMethod := 'GET';
+  try
+    FRESTResponse := FRESTClient.doGET(AURL, AParams);
+    Result := FRESTResponse.BodyAsString;
+    if FRESTResponse.HasError then
+      raise Exception.Create(FRESTResponse.Error.ExceptionMessage);
+  except
+    on E: Exception do
+    begin
+      if Assigned(FErrorCommand) then
+        FErrorCommand(GetBaseURL,
+                      AResource,
+                      ASubResource,
+                      FRequestMethod,
+                      E.Message,
+                      FRESTResponse.ResponseCode)
+      else
+        raise ERESTConnectionError
+                .Create(GetBaseURL,
+                        AResource,
+                        ASubResource,
+                        FRequestMethod,
+                        E.Message,
+                        FRESTResponse.ResponseCode);
+    end;
+  end;
+end;
+
+function TRESTClientDelphiMVC.DoPOST(const AURL, AResource,
+  ASubResource: String; const AParams: array of string): String;
+begin
+  FRequestMethod := 'POST';
+  try
+    FRESTResponse := FRESTClient.doPOST(AURL, AParams, FRESTClient.BodyParams.Text);
+    Result := FRESTResponse.BodyAsString;
+    if FRESTResponse.HasError then
+      raise Exception.Create(FRESTResponse.Error.ExceptionMessage);
+  except
+    on E: Exception do
+    begin
+      if Assigned(FErrorCommand) then
+        FErrorCommand(GetBaseURL,
+                      AResource,
+                      ASubResource,
+                      FRequestMethod,
+                      E.Message,
+                      FRESTResponse.ResponseCode)
+      else
+        raise ERESTConnectionError
+                .Create(GetBaseURL,
+                        AResource,
+                        ASubResource,
+                        FRequestMethod,
+                        E.Message,
+                        FRESTResponse.ResponseCode);
+    end;
+  end;
+end;
+
+function TRESTClientDelphiMVC.DoPUT(const AURL, AResource, ASubResource: String;
+  const AParams: array of string): String;
+begin
+  FRequestMethod := 'PUT';
+  if FBodyParams.Count = 0 then
+    raise Exception.Create('Não foi passado o parâmetro com os dados do update!');
+  try
+    FRESTResponse := FRESTClient.doPUT(AURL, AParams, FRESTClient.BodyParams.Text);
+    Result := FRESTResponse.BodyAsString;
+    if FRESTResponse.HasError then
+      raise Exception.Create(FRESTResponse.Error.ExceptionMessage);
+  except
+    on E: Exception do
+    begin
+      if Assigned(FErrorCommand) then
+        FErrorCommand(GetBaseURL,
+                      AResource,
+                      ASubResource,
+                      FRequestMethod,
+                      E.Message,
+                      FRESTResponse.ResponseCode)
+      else
+        raise ERESTConnectionError
+                .Create(GetBaseURL,
+                        AResource,
+                        ASubResource,
+                        FRequestMethod,
+                        E.Message,
+                        FRESTResponse.ResponseCode);
+    end;
+  end;
+end;
+
 function TRESTClientDelphiMVC.Execute(const AResource, ASubResource: String;
   const ARequestMethod: TRESTRequestMethodType;
   const AParamsProc: TProc): String;
 var
-  LFor: Integer;
-  LParams: array of String;
-  LResource: String;
-  LSubResource: String;
   LURL: String;
+  LParams: TClientParam;
+
+  procedure SetURLValue;
+  var
+    LResource: String;
+    LSubResource: String;
+  begin
+    /// <summary>
+    ///   Trata URL Base caso componente esteja usando servidor, mas a classe não.
+    /// </summary>
+    if (FServerUse) and (not FClassNotServerUse) then
+      LResource := FAPIContext;
+
+    /// <summary> Nome do recurso </summary>
+    LResource := LResource + '/' + AResource;
+
+    /// <summary> Nome do sub-recurso </summary>
+    if Length(ASubResource) > 0 then
+      LSubResource := '/' + ASubResource;
+
+    /// <summary> URL completa </summary>
+    LURL := LResource + LSubResource;
+  end;
+
 begin
   Result := '';
-  /// <summary>
-  ///   Trata URL Base caso componente esteja usando servidor, mas a classe não.
-  /// </summary>
-  if (FServerUse) and (not FClassNotServerUse) then
-    LResource := FAPIContext;
-
-  /// <summary> Nome do recurso </summary>
-  LResource := LResource + '/' + AResource;
-
-  /// <summary> Nome do sub-recurso </summary>
-  if Length(ASubResource) > 0 then
-    LSubResource := '/' + ASubResource;
-
-  /// <summary> URL completa </summary>
-  LURL := LResource + LSubResource;
 
   /// <summary> Passa os dados de acesso para o RESTClient do Delphi MVC </summary>
   if not Assigned(FRESTClient) then
+  begin
     FRESTClient := TRESTClient.Create(FHost, FPort);
-
-  FRESTClient.UserName := FAuthenticator.Username;
-  FRESTClient.Password := FAuthenticator.Password;
-
+    FRESTClient.UseBasicAuthentication := True;
+  end;
   /// <summary> Executa a procedure de adição dos parâmetros </summary>
   if Assigned(AParamsProc) then
     AParamsProc();
 
+  /// <summary> Define valor da URL </summary>
+  SetURLValue;
+
   /// <summary> Define dados do proxy </summary>
-  SetProxyParamsClient;
+  SetProxyParamsClientValues;
 
-  /// <summary> Define o parametro do tipo array necessário para o Delphi MVC </summary>
-  if FParams.Count > 0 then
-    SetLength(LParams, FParams.Count);
+  /// <summary> Define valores dos parâmetros </summary>
+  SetParamValues(@LParams);
 
-  /// <summary> Passa os valores do Params externo para o array </summary>
-  for LFor := 0 to FParams.Count -1 do
-    LParams[LFor] := FParams.Items[LFor].AsString;
-
-  /// <summary> Passa os valores do BodyParams externo para o string </summary>
-  for LFor := 0 to FBodyParams.Count -1 do
-    FRESTClient.BodyParams.Add(FBodyParams.Items[LFor].AsString);
-
-  /// <summary> Passa os valores do Query Params externo para o array </summary>
-  for LFor := 0 to FQueryParams.Count -1 do
-    FRESTClient.QueryStringParams.Add(FQueryParams.Items[LFor].AsString);
-
+  /// <summary> Define valores de autenticação </summary>
+  SetAuthenticatorTypeValues;
   try
     /// <summary> DoBeforeCommand </summary>
     DoBeforeCommand;
@@ -149,83 +276,19 @@ begin
     case ARequestMethod of
       TRESTRequestMethodType.rtPOST:
         begin
-          FRequestMethod := 'POST';
-          if FBodyParams.Count = 0 then
-            raise Exception.Create('Não foi passado o parâmetro com os dados do insert!');
-          try
-            FRESTResponse := FRESTClient.doPOST(LURL, LParams, FRESTClient.BodyParams.Text);
-            Result := FRESTResponse.BodyAsString;
-          except
-            on E: Exception do
-            begin
-              raise ERESTConnectionError
-                      .Create(GetBaseURL,
-                              AResource,
-                              ASubResource,
-                              FRequestMethod,
-                              E.Message,
-                              FRESTResponse.ResponseCode);
-            end;
-          end;
+          Result := DoPOST(LURL, AResource, ASubResource, LParams);
         end;
       TRESTRequestMethodType.rtPUT:
         begin
-          FRequestMethod := 'PUT';
-          if FBodyParams.Count = 0 then
-            raise Exception.Create('Não foi passado o parâmetro com os dados do update!');
-          try
-            FRESTResponse := FRESTClient.doPUT(LURL, LParams, FRESTClient.BodyParams.Text);
-            Result := FRESTResponse.BodyAsString;
-          except
-            on E: Exception do
-            begin
-              raise ERESTConnectionError
-                      .Create(GetBaseURL,
-                              AResource,
-                              ASubResource,
-                              FRequestMethod,
-                              E.Message,
-                              FRESTResponse.ResponseCode);
-            end;
-          end;
+          Result := DoPUT(LURL, AResource, ASubResource, LParams);
         end;
       TRESTRequestMethodType.rtGET:
         begin
-          FRequestMethod := 'GET';
-          try
-            FRESTResponse := FRESTClient.doGET(LURL, LParams);
-            Result := FRESTResponse.BodyAsString;
-          except
-            on E: Exception do
-            begin
-              raise ERESTConnectionError
-                      .Create(GetBaseURL,
-                              AResource,
-                              ASubResource,
-                              FRequestMethod,
-                              E.Message,
-                              FRESTResponse.ResponseCode);
-            end;
-          end;
+          Result := DoGET(LURL, AResource, ASubResource, LParams);
         end;
       TRESTRequestMethodType.rtDELETE:
         begin
-          FRequestMethod := 'DELETE';
-          try
-            FRESTResponse := FRESTClient.doDELETE(LURL, LParams);
-            Result := FRESTResponse.BodyAsString;
-          except
-            on E: Exception do
-            begin
-              raise ERESTConnectionError
-                      .Create(GetBaseURL,
-                              AResource,
-                              ASubResource,
-                              FRequestMethod,
-                              E.Message,
-                              FRESTResponse.ResponseCode);
-            end;
-          end;
+          Result := DoDELETE(LURL, AResource, ASubResource, LParams);
         end;
       TRESTRequestMethodType.rtPATCH: ;
     end;
@@ -242,20 +305,73 @@ begin
   finally
     FResponseString := '';
     FParams.Clear;
-    FBodyParams.Clear;
     FQueryParams.Clear;
+    FBodyParams.Clear;
+    FRESTClient.ClearHeaders;
   end;
 end;
 
-function TRESTClientDelphiMVC.RemoveContextServerUse(
-  const Value: String): string;
+procedure TRESTClientDelphiMVC.SetAuthenticatorTypeValues;
 begin
-
+  case FAuthenticator.AuthenticatorType of
+    atNoAuth:
+      ;
+    atBasicAuth:
+      begin
+        FRESTClient.UserName := FAuthenticator.Username;
+        FRESTClient.Password := FAuthenticator.Password;
+        FRESTClient.UseBasicAuthentication := True;
+      end;
+    atBearerToken:
+      begin
+        FRESTClient.UseBasicAuthentication := False;
+        if Length(FAuthenticator.Token) > 0 then
+        begin
+          FRESTClient.Header('Authentication', 'bearer ' + FAuthenticator.Token);
+          Exit;
+        end;
+        FRESTClient.Header('jwtusername', FAuthenticator.Username);
+        FRESTClient.Header('jwtpassword', FAuthenticator.Password);
+      end;
+    atOAuth1:
+      begin
+        FRESTClient.UseBasicAuthentication := True;
+      end;
+    atOAuth2:
+      begin
+        FRESTClient.UseBasicAuthentication := True;
+      end;
+  end;
 end;
 
-procedure TRESTClientDelphiMVC.SetProxyParamsClient;
+function TRESTClientDelphiMVC.RemoveContextServerUse(const Value: String): string;
 begin
-  FRESTClient.UseBasicAuthentication := FProxyParams.BasicAuthentication;
+  Result := '';
+end;
+
+procedure TRESTClientDelphiMVC.SetParamValues(AParams: PClientParam);
+var
+  LFor: Integer;
+begin
+  /// <summary> Define o parametro do tipo array necessário para o Delphi MVC </summary>
+  if FParams.Count > 0 then
+  begin
+    SetLength(AParams^, FParams.Count);
+    /// <summary> Passa os valores do Params externo para o array </summary>
+    for LFor := 0 to FParams.Count -1 do
+      AParams^[LFor] := FParams.Items[LFor].AsString;
+  end;
+  /// <summary> Passa os valores do BodyParams externo para o string </summary>
+  for LFor := 0 to FBodyParams.Count -1 do
+    FRESTClient.BodyParams.Add(FBodyParams.Items[LFor].AsString);
+
+  /// <summary> Passa os valores do Query Params externo para o array </summary>
+  for LFor := 0 to FQueryParams.Count -1 do
+    FRESTClient.QueryStringParams.Add(FQueryParams.Items[LFor].AsString);
+end;
+
+procedure TRESTClientDelphiMVC.SetProxyParamsClientValues;
+begin
   FRESTClient.ProxyServer := FProxyParams.ProxyServer;
   FRESTClient.ProxyPort := FProxyParams.ProxyPort;
   FRESTClient.Username := FProxyParams.ProxyUsername;

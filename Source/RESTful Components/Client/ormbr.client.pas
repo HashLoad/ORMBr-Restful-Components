@@ -28,6 +28,9 @@ uses
   ormbr.client.base;
 
 type
+  TClientParam = array of String;
+  PClientParam = ^TClientParam;
+
   TBeforeCommandEvent = procedure (ARequestMethod: String) of object;
   TAfterCommandEvent = procedure (AStatusCode: Integer;
                               var AResponseString: String;
@@ -184,10 +187,10 @@ destructor TORMBrClient.Destroy;
 begin
   FParams.Clear;
   FParams.Free;
-  FBodyParams.Clear;
-  FBodyParams.Free;
   FQueryParams.Clear;
   FQueryParams.Free;
+  FBodyParams.Clear;
+  FBodyParams.Free;
   inherited;
 end;
 
@@ -207,7 +210,7 @@ procedure TORMBrClient.AddBodyParam(AValue: String);
 begin
   with FBodyParams.Add as TParam do
   begin
-    Name := 'param_' + IntToStr(FBodyParams.Count -1);
+    Name := 'body';
     DataType := ftString;
     ParamType := ptInput;
     Value := AValue;

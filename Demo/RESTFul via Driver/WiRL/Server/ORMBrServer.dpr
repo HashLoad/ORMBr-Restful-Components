@@ -18,7 +18,8 @@ uses
   ormbr.model.master in '..\ormbr.model.master.pas',
   Server.Datamodule in 'Server.Datamodule.pas' {ServerDataModule: TDataModule},
   ormbr.server.resource.wirl in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.resource.wirl.pas',
-  ormbr.server.wirl in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.wirl.pas';
+  ormbr.server.wirl in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.wirl.pas',
+  Server.Resources in 'Server.Resources.pas';
 
 {$R *.res}
 

@@ -4,8 +4,10 @@ object ServerDataModule: TServerDataModule
   Width = 362
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'DriverID=SQLite'
-      'Database=..\..\..\Data\Database\database.db3')
+      'Database=D:\ORMBr\Demo\Data\Database\database.fdb'
+      'User_Name=SYSDBA'
+      'Password=masterkey'
+      'DriverID=FB')
     LoginPrompt = False
     Left = 86
     Top = 48

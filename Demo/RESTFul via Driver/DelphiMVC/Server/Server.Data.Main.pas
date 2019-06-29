@@ -14,6 +14,8 @@ uses
   ormbr.factory.interfaces,
   ormbr.factory.firedac,
   ormbr.server.dmvc,
+  ormbr.dml.generator.sqlite,
+  ormbr.dml.generator.firebird,
 
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error,
   FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool,
@@ -72,7 +74,7 @@ begin
   FMVC.AddController(TLookupController);
 
   /// ORMBr - REST Server WiRL
-  FConnection := TFactoryFireDAC.Create(ServerDataModule.FDConnection1, dnSQLite);
+  FConnection := TFactoryFireDAC.Create(ServerDataModule.FDConnection1, dnFirebird);
   RESTServerDMVC1 := TRESTServerDMVC.Create(Self);
   RESTServerDMVC1.MVCEngine := FMVC;
   RESTServerDMVC1.Connection := FConnection;
@@ -84,5 +86,8 @@ begin
   FMVC.Free;
   FreeAndNil(ServerDataModule);
 end;
+
+initialization
+  ReportMemoryLeaksOnShutdown := DebugHook <> 0;
 
 end.
