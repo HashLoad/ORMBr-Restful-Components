@@ -608,7 +608,6 @@ end;
 procedure TRESTObjectSet.Update(const AObject: TObject);
 var
   LRttiType: TRttiType;
-  LProperty: TRttiProperty;
   LObject: TObject;
   LKey: string;
   LInTransaction: Boolean;

@@ -36,7 +36,7 @@ VersionInfoProductName={#ProductName}
 AppSupportPhone={#Phone}
 
 [Files]
-Source: "..\RESTful Install\ORMBrInstall.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\RESTful Install\RESTFulInstall.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\Source\RESTful Components\Common\*.pas"; DestDir: "{app}\Source\RESTful Components\Common\"; Flags: ignoreversion
 Source: "..\..\Source\RESTful Components\Client\*.dres"; DestDir: "{app}\Source\RESTful Components\Client\"; Flags: ignoreversion
 Source: "..\..\Source\RESTful Components\Client\*.identcache"; DestDir: "{app}\Source\RESTful Components\Client\"; Flags: ignoreversion

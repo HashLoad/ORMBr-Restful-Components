@@ -91,8 +91,8 @@ procedure TServerMethods.DoReplyEventByType(
 var
   LParam: TJSONParam;
 begin
+  LParam := nil;
   try
-    LParam := nil;
     LParam := Params.ItemsString['requesttype'];
     if LParam = nil then
       raise Exception.Create('resource parameter not passed');
@@ -187,7 +187,7 @@ begin
   LAppResource := TAppResourceBase.Create(TRESTServerDWCore.GetConnection);
   try
     LBody := nil;
-    LBody := AParams.ItemsString['body'];
+    LBody := AParams.ItemsString['json'];
     if LBody = nil then
       raise Exception.Create('body parameter not passed');
     Result := LAppResource.insert(LParam.AsString, LBody.AsString);
@@ -209,7 +209,7 @@ begin
   LAppResource := TAppResourceBase.Create(TRESTServerDWCore.GetConnection);
   try
     LBody := nil;
-    LBody := AParams.ItemsString['body'];
+    LBody := AParams.ItemsString['json'];
     if LBody = nil then
       raise Exception.Create('body parameter not passed');
     Result := LAppResource.update(LParam.AsString, LBody.AsString);

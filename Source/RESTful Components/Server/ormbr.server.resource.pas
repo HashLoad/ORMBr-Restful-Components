@@ -53,10 +53,10 @@ type
     destructor Destroy; override;
     function ParseFind(AQuery: TRESTQuery): String;
     function ParseDelete(AQuery: TRESTQuery): String;
-    function select(AResource: String): String; overload; virtual; abstract;
+    function select(AResource: String): String; overload; virtual;
     function insert(AResource: String; AValue: String): String; overload; virtual;
     function update(AResource: String; AValue: String): String; overload; virtual;
-    function delete(AResource: String): String; overload; virtual; abstract;
+    function delete(AResource: String): String; overload; virtual;
   end;
 
 implementation
@@ -77,6 +77,11 @@ begin
 //  {$ENDIF}
   FConnection := AConnection;
   FRepository := TMappingExplorer.GetInstance.Repository;
+end;
+
+function TAppResourceBase.delete(AResource: String): String;
+begin
+  Result := AResource;
 end;
 
 destructor TAppResourceBase.Destroy;
@@ -121,7 +126,6 @@ end;
 
 function TAppResourceBase.ParseDelete(AQuery: TRESTQuery): String;
 var
-  LObjectType: TRttiType;
   LPrimaryKey: TPrimaryKeyColumnsMapping;
   LColumn: TColumnMapping;
   LObject: TObject;
@@ -140,8 +144,6 @@ begin
     try
       if Length(AQuery.Filter) > 0  then
       begin
-//        if LObject.GetType(LObjectType) then
-//          LObjectType.GetProperty()
         LObject := LObjectSet.FindOne(AQuery.Filter)
       end
       else
@@ -170,6 +172,7 @@ begin
       Result := '{"result":"Class ' + AQuery.ResourceName + ' delete command executed successfully"}';
     finally
       LObject.MethodCall('Destroy', []);
+      LObjectSet.Free;
     end;
   except
     on E: Exception do
@@ -362,6 +365,11 @@ begin
     LObjectList.Clear;
     LObjectList.Free;
   end;
+end;
+
+function TAppResourceBase.select(AResource: String): String;
+begin
+  Result := AResource;
 end;
 
 end.

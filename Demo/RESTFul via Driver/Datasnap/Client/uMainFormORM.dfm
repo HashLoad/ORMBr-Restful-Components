@@ -298,6 +298,7 @@ object Form3: TForm3
   object RESTClientDataSnap1: TRESTClientDataSnap
     ProxyParams.BasicAuthentication = False
     ProxyParams.ProxyPort = 0
+    Authenticator.AuthenticatorType = atNoAuth
     Protocol = Http
     Host = 'localhost'
     Port = 211

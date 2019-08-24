@@ -1,9 +1,10 @@
 unit uPrincipal;
 
-{$DEFINE RESTFULDATASNAP}
-{$DEFINE RESTFULWIRL}
-{$DEFINE RESTFULMARS}
-{$DEFINE RESTFULDELPHIMVC}
+{$DEFINE RESTFULDISABLE}
+//{$DEFINE RESTFULDATASNAP}
+//{$DEFINE RESTFULWIRL}
+//{$DEFINE RESTFULMARS}
+//{$DEFINE RESTFULDELPHIMVC}
 {$DEFINE RESTFULDWCORE}
 
 interface
@@ -69,6 +70,7 @@ type
     Label23: TLabel;
     edtDelphiVersion: TComboBox;
     Label1: TLabel;
+    ckbUsarArquivoConfig: TCheckBox;
     procedure imgPropaganda1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -136,6 +138,8 @@ implementation
 uses
   SVN_Class, FileCtrl, ShellApi, IniFiles, StrUtils, Math, Registry;
 
+const cTOP = 100;
+
 {$R *.dfm}
 
 {$IFNDEF DEBUG}
@@ -173,7 +177,6 @@ procedure TfrmPrincipal.ExtrairDiretorioPacote(NomePacote: string);
   var
     oDirList: TSearchRec;
     iRet: Integer;
-    sDirDpk: string;
   begin
     sDir := IncludeTrailingPathDelimiter(sDir);
     if not DirectoryExists(sDir) then
@@ -210,6 +213,7 @@ procedure TfrmPrincipal.ExtrairDiretorioPacote(NomePacote: string);
 begin
    sDirPackage := '';
    FindDirPackage(IncludeTrailingPathDelimiter(sDirRoot) + 'Source\RESTful Components\Client', NomePacote);
+   FindDirPackage(IncludeTrailingPathDelimiter(sDirRoot) + 'Components\Packages\Delphi', NomePacote);
 end;
 
 // retornar o path do aplicativo
@@ -365,6 +369,7 @@ begin
 end;
 
 procedure TfrmPrincipal.DeixarSomenteLib;
+
   procedure Copiar(const Extensao : string);
   var
     ListArquivos: TStringDynArray;
@@ -378,9 +383,11 @@ procedure TfrmPrincipal.DeixarSomenteLib;
       CopyFile(PWideChar(ListArquivos[i]), PWideChar(IncludeTrailingPathDelimiter(sDirLibrary) + Arquivo), False);
     end;
   end;
+
 begin
   // remover os path com o segundo parametro
   FindDirs(IncludeTrailingPathDelimiter(sDirRoot) + 'Source', False);
+  FindDirs(IncludeTrailingPathDelimiter(sDirRoot) + 'Components\Source', False);
 
   Copiar('*.dcr');
   Copiar('*.res');
@@ -502,6 +509,7 @@ end;
 procedure TfrmPrincipal.AddLibrarySearchPath;
 begin
   FindDirs(IncludeTrailingPathDelimiter(sDirRoot) + 'Source\RESTful Components');
+  FindDirs(IncludeTrailingPathDelimiter(sDirRoot) + 'Components\Source');
 
   // --
   with oORMBr.Installations[iVersion] do
@@ -557,8 +565,7 @@ begin
   // limpar os parâmetros do compilador
   Sender.Options.Clear;
 
-  // não utilizar o dcc32.cfg
-  if (oORMBr.Installations[iVersion].SupportsNoConfig) then
+  if (oORMBr.Installations[iVersion].SupportsNoConfig) and (not ckbUsarArquivoConfig.Checked) then
     Sender.Options.Add('--no-config');
 
   // -B = Build all units
@@ -607,6 +614,12 @@ begin
      if MatchText(VersionNumberStr, ['d17','d18','d19','d20','d21','d22','d23','d24','d25','d26']) then
         Sender.Options.Add('-NSWinapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell,Ibx');
 
+  end;
+  if (ckbUsarArquivoConfig.Checked) then
+  begin
+    LArquivoCfg := ChangeFileExt(FPacoteAtual, '.cfg');
+    Sender.Options.SaveToFile(LArquivoCfg);
+    Sender.Options.Clear;
   end;
 end;
 
@@ -686,41 +699,54 @@ begin
 
   LerConfiguracoes;
 
-//  {$IFDEF RESTFULDATASNAP}
-//  framePacotes1.RestClientDatasnap_dpk.Visible := True;
-//  framePacotes1.RestClientDatasnap_Label.Visible := True;
-//  framePacotes1.RestClientDatasnap_Label.Top := 56;
-//  framePacotes1.RestClientDatasnap_dpk.Checked := True;
-//  framePacotes1.RestClientDatasnap_dpk.Top := 55;
-//  {$ENDIF}
-//  {$IFDEF RESTFULWIRL}
-//  framePacotes1.RestClientWiRL_dpk.Visible := True;
-//  framePacotes1.RestClientWiRL_Label.Visible := True;
-//  framePacotes1.RestClientWiRL_Label.Top := 56;
-//  framePacotes1.RestClientWiRL_dpk.Checked := True;
-//  framePacotes1.RestClientWiRL_dpk.Top := 55;
-//  {$ENDIF}
-//  {$IFDEF RESTFULMARS}
-//  framePacotes1.RestClientMARS_dpk.Visible := True;
-//  framePacotes1.RestClientMARS_Label.Visible := True;
-//  framePacotes1.RestClientMARS_Label.Top := 56;
-//  framePacotes1.RestClientMARS_dpk.Checked := True;
-//  framePacotes1.RestClientMARS_dpk.Top := 55;
-//  {$ENDIF}
-//  {$IFDEF RESTFULDELPHIMVC}
-//  framePacotes1.RestClientDelphiMVC_dpk.Visible := True;
-//  framePacotes1.RestClientDelphiMVC_Label.Visible := True;
-//  framePacotes1.RestClientDelphiMVC_Label.Top := 56;
-//  framePacotes1.RestClientDelphiMVC_dpk.Checked := True;
-//  framePacotes1.RestClientDelphiMVC_dpk.Top := 55;
-//  {$ENDIF}
-//  {$IFDEF RESTFULDWCORE}
-//  framePacotes1.RestClientDWCore_dpk.Visible := True;
-//  framePacotes1.RestClientDWCore_Label.Visible := True;
-//  framePacotes1.RestClientDWCore_Label.Top := 56;
-//  framePacotes1.RestClientDWCore_dpk.Checked := True;
-//  framePacotes1.RestClientDWCore_dpk.Top := 55;
-//  {$ENDIF}
+  {$IFDEF RESTFULDISABLE}
+  framePacotes1.RestClientDatasnap_dpk.Visible := False;
+  framePacotes1.RestClientDatasnap_Label.Visible := False;
+  framePacotes1.RestClientWiRL_dpk.Visible := False;
+  framePacotes1.RestClientWiRL_Label.Visible := False;
+  framePacotes1.RestClientMARS_dpk.Visible := False;
+  framePacotes1.RestClientMARS_Label.Visible := False;
+  framePacotes1.RestClientDelphiMVC_dpk.Visible := False;
+  framePacotes1.RestClientDelphiMVC_Label.Visible := False;
+  framePacotes1.RestClientDWCore_dpk.Visible := False;
+  framePacotes1.RestClientDWCore_Label.Visible := False;
+  {$ENDIF}
+
+  {$IFDEF RESTFULDATASNAP}
+  framePacotes1.RestClientDatasnap_dpk.Visible := True;
+  framePacotes1.RestClientDatasnap_Label.Visible := True;
+  framePacotes1.RestClientDatasnap_Label.Top := cTOP;
+  framePacotes1.RestClientDatasnap_dpk.Checked := True;
+  framePacotes1.RestClientDatasnap_dpk.Top := cTOP - 1;
+  {$ENDIF}
+  {$IFDEF RESTFULWIRL}
+  framePacotes1.RestClientWiRL_dpk.Visible := True;
+  framePacotes1.RestClientWiRL_Label.Visible := True;
+  framePacotes1.RestClientWiRL_Label.Top := cTOP;
+  framePacotes1.RestClientWiRL_dpk.Checked := True;
+  framePacotes1.RestClientWiRL_dpk.Top := cTOP - 1;
+  {$ENDIF}
+  {$IFDEF RESTFULMARS}
+  framePacotes1.RestClientMARS_dpk.Visible := True;
+  framePacotes1.RestClientMARS_Label.Visible := True;
+  framePacotes1.RestClientMARS_Label.Top := cTOP;
+  framePacotes1.RestClientMARS_dpk.Checked := True;
+  framePacotes1.RestClientMARS_dpk.Top := cTOP - 1;
+  {$ENDIF}
+  {$IFDEF RESTFULDELPHIMVC}
+  framePacotes1.RestClientDelphiMVC_dpk.Visible := True;
+  framePacotes1.RestClientDelphiMVC_Label.Visible := True;
+  framePacotes1.RestClientDelphiMVC_Label.Top := cTOP;
+  framePacotes1.RestClientDelphiMVC_dpk.Checked := True;
+  framePacotes1.RestClientDelphiMVC_dpk.Top := cTOP - 1;
+  {$ENDIF}
+  {$IFDEF RESTFULDWCORE}
+  framePacotes1.RestClientDWCore_dpk.Visible := True;
+  framePacotes1.RestClientDWCore_Label.Visible := True;
+  framePacotes1.RestClientDWCore_Label.Top := cTOP;
+  framePacotes1.RestClientDWCore_dpk.Checked := True;
+  framePacotes1.RestClientDWCore_dpk.Top := cTOP - 1;
+  {$ENDIF}
 end;
 
 procedure TfrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);

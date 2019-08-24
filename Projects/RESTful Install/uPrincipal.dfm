@@ -1,12 +1,13 @@
 object frmPrincipal: TfrmPrincipal
   Left = 359
   Top = 202
-  ActiveControl = framePacotes1
+  ActiveControl = wizPgInicio
   BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsSingle
+  BorderStyle = bsNone
+  BorderWidth = 1
   Caption = 'Instalador ORMBr - REST Client  Components'
-  ClientHeight = 612
-  ClientWidth = 718
+  ClientHeight = 639
+  ClientWidth = 722
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,9 +23,9 @@ object frmPrincipal: TfrmPrincipal
   object wizPrincipal: TJvWizard
     Left = 0
     Top = 0
-    Width = 718
-    Height = 612
-    ActivePage = wizPgPacotes
+    Width = 722
+    Height = 639
+    ActivePage = wizPgInicio
     ButtonBarHeight = 42
     ButtonStart.Caption = 'Para o in'#237'cio'
     ButtonStart.NumGlyphs = 1
@@ -48,13 +49,14 @@ object frmPrincipal: TfrmPrincipal
     ButtonHelp.Caption = '&Ajuda'
     ButtonHelp.NumGlyphs = 1
     ButtonHelp.Width = 100
+    ShowDivider = False
     ShowRouteMap = True
     OnFinishButtonClick = wizPrincipalFinishButtonClick
     OnCancelButtonClick = wizPrincipalCancelButtonClick
-    Color = clWhite
+    Color = 6709819
     DesignSize = (
-      718
-      612)
+      722
+      639)
     object wizPgInicio: TJvWizardWelcomePage
       Header.Visible = False
       Header.Height = 50
@@ -79,7 +81,7 @@ object frmPrincipal: TfrmPrincipal
       Header.Subtitle.Font.Name = 'Arial'
       Header.Subtitle.Font.Style = []
       VisibleButtons = [bkNext, bkCancel]
-      Color = 15724527
+      Color = 9407864
       Caption = 'In'#237'cio'
       OnNextButtonClick = wizPgInicioNextButtonClick
       WaterMark.Visible = False
@@ -96,7 +98,7 @@ object frmPrincipal: TfrmPrincipal
           'entes RESTful para uso como o ORMBr em seu computador.'#13#10#13#10#201' reco' +
           'mend'#225'vel fechar todos os outros aplicativos antes de continuar.'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clNavy
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -904,7 +906,7 @@ object frmPrincipal: TfrmPrincipal
         Cursor = crHandPoint
         Caption = 'http://www.ormbr.com.br'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = 2667766
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsUnderline]
@@ -919,7 +921,7 @@ object frmPrincipal: TfrmPrincipal
         Cursor = crHandPoint
         Caption = 'http://ormbr.com.br/forum/'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = 2667766
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsUnderline]
@@ -933,7 +935,7 @@ object frmPrincipal: TfrmPrincipal
         Height = 13
         Caption = 'Para maiores informa'#231#245'es sobre o projeto ORMBr visite:'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clGreen
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -948,7 +950,7 @@ object frmPrincipal: TfrmPrincipal
           'Ajude o projeto ORMBr doando para mais informa'#231#245'es visite o site' +
           ':'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clGreen
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
@@ -961,7 +963,7 @@ object frmPrincipal: TfrmPrincipal
         Height = 13
         Caption = 'Para tirar d'#250'vidas, ajudar ou dar sugest'#245'es visite:'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clGreen
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -975,7 +977,7 @@ object frmPrincipal: TfrmPrincipal
         Cursor = crHandPoint
         Caption = 'https://github.com/delphi-blocks/WiRL'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = 2667766
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsUnderline]
@@ -991,7 +993,7 @@ object frmPrincipal: TfrmPrincipal
           'Para baixar os Frameworks RESTful visite os links abaixo descrit' +
           'os'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clGreen
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -1005,7 +1007,7 @@ object frmPrincipal: TfrmPrincipal
         Cursor = crHandPoint
         Caption = 'https://github.com/andrea-magni/MARS'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = 2667766
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsUnderline]
@@ -1020,7 +1022,7 @@ object frmPrincipal: TfrmPrincipal
         Cursor = crHandPoint
         Caption = 'https://github.com/danieleteti/delphimvcframework'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = 2667766
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsUnderline]
@@ -1037,7 +1039,7 @@ object frmPrincipal: TfrmPrincipal
           'https://svn.code.sf.net/p/rest-dataware-componentes/dataware/tru' +
           'nk'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = 2667766
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsUnderline]
@@ -1066,9 +1068,13 @@ object frmPrincipal: TfrmPrincipal
       Header.Subtitle.Font.Height = -11
       Header.Subtitle.Font.Name = 'Arial'
       Header.Subtitle.Font.Style = []
-      Color = clWhite
+      Color = 9407864
       Caption = 'Configura'#231#245'es'
       OnNextButtonClick = wizPgConfiguracaoNextButtonClick
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label4: TLabel
         Left = 17
         Top = 68
@@ -1076,7 +1082,7 @@ object frmPrincipal: TfrmPrincipal
         Height = 13
         Caption = 'Vers'#245'es do delphi'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -1089,7 +1095,7 @@ object frmPrincipal: TfrmPrincipal
         Height = 13
         Caption = 'Plataforma'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -1097,12 +1103,12 @@ object frmPrincipal: TfrmPrincipal
       end
       object Label2: TLabel
         Left = 17
-        Top = 13
+        Top = 12
         Width = 183
         Height = 13
         Caption = 'Diret'#243'rio onde est'#225' instalado o ORMBr'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -1126,7 +1132,7 @@ object frmPrincipal: TfrmPrincipal
         Height = 13
         Caption = 'ComboBox Invisivel'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -1146,18 +1152,19 @@ object frmPrincipal: TfrmPrincipal
         Font.Style = []
         ItemIndex = 0
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 2
         Text = 'Win32'
         Items.Strings = (
           'Win32')
       end
       object edtDirDestino: TEdit
         Left = 17
-        Top = 29
+        Top = 28
         Width = 487
         Height = 21
+        Color = 6709819
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -1171,16 +1178,24 @@ object frmPrincipal: TfrmPrincipal
         Width = 350
         Height = 17
         Caption = 'Deixar somente a pasta LibXX no Library Path do Delphi?'
-        TabOrder = 2
+        TabOrder = 4
       end
       object clbDelphiVersion: TCheckListBox
         Left = 17
         Top = 84
         Width = 172
         Height = 401
-        Color = clBtnFace
+        Color = 6709819
+        Ctl3D = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
         ItemHeight = 13
-        TabOrder = 3
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 1
         OnClick = clbDelphiVersionClick
       end
       object edtDelphiVersion: TComboBox
@@ -1195,8 +1210,22 @@ object frmPrincipal: TfrmPrincipal
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 4
+        TabOrder = 3
         Visible = False
+      end
+      object ckbUsarArquivoConfig: TCheckBox
+        Left = 195
+        Top = 138
+        Width = 283
+        Height = 17
+        Caption = 'Usar arquivo de configura'#231#227'o (*.cfg)'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clSilver
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 5
       end
     end
     object wizPgPacotes: TJvWizardInteriorPage
@@ -1219,70 +1248,96 @@ object frmPrincipal: TfrmPrincipal
       Header.Subtitle.Font.Name = 'Tahoma'
       Header.Subtitle.Font.Style = []
       Caption = 'Pacotes'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inline framePacotes1: TframePacotes
         Left = 0
         Top = 0
-        Width = 552
-        Height = 499
+        Width = 556
+        Height = 526
         HorzScrollBar.Visible = False
         VertScrollBar.Visible = False
         Align = alClient
+        Color = 9407864
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 2667766
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentBackground = False
+        ParentColor = False
+        ParentFont = False
         TabOrder = 0
-        ExplicitWidth = 552
-        ExplicitHeight = 499
+        ExplicitWidth = 556
+        ExplicitHeight = 526
         inherited pnlBotoesMarcar: TPanel
-          Top = 458
-          Width = 552
-          ExplicitTop = 458
-          ExplicitWidth = 552
+          Top = 485
+          Width = 556
+          ExplicitTop = 485
+          ExplicitWidth = 556
           inherited btnPacotesDesmarcarTodos: TSpeedButton
-            Left = 502
+            Left = 506
             ExplicitLeft = 504
           end
           inherited btnPacotesMarcarTodos: TSpeedButton
-            Left = 452
+            Left = 456
             ExplicitLeft = 454
           end
         end
         inherited ScrollBox1: TScrollBox
-          Width = 546
-          Height = 452
-          ExplicitWidth = 546
-          ExplicitHeight = 452
+          Width = 550
+          Height = 479
+          ExplicitWidth = 550
+          ExplicitHeight = 479
+          inherited Bevel3: TBevel
+            Left = 161
+            Width = 366
+            ExplicitLeft = 161
+            ExplicitWidth = 366
+          end
           inherited RestServerDatasnap_dpk: TCheckBox
             Checked = True
             Enabled = False
+            Font.Color = 2667766
             State = cbChecked
           end
           inherited RestServerWiRL_dpk: TCheckBox
             Checked = True
             Enabled = False
+            Font.Color = 2667766
             State = cbChecked
           end
           inherited RestServerMARS_dpk: TCheckBox
             Checked = True
             Enabled = False
+            Font.Color = 2667766
             State = cbChecked
           end
           inherited RestServerDelphiMVC_dpk: TCheckBox
             Checked = True
             Enabled = False
+            Font.Color = 2667766
             State = cbChecked
           end
           inherited RestClientDatasnap_dpk: TCheckBox
-            Visible = True
+            Font.Color = 2667766
           end
           inherited RestClientWiRL_dpk: TCheckBox
-            Visible = True
+            Font.Color = 2667766
           end
           inherited RestClientMARS_dpk: TCheckBox
-            Visible = True
+            Font.Color = 2667766
           end
           inherited RestClientDelphiMVC_dpk: TCheckBox
-            Visible = True
+            Font.Color = 2667766
           end
           inherited RestClientDWCore_dpk: TCheckBox
-            Visible = True
+            Font.Color = 2667766
+          end
+          inherited RestCoreClient_dpk: TCheckBox
+            Font.Color = 2667766
           end
         end
       end
@@ -1308,10 +1363,14 @@ object frmPrincipal: TfrmPrincipal
       Header.Subtitle.Font.Height = -11
       Header.Subtitle.Font.Name = 'Arial'
       Header.Subtitle.Font.Style = []
-      Color = clWhite
+      Color = 9407864
       Caption = 'Instala'#231#227'o'
       OnEnterPage = wizPgInstalacaoEnterPage
       OnNextButtonClick = wizPgInstalacaoNextButtonClick
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object btnInstalar: TSpeedButton
         Left = 430
         Top = 463
@@ -1333,11 +1392,16 @@ object frmPrincipal: TfrmPrincipal
         Top = 72
         Width = 516
         Height = 362
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        Color = 6709819
+        Ctl3D = False
         Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
+        Font.Color = clWhite
         Font.Height = -12
         Font.Name = 'Courier New'
         Font.Style = [fsBold]
+        ParentCtl3D = False
         ParentFont = False
         ParentShowHint = False
         ShowHint = True
@@ -1355,22 +1419,28 @@ object frmPrincipal: TfrmPrincipal
         Top = 15
         Width = 516
         Height = 51
-        BevelOuter = bvLowered
+        BevelOuter = bvNone
+        Color = 6709819
+        ParentBackground = False
         TabOrder = 0
         object lbInfo: TListBox
-          Left = 1
-          Top = 1
-          Width = 514
-          Height = 49
+          Left = 0
+          Top = 0
+          Width = 516
+          Height = 51
           Align = alClient
+          BevelInner = bvNone
+          BevelOuter = bvNone
           BorderStyle = bsNone
+          Color = 6709819
+          Ctl3D = False
           Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
+          Font.Color = clWhite
           Font.Height = -11
           Font.Name = 'Courier New'
           Font.Style = []
           ItemHeight = 14
-          ParentColor = True
+          ParentCtl3D = False
           ParentFont = False
           TabOrder = 0
         end
@@ -1396,8 +1466,12 @@ object frmPrincipal: TfrmPrincipal
       Header.Subtitle.Font.Name = 'Arial'
       Header.Subtitle.Font.Style = []
       VisibleButtons = [bkFinish]
-      Color = clWhite
+      Color = 9407864
       Caption = 'Fim'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label3: TLabel
         Left = 39
         Top = 58
@@ -1406,7 +1480,7 @@ object frmPrincipal: TfrmPrincipal
         AutoSize = False
         Caption = 'A instala'#231#227'o dos Componentes foi conclu'#237'da com '#234'xito.'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clMaroon
+        Font.Color = clWhite
         Font.Height = -16
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -1421,7 +1495,7 @@ object frmPrincipal: TfrmPrincipal
         Cursor = crHandPoint
         Caption = 'http://www.ormbr.com.br'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = 2667766
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsUnderline]
@@ -1436,7 +1510,7 @@ object frmPrincipal: TfrmPrincipal
         Cursor = crHandPoint
         Caption = 'http://ormbr.com.br/forum/'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = 2667766
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsUnderline]
@@ -1451,7 +1525,7 @@ object frmPrincipal: TfrmPrincipal
         Cursor = crHandPoint
         Caption = 'http://www.ormbr.com.br/'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = 2667766
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsUnderline]
@@ -1465,7 +1539,7 @@ object frmPrincipal: TfrmPrincipal
         Height = 13
         Caption = 'Para maiores informa'#231#245'es sobre o projeto ORMBr visite:'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clGreen
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -1480,7 +1554,7 @@ object frmPrincipal: TfrmPrincipal
           'Ajude o projeto ORMBr doando para mais informa'#231#245'es visite o site' +
           ':'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clGreen
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -1494,7 +1568,7 @@ object frmPrincipal: TfrmPrincipal
         Height = 13
         Caption = 'Para tirar d'#250'vidas, ajudar ou dar sugest'#245'es visite:'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clGreen
+        Font.Color = clWhite
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
@@ -1508,7 +1582,7 @@ object frmPrincipal: TfrmPrincipal
         Cursor = crHandPoint
         Caption = 'Telegram: https://t.me/ormbr'
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = 2667766
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsUnderline]
@@ -1520,10 +1594,10 @@ object frmPrincipal: TfrmPrincipal
       Left = 0
       Top = 71
       Width = 166
-      Height = 499
+      Height = 526
       ItemHeight = 30
       AllowClickableNodes = False
-      Color = 11583044
+      Color = 6709819
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -11
@@ -1538,13 +1612,13 @@ object frmPrincipal: TfrmPrincipal
     object pnlTopo: TPanel
       Left = 0
       Top = 0
-      Width = 718
+      Width = 722
       Height = 71
       Align = alTop
       BevelOuter = bvNone
-      Color = 5192235
+      Color = 6709819
       ParentBackground = False
-      TabOrder = 4
+      TabOrder = 2
       object Label9: TLabel
         Left = 14
         Top = 19

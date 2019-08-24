@@ -90,9 +90,9 @@
         <VerInfo_Locale>1046</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
-        <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
         <DCC_Define>DRIVERRESTFUL;$(DCC_Define)</DCC_Define>
         <DCC_Description>ORMBr - RESTful Core</DCC_Description>
+        <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
@@ -164,6 +164,7 @@
         <DCCReference Include="dbrtl.dcp"/>
         <DCCReference Include="fmx.dcp"/>
         <DCCReference Include="designide.dcp"/>
+        <DCCReference Include="ORMBrCore.dcp"/>
         <DCCReference Include="ormbr.client.pas"/>
         <DCCReference Include="ormbr.client.base.pas"/>
         <DCCReference Include="ormbr.client.consts.pas"/>
@@ -176,6 +177,8 @@
         <DCCReference Include="ormbr.client.methods.pas"/>
         <DCCReference Include="ormbr.client.interfaces.pas"/>
         <DCCReference Include="ormbr.session.rest.pas"/>
+        <DCCReference Include="D:\PROJETOS-Brasil\ORMBr\Source\RESTful\ormbr.restdataset.adapter.pas"/>
+        <DCCReference Include="..\Common\ormbr.rest.classes.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -197,8 +200,7 @@
                     <Source Name="MainSource">RestCoreClient.dpk</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="D:\ACBr2\Lib\Delphi\LibD26\ACBr_Integrador.bpl">ACBr - Integrador - (http://www.projetoacbr.com.br/)</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">

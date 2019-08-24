@@ -33,16 +33,16 @@ package RestClientDatasnap;
 requires
   rtl,
   dbrtl,
-  CustomIPTransport,
-  bindengine,
-  bindcomp,
-  RESTComponents,
   RestCoreClient,
+  CustomIPTransport,
   IndyIPCommon,
   IndySystem,
   IndyProtocols,
   IndyCore,
-  IndyIPClient;
+  IndyIPClient,
+  bindengine,
+  bindcomp,
+  RESTComponents;
 
 contains
   ormbr.client.datasnap in 'ormbr.client.datasnap.pas',

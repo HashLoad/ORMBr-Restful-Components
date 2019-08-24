@@ -28,6 +28,9 @@ uses
   Generics.Collections;
 
 type
+  /// <summary>
+  ///   Querying Data
+  /// </summary>
   TRESTQuery = class
   private
     FPath: String;
@@ -45,11 +48,12 @@ type
     function GetTop: Integer;
     function GetCount: Boolean;
     function GetResourceName: String;
-    function ParseOperator(AParams: String): String;
-    function ParseOperatorReverse(AParams: String): String;
-    function ParsePathTokens(const APath: String): TArray<String>;
     function SplitString(const AValue, ADelimiters: String): TStringDynArray;
-    procedure ParseClassNameAndID(const AValue: String);
+    function ParseQueryingData(const AURI: String): String;
+    function ParseOperator(const AParams: String): String;
+    function ParseOperatorReverse(const AParams: String): String;
+    function ParsePathTokens(const APath: String): TArray<String>;
+    procedure ParseResourceNameAndID(const AValue: String);
     procedure ParseQueryTokens;
   protected
     const cPATH_SEPARATOR = '/';
@@ -59,16 +63,14 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure ParseQuery(const AURI: String);
-
-    procedure SetSelect(Value: String);
-    procedure SetExpand(Value: String);
-    procedure SetFilter(Value: String);
-    procedure SetSearch(Value: String);
-    procedure SetOrderBy(Value: String);
-    procedure SetSkip(Value: Variant);
-    procedure SetTop(Value: Variant);
-    procedure SetCount(Value: Variant);
-
+    procedure SetSelect(const Value: String);
+    procedure SetExpand(const Value: String);
+    procedure SetFilter(const Value: String);
+    procedure SetSearch(const Value: String);
+    procedure SetOrderBy(const Value: String);
+    procedure SetSkip(const Value: Variant);
+    procedure SetTop(const Value: Variant);
+    procedure SetCount(const Value: Variant);
     property Path: String read FPath;
     property Query: String read FQuery;
     property ResourceName: String read GetResourceName;
@@ -101,7 +103,7 @@ begin
   inherited;
 end;
 
-procedure TRESTQuery.SetExpand(Value: String);
+procedure TRESTQuery.SetExpand(const Value: String);
 begin
   if Value = '' then
     Exit;
@@ -176,26 +178,29 @@ end;
 procedure TRESTQuery.ParseQuery(const AURI: String);
 var
   LPos: Integer;
-  LParams: String;
+  LQueryingData: String;
 begin
-  ParseClassNameAndID(AURI);
   FPath := AURI;
-  LPos := Pos(cQUERY_INITIAL, FPath);
-  if LPos = 0 then
-    Exit;
-
-  LParams := Copy(FPath, LPos +1, MaxInt);
-  ///
+  ParseResourceNameAndID(FPath);
+  LQueryingData := ParseQueryingData(FPath);
   FPathTokens := ParsePathTokens(FPath);
-//  LPos := Pos(cQUERY_INITIAL, FPathTokens[High(FPathTokens)]);
-//  if LPos > 0 then
-//    FResourceName := Copy(FPathTokens[High(FPathTokens)], 1, LPos -1);
-  FQuery := ParseOperator(LParams);
+  FQuery := ParseOperator(LQueryingData);
   /// <summary> Dicionário </summary>
   ParseQueryTokens;
 end;
 
-procedure TRESTQuery.ParseClassNameAndID(const AValue: String);
+function TRESTQuery.ParseQueryingData(const AURI: String): String;
+var
+  LPos: Integer;
+begin
+  Result := '';
+  LPos := Pos(cQUERY_INITIAL, AURI);
+  if LPos = 0 then
+    Exit;
+  Result := Copy(AURI, LPos +1, MaxInt);
+end;
+
+procedure TRESTQuery.ParseResourceNameAndID(const AValue: String);
 var
   LChar: Char;
   LFor: Integer;
@@ -215,7 +220,7 @@ begin
           FResourceName := LCommand;
           /// <summary> Command Next </summary>
           if LFor +1 <= LLength then
-            ParseClassNameAndID(Copy(AValue, LFor +1, LLength));
+            ParseResourceNameAndID(Copy(AValue, LFor +1, LLength));
           Break;
         end;
       ')':
@@ -223,7 +228,7 @@ begin
           FID := LCommand;
           /// <summary> Command Next </summary>
           if LFor +1 <= LLength then
-            ParseClassNameAndID(Copy(AValue, LFor +1, LLength));
+            ParseResourceNameAndID(Copy(AValue, LFor +1, LLength));
           Break;
         end;
       '?','$':
@@ -233,12 +238,12 @@ begin
     else
       LCommand := LCommand + LChar;
     end;
-  until (LFor >= LLength );
+  until (LFor >= LLength);
   if Length(FResourceName) = 0 then
     FResourceName := LCommand;
 end;
 
-function TRESTQuery.ParseOperator(AParams: String): string;
+function TRESTQuery.ParseOperator(const AParams: String): String;
 begin
   Result := AParams;
   Result := StringReplace(Result, ' eq ' , ' = ' , [rfReplaceAll]);
@@ -253,7 +258,7 @@ begin
   Result := StringReplace(Result, ' div ', ' / ' , [rfReplaceAll]);
 end;
 
-function TRESTQuery.ParseOperatorReverse(AParams: String): string;
+function TRESTQuery.ParseOperatorReverse(const AParams: String): String;
 begin
   Result := AParams;
   Result := StringReplace(Result, ' = ' , ' eq ' , [rfReplaceAll]);
@@ -308,7 +313,7 @@ begin
   end;
 end;
 
-procedure TRESTQuery.SetCount(Value: Variant);
+procedure TRESTQuery.SetCount(const Value: Variant);
 begin
   if Value = '' then
     Exit;
@@ -319,7 +324,7 @@ begin
     FQueryTokens.Add('$count', VarToStr(Value));
 end;
 
-procedure TRESTQuery.SetFilter(Value: String);
+procedure TRESTQuery.SetFilter(const Value: String);
 begin
   if Value = '' then
     Exit;
@@ -330,7 +335,7 @@ begin
     FQueryTokens.Add('$filter', ParseOperator(Value));
 end;
 
-procedure TRESTQuery.SetTop(Value: Variant);
+procedure TRESTQuery.SetTop(const Value: Variant);
 begin
   if Value = '' then
     Exit;
@@ -341,7 +346,7 @@ begin
     FQueryTokens.Add('$top', VarToStr(Value));
 end;
 
-procedure TRESTQuery.SetSearch(Value: String);
+procedure TRESTQuery.SetSearch(const Value: String);
 begin
   if Value = '' then
     Exit;
@@ -352,7 +357,7 @@ begin
     FQueryTokens.Add('$search', Value);
 end;
 
-procedure TRESTQuery.SetSelect(Value: String);
+procedure TRESTQuery.SetSelect(const Value: String);
 begin
   if Value = '' then
     Exit;
@@ -363,7 +368,7 @@ begin
     FQueryTokens.Add('$select', Value);
 end;
 
-procedure TRESTQuery.SetSkip(Value: Variant);
+procedure TRESTQuery.SetSkip(const Value: Variant);
 begin
   if Value = '' then
     Exit;
@@ -374,7 +379,7 @@ begin
     FQueryTokens.Add('$skip', VarToStr(Value));
 end;
 
-procedure TRESTQuery.SetOrderBy(Value: String);
+procedure TRESTQuery.SetOrderBy(const Value: String);
 begin
   if Value = '' then
     Exit;

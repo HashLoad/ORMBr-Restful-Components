@@ -144,6 +144,12 @@ begin
       if LResource <> nil then
         FResource := Resource(LResource).Name;
 
+      if LResource = nil then
+      begin
+        LTable := LObject.GetTable;
+        if LTable <> nil then
+          FResource := Table(LTable).Name;
+      end;
       /// <summary>
       ///   Nome do SubRecurso
       /// </summary>
@@ -315,7 +321,11 @@ begin
     /// <summary>
     ///   Caso o JSON retornado não seja um array, é tranformado em um.
     /// </summary>
+    {$IFDEF NEXTGEN}
+    if LJSON[0] = '{' then
+    {$ELSE}
     if LJSON[1] = '{' then
+    {$ENDIF}
       LJSON := '[' + LJSON + ']';
 
     /// <summary>
@@ -421,7 +431,11 @@ begin
     /// <summary>
     ///   Caso o JSON retornado não seja um array, é tranformado em um.
     /// </summary>
+    {$IFDEF NEXTGEN}
+    if LJSON[0] = '{' then
+    {$ELSE}
     if LJSON[1] = '{' then
+    {$ENDIF}
       LJSON := '[' + LJSON + ']';
 
     /// <summary>

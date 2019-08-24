@@ -27,7 +27,7 @@ uses
 
 type
   /// <summary>
-  /// Fábrica de conexões abstratas
+  ///   Fábrica de conexões abstratas
   /// </summary>
   TFactoryRestWiRL = class (TFactoryRestConnection)
   public

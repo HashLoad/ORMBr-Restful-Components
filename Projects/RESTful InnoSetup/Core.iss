@@ -1,7 +1,7 @@
 [Setup]
 PrivilegesRequired=admin
 DefaultDirName=C:\ORMBr\
-SetupIconFile=..\RESTful Install\ORMBrInstall_Icon.ico
+SetupIconFile=..\RESTful Install\RESTfulInstall_Icon.ico
 Compression=lzma/max
 SolidCompression=yes
 UserInfoPage = yes

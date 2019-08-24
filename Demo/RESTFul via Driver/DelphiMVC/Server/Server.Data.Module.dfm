@@ -4,7 +4,9 @@ object ServerDataModule: TServerDataModule
   Width = 362
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'Database=D:\ORMBr\Demo\Data\Database\database.fdb'
+      
+        'Database=D:\PROJETOS-Brasil\ORMBr\Examples\Data\Database\databas' +
+        'e.fdb'
       'User_Name=SYSDBA'
       'Password=masterkey'
       'DriverID=FB')

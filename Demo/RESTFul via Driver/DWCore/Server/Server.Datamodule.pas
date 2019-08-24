@@ -40,15 +40,10 @@ type
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
     Master: TDWServerEvents;
     Lookup: TDWServerEvents;
-    ServerEvents: TDWServerEvents;
     procedure MasterEventsselectidReplyEvent(
       var Params: TDWParams; var Result: string);
     procedure MasterEventsselectwhereReplyEvent(
       var Params: TDWParams; var Result: string);
-    procedure MasterEventsinsertReplyEvent(var Params: TDWParams;
-      var Result: string);
-    procedure MasterEventsupdateReplyEvent(var Params: TDWParams;
-      var Result: string);
     procedure MasterEventsdeleteReplyEvent(var Params: TDWParams;
       var Result: string);
     procedure DataModuleCreate(Sender: TObject);
@@ -63,6 +58,12 @@ type
       var Result: string; const RequestType: TRequestType;
       var StatusCode: Integer; RequestHeader: TStringList);
     procedure DWServerEvents1EventsapiReplyEventByType(var Params: TDWParams;
+      var Result: string; const RequestType: TRequestType;
+      var StatusCode: Integer; RequestHeader: TStringList);
+    procedure MasterEventsupdateReplyEventByType(var Params: TDWParams;
+      var Result: string; const RequestType: TRequestType;
+      var StatusCode: Integer; RequestHeader: TStringList);
+    procedure MasterEventsinsertReplyEventByType(var Params: TDWParams;
       var Result: string; const RequestType: TRequestType;
       var StatusCode: Integer; RequestHeader: TStringList);
   private
@@ -108,14 +109,15 @@ begin
                 .delete(Params.Items[0].AsInteger);
 end;
 
-procedure TServerDataModule.MasterEventsinsertReplyEvent(
-  var Params: TDWParams; var Result: string);
+procedure TServerDataModule.MasterEventsinsertReplyEventByType(
+  var Params: TDWParams; var Result: string; const RequestType: TRequestType;
+  var StatusCode: Integer; RequestHeader: TStringList);
 var
   LJSONValue: TJSONValue;
 begin
-  if Params.Count = 1 then
+  if Params.Count > 0 then
   begin
-    LJSONValue := TORMBrJSONUtil.JSONStringToJSONValue(Params.Items[0].AsString);
+    LJSONValue := TORMBrJSONUtil.JSONStringToJSONValue(Params.ItemsString['json'].AsString);
     try
       Result := FMasterResource
                   .insert(LJSONValue)
@@ -167,14 +169,15 @@ begin
                              Params.Items[1].AsString).ToJSON;
 end;
 
-procedure TServerDataModule.MasterEventsupdateReplyEvent(
-  var Params: TDWParams; var Result: string);
+procedure TServerDataModule.MasterEventsupdateReplyEventByType(
+  var Params: TDWParams; var Result: string; const RequestType: TRequestType;
+  var StatusCode: Integer; RequestHeader: TStringList);
 var
   LJSONValue: TJSONValue;
 begin
-  if Params.Count = 1 then
+  if Params.Count > 0 then
   begin
-    LJSONValue := TORMBrJSONUtil.JSONStringToJSONValue(Params.Items[0].AsString);
+    LJSONValue := TORMBrJSONUtil.JSONStringToJSONValue(Params.ItemsString['json'].AsString);
     try
       Result := FMasterResource
                   .update(LJSONValue);

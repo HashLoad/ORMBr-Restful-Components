@@ -20,7 +20,6 @@ interface
 
 uses
   DB,
-  Dialogs,
   SysUtils,
   StrUtils,
   Classes,
@@ -31,6 +30,7 @@ type
   TClientParam = array of String;
   PClientParam = ^TClientParam;
 
+//  TAuthentication = procedure (var AAuthorized: Boolean) of object;
   TBeforeCommandEvent = procedure (ARequestMethod: String) of object;
   TAfterCommandEvent = procedure (AStatusCode: Integer;
                               var AResponseString: String;
@@ -46,6 +46,7 @@ type
 
   TORMBrClient = class(TORMBrClientBase)
   private
+//    FAuthentication: TAuthentication;
     FBeforeCommand: TBeforeCommandEvent;
     FAfterCommand: TAfterCommandEvent;
     function GetMethodGET: String;
@@ -89,6 +90,11 @@ type
     FPort: Integer;
     FServerUse: Boolean;
     FClassNotServerUse: Boolean;
+    /// <summary>
+    ///   Variável de controle, para conseguir chamar o método Execute()
+    ///   de dentro do evento de autenticação.
+    /// </summary>
+    FPerformingAuthentication: Boolean;
     FMethodSelect: String;
     FMethodSelectID: String;
     FMethodSelectWhere: String;
@@ -107,6 +113,7 @@ type
     function GetBaseURL: String;
     procedure DoBeforeCommand; virtual;
     procedure DoAfterCommand; virtual;
+//    procedure DoAuthentication(var AAuthorized: Boolean); virtual;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -131,8 +138,9 @@ type
     property MethodGETNextPacket: String read GetMethodGETNextPacket write SetMethodGETNextPacket;
     property MethodGETNextPacketWhere: String read GetMethodGETNextPacketWhere write SetMethodGETNextPacketWhere;
     property BaseURL: String read GetBaseURL;
-    property BeforeCommand: TBeforeCommandEvent read FBeforeCommand write FBeforeCommand;
-    property AfterCommand: TAfterCommandEvent read FAfterCommand write FAfterCommand;
+//    property OnAuthentication: TAuthentication read FAuthentication write FAuthentication;
+    property OnBeforeCommand: TBeforeCommandEvent read FBeforeCommand write FBeforeCommand;
+    property OnAfterCommand: TAfterCommandEvent read FAfterCommand write FAfterCommand;
     property OnErrorCommand: TErrorCommandEvent read FErrorCommand write FErrorCommand;
   end;
 
@@ -155,13 +163,16 @@ constructor TORMBrClient.Create(AOwner: TComponent);
 begin
   inherited;
   {$IFDEF TRIAL}
-  MessageDlg('Esta é uma versão de demonstração do ORMBr - REST Client Components. Adquira a versão completa pelo E-mail ormbrframework@gmail.com', mtInformation, [mbOk], 0);
+  try
+    raise Exception.Create('Esta é uma versão de demonstração do ORMBr - REST Client Components. Adquira a versão completa pelo E-mail ormbrframework@gmail.com');
+  except end;
   {$ENDIF}
   FParams := TParams.Create(Self);
   FBodyParams := TParams.Create(Self);
   FQueryParams := TParams.Create(Self);
   FServerUse := False;
   FClassNotServerUse := False;
+  FPerformingAuthentication := False;
   FHost := 'localhost';
   FPort := 8080;
   FMethodSelect := '';
@@ -199,6 +210,12 @@ begin
   if Assigned(FAfterCommand) then
     FAfterCommand(FStatusCode, FResponseString, FRequestMethod);
 end;
+
+//procedure TORMBrClient.DoAuthentication(var AAuthorized: Boolean);
+//begin
+//  if Assigned(FAuthenticator) then
+//    FAuthenticator(AAuthorized);
+//end;
 
 procedure TORMBrClient.DoBeforeCommand;
 begin

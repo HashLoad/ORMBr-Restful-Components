@@ -40,6 +40,10 @@ type
     Label1: TLabel;
     RestCoreClient_dpk: TCheckBox;
     Label13: TLabel;
+    Label7: TLabel;
+    Bevel3: TBevel;
+    Label8: TLabel;
+    ORMBrCore_dpk: TCheckBox;
     procedure btnPacotesMarcarTodosClick(Sender: TObject);
     procedure btnPacotesDesmarcarTodosClick(Sender: TObject);
     procedure VerificarCheckboxes(Sender: TObject);

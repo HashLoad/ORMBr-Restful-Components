@@ -127,8 +127,6 @@ begin
 end;
 
 procedure TForm3.FormCreate(Sender: TObject);
-var
-  LMaster: TMaster;
 begin
   RESTClientWiRL1
     .AsConnection

@@ -95,10 +95,13 @@ end;
 
 procedure TServerForm.FormCreate(Sender: TObject);
 begin
+//  RESTServicePooler1.ServerMethodClass := TServerDataModule;
+
+  /// <summary>
+  ///   ORMBr Server
+  /// </summary>
   RESTServicePooler1.ServerMethodClass := TServerMethods;
-
   FConnection := TFactoryFireDAC.Create(FDConnection1, dnFirebird);
-
   RESTServerDWCore := TRESTServerDWCore.Create(Self);
   RESTServerDWCore.RESTServicePooler := RESTServicePooler1;
   RESTServerDWCore.Connection := FConnection;

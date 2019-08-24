@@ -16,7 +16,6 @@ uses
   ormbr.rest.json,
   ormbr.json.utils,
   /// ORMBr conexão database
-  ormbr.types.database,
   ormbr.factory.firedac,
   ormbr.factory.interfaces,
   /// ORMBr

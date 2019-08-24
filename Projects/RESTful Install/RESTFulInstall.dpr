@@ -1,4 +1,4 @@
-program ORMBrInstall;
+program RESTFulInstall;
 
 uses
   Forms,

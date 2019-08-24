@@ -50,7 +50,6 @@ type
   private
     class var
     FConnection: IDBConnection;
-    FQueryParams: String;
   private
     FDSServer: TDSServer;
     procedure SetDSServer(const Value: TDSServer);
@@ -60,8 +59,8 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     class function GetConnection: IDBConnection;
-  published
     property Connection: IDBConnection read GetConnection write SetConnection;
+  published
     property DSServer: TDSServer read FDSServer write SetDSServer;
   end;
 

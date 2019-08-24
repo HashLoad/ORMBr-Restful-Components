@@ -269,9 +269,6 @@ end;
 function TRESTClientWiRL.Execute(const AResource, ASubResource: String;
   const ARequestMethod: TRESTRequestMethodType;
   const AParamsProc: TProc): String;
-var
-  LFor: Integer;
-  LParams: String;
 
   procedure SetURLValue;
   begin
@@ -292,17 +289,13 @@ var
 
 begin
   Result := '';
-  LParams := '';
   /// <summary> Executa a procedure de adição dos parâmetros </summary>
   if Assigned(AParamsProc) then
     AParamsProc();
-
   /// <summary> Define valor da URL </summary>
   SetURLValue;
-
   /// <summary> Define dados do proxy </summary>
   SetProxyParamsClientValue;
-
   /// <summary> Define valores de autenticação </summary>
   SetAuthenticatorTypeValues;
   try

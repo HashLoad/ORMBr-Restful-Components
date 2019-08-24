@@ -38,6 +38,7 @@ type
     FRESTResponse: IRESTResponse;
     procedure SetProxyParamsClientValues;
     procedure SetAuthenticatorTypeValues;
+    procedure SetParamsBodyValue;
     procedure SetParamValues(AParams: PClientParam);
     function DoGET(const AURL, AResource, ASubResource: String;
       const AParams: array of string): String;
@@ -156,6 +157,9 @@ function TRESTClientDelphiMVC.DoPOST(const AURL, AResource,
   ASubResource: String; const AParams: array of string): String;
 begin
   FRequestMethod := 'POST';
+  /// <summary> Define valores dos parâmetros </summary>
+  SetParamsBodyValue;
+  /// <summary> POST </summary>
   try
     FRESTResponse := FRESTClient.doPOST(AURL, AParams, FRESTClient.BodyParams.Text);
     Result := FRESTResponse.BodyAsString;
@@ -187,8 +191,9 @@ function TRESTClientDelphiMVC.DoPUT(const AURL, AResource, ASubResource: String;
   const AParams: array of string): String;
 begin
   FRequestMethod := 'PUT';
-  if FBodyParams.Count = 0 then
-    raise Exception.Create('Não foi passado o parâmetro com os dados do update!');
+  /// <summary> Define valores dos parâmetros </summary>
+  SetParamsBodyValue;
+  /// <summary> POST </summary>
   try
     FRESTResponse := FRESTClient.doPUT(AURL, AParams, FRESTClient.BodyParams.Text);
     Result := FRESTResponse.BodyAsString;
@@ -233,42 +238,31 @@ var
     /// </summary>
     if (FServerUse) and (not FClassNotServerUse) then
       LResource := FAPIContext;
-
     /// <summary> Nome do recurso </summary>
     LResource := LResource + '/' + AResource;
-
     /// <summary> Nome do sub-recurso </summary>
     if Length(ASubResource) > 0 then
       LSubResource := '/' + ASubResource;
-
     /// <summary> URL completa </summary>
     LURL := LResource + LSubResource;
   end;
 
 begin
   Result := '';
-
   /// <summary> Passa os dados de acesso para o RESTClient do Delphi MVC </summary>
   if not Assigned(FRESTClient) then
-  begin
     FRESTClient := TRESTClient.Create(FHost, FPort);
-    FRESTClient.UseBasicAuthentication := True;
-  end;
+  /// <summary> Define valores de autenticação </summary>
+  SetAuthenticatorTypeValues;
   /// <summary> Executa a procedure de adição dos parâmetros </summary>
   if Assigned(AParamsProc) then
     AParamsProc();
-
   /// <summary> Define valor da URL </summary>
   SetURLValue;
-
   /// <summary> Define dados do proxy </summary>
   SetProxyParamsClientValues;
-
   /// <summary> Define valores dos parâmetros </summary>
   SetParamValues(@LParams);
-
-  /// <summary> Define valores de autenticação </summary>
-  SetAuthenticatorTypeValues;
   try
     /// <summary> DoBeforeCommand </summary>
     DoBeforeCommand;
@@ -312,7 +306,22 @@ begin
 end;
 
 procedure TRESTClientDelphiMVC.SetAuthenticatorTypeValues;
+var
+  LAuthorized: Boolean;
 begin
+  LAuthorized := False;
+  /// <summary> Dispara evento OnAuthentication </summary>
+//  if Assigned(FAuthentication) and (not FPerformingAuthentication) then
+//  begin
+//    FPerformingAuthentication := True;
+//    try
+//      FAuthentication(LAuthorized);
+//      if not LAuthorized then
+//        raise Exception.Create('Unauthorized Authentication');
+//    finally
+//      FPerformingAuthentication := False;
+//    end
+//  end;
   case FAuthenticator.AuthenticatorType of
     atNoAuth:
       ;
@@ -349,6 +358,17 @@ begin
   Result := '';
 end;
 
+procedure TRESTClientDelphiMVC.SetParamsBodyValue;
+var
+  LFor: Integer;
+begin
+  /// <summary>
+  ///   Passa os valores do BodyParams externo para o string
+  /// </summary>
+  for LFor := 0 to FBodyParams.Count -1 do
+    FRESTClient.BodyParams.Add(FBodyParams.Items[LFor].AsString);
+end;
+
 procedure TRESTClientDelphiMVC.SetParamValues(AParams: PClientParam);
 var
   LFor: Integer;
@@ -361,10 +381,6 @@ begin
     for LFor := 0 to FParams.Count -1 do
       AParams^[LFor] := FParams.Items[LFor].AsString;
   end;
-  /// <summary> Passa os valores do BodyParams externo para o string </summary>
-  for LFor := 0 to FBodyParams.Count -1 do
-    FRESTClient.BodyParams.Add(FBodyParams.Items[LFor].AsString);
-
   /// <summary> Passa os valores do Query Params externo para o array </summary>
   for LFor := 0 to FQueryParams.Count -1 do
     FRESTClient.QueryStringParams.Add(FQueryParams.Items[LFor].AsString);

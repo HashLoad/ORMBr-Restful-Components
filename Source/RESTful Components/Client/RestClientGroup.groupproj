@@ -3,6 +3,9 @@
         <ProjectGuid>{EF5FBB86-CB12-4922-89EF-51A45A51E3F4}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
+        <Projects Include="D:\PROJETOS-Brasil\ORMBr\Components\Packages\Delphi\ORMBrCore.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="RestCoreClient.dproj">
             <Dependencies/>
         </Projects>
@@ -32,6 +35,15 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
+    <Target Name="ORMBrCore">
+        <MSBuild Projects="D:\PROJETOS-Brasil\ORMBr\Components\Packages\Delphi\ORMBrCore.dproj"/>
+    </Target>
+    <Target Name="ORMBrCore:Clean">
+        <MSBuild Projects="D:\PROJETOS-Brasil\ORMBr\Components\Packages\Delphi\ORMBrCore.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ORMBrCore:Make">
+        <MSBuild Projects="D:\PROJETOS-Brasil\ORMBr\Components\Packages\Delphi\ORMBrCore.dproj" Targets="Make"/>
+    </Target>
     <Target Name="RestCoreClient">
         <MSBuild Projects="RestCoreClient.dproj"/>
     </Target>
@@ -96,13 +108,13 @@
         <MSBuild Projects="RestClientWS.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="RestCoreClient;RestClientWiRL;RestClientDatasnap;RestClientDWCore;RestClientMARS;RestClientDelphiMVC;RestClientWS"/>
+        <CallTarget Targets="ORMBrCore;RestCoreClient;RestClientWiRL;RestClientDatasnap;RestClientDWCore;RestClientMARS;RestClientDelphiMVC;RestClientWS"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="RestCoreClient:Clean;RestClientWiRL:Clean;RestClientDatasnap:Clean;RestClientDWCore:Clean;RestClientMARS:Clean;RestClientDelphiMVC:Clean;RestClientWS:Clean"/>
+        <CallTarget Targets="ORMBrCore:Clean;RestCoreClient:Clean;RestClientWiRL:Clean;RestClientDatasnap:Clean;RestClientDWCore:Clean;RestClientMARS:Clean;RestClientDelphiMVC:Clean;RestClientWS:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="RestCoreClient:Make;RestClientWiRL:Make;RestClientDatasnap:Make;RestClientDWCore:Make;RestClientMARS:Make;RestClientDelphiMVC:Make;RestClientWS:Make"/>
+        <CallTarget Targets="ORMBrCore:Make;RestCoreClient:Make;RestClientWiRL:Make;RestClientDatasnap:Make;RestClientDWCore:Make;RestClientMARS:Make;RestClientDelphiMVC:Make;RestClientWS:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

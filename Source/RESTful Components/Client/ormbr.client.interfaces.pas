@@ -19,11 +19,17 @@ unit ormbr.client.interfaces;
 interface
 
 uses
+  DB,
   SysUtils,
-  ormbr.client.methods,
-  ormbr.monitor;
+  ormbr.client.methods;
 
 type
+  ICommandMonitor = interface
+    ['{20B090BF-182F-43F9-B748-AE4DC87AE819}']
+    procedure Command(const ASQL: string; AParams: TParams);
+    procedure Show;
+  end;
+
   IRESTConnection = interface
     ['{A5974AAA-1B36-46F2-AF8D-51C4E69BC072}']
     function GetBaseURL: String;

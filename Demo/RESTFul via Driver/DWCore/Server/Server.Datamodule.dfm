@@ -30,48 +30,56 @@ object ServerDataModule: TServerDataModule
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'select'
+        OnReplyEvent = MasterEventsselectReplyEvent
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'selectid'
+        OnReplyEvent = MasterEventsselectidReplyEvent
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'selectwhere'
+        OnReplyEvent = MasterEventsselectwhereReplyEvent
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'insert'
+        OnReplyEventByType = MasterEventsinsertReplyEventByType
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'update'
+        OnReplyEventByType = MasterEventsupdateReplyEventByType
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'delete'
+        OnReplyEvent = MasterEventsdeleteReplyEvent
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'nextpacket'
+        OnReplyEvent = MasterEventsnextpacketReplyEvent
       end
       item
         Routes = [crAll]
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'nextpacketwhere'
+        OnReplyEvent = MasterEventsnextpacketwhereReplyEvent
       end>
     ContextName = 'master'
     Left = 37
@@ -85,22 +93,10 @@ object ServerDataModule: TServerDataModule
         DWParams = <>
         JsonMode = jmPureJSON
         Name = 'select'
+        OnReplyEventByType = LookupEventsselectReplyEventByType
       end>
     ContextName = 'lookup'
     Left = 204
     Top = 160
-  end
-  object ServerEvents: TDWServerEvents
-    IgnoreInvalidParams = False
-    Events = <
-      item
-        Routes = [crAll]
-        DWParams = <>
-        JsonMode = jmPureJSON
-        Name = 'api'
-      end>
-    ContextName = 'ormbr'
-    Left = 130
-    Top = 201
   end
 end

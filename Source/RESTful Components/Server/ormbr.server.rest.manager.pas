@@ -112,7 +112,7 @@ type
 implementation
 
 uses
-  ormbr.objectset.bind,
+  ormbr.bind,
   ormbr.objects.helper,
   ormbr.rtti.helper,
   ormbr.server.rest.session;
@@ -246,7 +246,7 @@ begin
       /// <summary>
       /// Preenche o objeto com os dados do ResultSet
       /// </summary>
-      TBindObject.GetInstance.SetFieldToProperty(LResultSet, LObjectValue);
+      TBind.Instance.SetFieldToProperty(LResultSet, LObjectValue);
       /// <summary>
       /// Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
@@ -282,9 +282,7 @@ begin
       /// <summary>
       ///   Popula o objeto com os dados do ResultSet
       /// </summary>
-      TBindObject
-        .GetInstance
-          .SetFieldToProperty(LResultSet, LObjectCreate);
+      TBind.Instance.SetFieldToProperty(LResultSet, LObjectCreate);
       /// <summary>
       ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
@@ -341,9 +339,7 @@ begin
       LObject := FObjectInternal.ClassType.Create;
       LObject.MethodCall('Create', []);
       LObjectList.Add(LObject);
-      TBindObject
-        .GetInstance
-          .SetFieldToProperty(LResultSet, LObjectList.Last);
+      TBind.Instance.SetFieldToProperty(LResultSet, LObjectList.Last);
       /// <summary>
       ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
@@ -384,9 +380,7 @@ begin
       LObject := FObjectInternal.ClassType.Create;
       LObject.MethodCall('Create', []);
       LObjectList.Add(LObject);
-      TBindObject
-        .GetInstance
-          .SetFieldToProperty(LResultSet, LObjectList.Last);
+      TBind.Instance.SetFieldToProperty(LResultSet, LObjectList.Last);
       /// <summary>
       ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
@@ -411,9 +405,7 @@ begin
       LObject := FObjectInternal.ClassType.Create;
       LObject.MethodCall('Create', []);
       AObjectList.Add(LObject);
-      TBindObject
-        .GetInstance
-          .SetFieldToProperty(LResultSet, AObjectList.Last);
+      TBind.Instance.SetFieldToProperty(LResultSet, AObjectList.Last);
       /// <summary>
       ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
@@ -437,9 +429,7 @@ begin
       LObject := FObjectInternal.ClassType.Create;
       LObject.MethodCall('Create', []);
       AObjectList.Add(LObject);
-      TBindObject
-        .GetInstance
-          .SetFieldToProperty(LResultSet, AObjectList.Last);
+      TBind.Instance.SetFieldToProperty(LResultSet, AObjectList.Last);
       /// <summary>
       ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
@@ -465,9 +455,7 @@ begin
       LObject := FObjectInternal.ClassType.Create;
       LObject.MethodCall('Create', []);
       LObjectList.Add(LObject);
-      TBindObject
-        .GetInstance
-          .SetFieldToProperty(LResultSet, LObjectList.Last);
+      TBind.Instance.SetFieldToProperty(LResultSet, LObjectList.Last);
       /// <summary>
       ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
@@ -516,9 +504,7 @@ begin
     begin
       LObject := FObjectInternal.ClassType.Create;
       LObject.MethodCall('Create', []);
-      TBindObject
-        .GetInstance
-          .SetFieldToProperty(LResultSet, Result.Items[Result.Add(LObject)]);
+      TBind.Instance.SetFieldToProperty(LResultSet, Result.Items[Result.Add(LObject)]);
       /// <summary>
       ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
@@ -544,9 +530,7 @@ begin
     begin
       Result := FObjectInternal.ClassType.Create;
       Result.MethodCall('Create', []);
-      TBindObject
-        .GetInstance
-          .SetFieldToProperty(LResultSet, Result);
+      TBind.Instance.SetFieldToProperty(LResultSet, Result);
       /// <summary>
       ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>
@@ -570,9 +554,7 @@ begin
     begin
       LObject := FObjectInternal.ClassType.Create;
       LObject.MethodCall('Create', []);
-      TBindObject
-        .GetInstance
-          .SetFieldToProperty(LResultSet, LObject);
+      TBind.Instance.SetFieldToProperty(LResultSet, LObject);
       /// <summary>
       ///   Alimenta registros das associações existentes 1:1 ou 1:N
       /// </summary>

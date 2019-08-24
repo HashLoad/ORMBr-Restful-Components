@@ -41,8 +41,8 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     class function GetConnection: IDBConnection;
-  published
     property Connection: IDBConnection read GetConnection write SetConnection;
+  published
     property MVCEngine: TMVCEngine read FMVCEngine write SetMVCEngine;
   end;
 

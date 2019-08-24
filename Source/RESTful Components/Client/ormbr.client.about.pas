@@ -39,7 +39,7 @@ uses
   SysUtils,
   Variants,
   Classes,
-  ormbr.client.consts, Vcl.Imaging.pngimage;
+  ormbr.client.consts;
 
 type
   TFormAboutClient = class(TForm)

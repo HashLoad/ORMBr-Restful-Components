@@ -39,9 +39,15 @@ type
   private
     FDWParams: TDWParams;
     FRESTClient: TRESTClientPooler;
-    procedure AddDWParams;
     procedure ClearDWParams;
-    procedure SetProxyParamsClient;
+    procedure SetProxyParamsClientValue;
+    procedure SetParamsBodyValue;
+    procedure SetAuthenticatorTypeValues;
+    procedure SetParamValues;
+    function DoGET(const AResource, ASubResource: String): String;
+    function DoPOST(const AResource, ASubResource: String): String;
+    function DoPUT(const AResource, ASubResource: String): String;
+    function DoDELETE(const AResource, ASubResource: String): String;
   protected
     procedure SetServerUse(const Value: Boolean); override;
     procedure DoAfterCommand; override;
@@ -106,7 +112,300 @@ begin
   inherited;
 end;
 
-procedure TRESTClientDWCore.AddDWParams;
+function TRESTClientDWCore.DoDELETE(const AResource, ASubResource: String): String;
+begin
+  FRequestMethod := 'DELETE';
+  /// <summary> Define valores dos parâmetros </summary>
+  SetParamValues;
+  /// <summary> DELETE </summary>
+  try
+    Result := FRESTClient.SendEvent(ASubResource,
+                                    FDWParams,
+                                    sePOST, //seDELETE,
+                                    jmPureJSON,
+                                    AResource); // DELETE
+    if ContainsStr(Result, 'Exception:') then
+      raise Exception.Create(Result);
+  except
+    on E: Exception do
+    begin
+      if Assigned(FErrorCommand) then
+        FErrorCommand(GetBaseURL,
+                      AResource,
+                      ASubResource,
+                      FRequestMethod,
+                      E.Message,
+                      TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode)
+      else
+        raise ERESTConnectionError
+                .Create(GetBaseURL,
+                        AResource,
+                        ASubResource,
+                        FRequestMethod,
+                        E.Message,
+                        TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode);
+    end;
+  end;
+end;
+
+function TRESTClientDWCore.DoGET(const AResource, ASubResource: String): String;
+begin
+  FRequestMethod := 'GET';
+  /// <summary> Define valores dos parâmetros </summary>
+  SetParamValues;
+  /// <summary> GET </summary>
+  try
+    Result := FRESTClient.SendEvent(ASubResource,
+                                    FDWParams,
+                                    sePOST, //seGET,
+                                    jmPureJSON,
+                                    AResource);  // GET
+    if ContainsStr(Result, 'Exception:') then
+      raise Exception.Create(Result);
+  except
+    on E: Exception do
+    begin
+      if Assigned(FErrorCommand) then
+        FErrorCommand(GetBaseURL,
+                      AResource,
+                      ASubResource,
+                      FRequestMethod,
+                      E.Message,
+                      TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode)
+      else
+        raise ERESTConnectionError
+                .Create(GetBaseURL,
+                        AResource,
+                        ASubResource,
+                        FRequestMethod,
+                        E.Message,
+                        TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode);
+    end;
+  end;
+end;
+
+function TRESTClientDWCore.DoPOST(const AResource, ASubResource: String): String;
+begin
+  FRequestMethod := 'POST';
+  /// <summary> Define valores dos parâmetros </summary>
+  SetParamsBodyValue;
+  /// <summary> POST </summary>
+  try
+    Result := FRESTClient.SendEvent(ASubResource,
+                                    FDWParams,
+                                    sePOST,
+                                    jmPureJSON,
+                                    AResource); // POST
+    if ContainsStr(Result, 'Exception:') then
+      raise Exception.Create(Result);
+  except
+    on E: Exception do
+    begin
+      if Assigned(FErrorCommand) then
+        FErrorCommand(GetBaseURL,
+                      AResource,
+                      ASubResource,
+                      FRequestMethod,
+                      E.Message,
+                      TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode)
+      else
+        raise ERESTConnectionError
+                .Create(GetBaseURL,
+                        AResource,
+                        ASubResource,
+                        FRequestMethod,
+                        E.Message,
+                        TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode);
+    end;
+  end;
+end;
+
+function TRESTClientDWCore.DoPUT(const AResource, ASubResource: String): String;
+begin
+  FRequestMethod := 'PUT';
+  /// <summary> Define valores dos parâmetros </summary>
+  SetParamsBodyValue;
+  /// <summary> PUT </summary>
+  try
+    Result := FRESTClient.SendEvent(ASubResource,
+                                    FDWParams,
+                                    sePOST, //sePUT,
+                                    jmPureJSON,
+                                    AResource); // PUT
+    if ContainsStr(Result, 'Exception:') then
+      raise Exception.Create(Result);
+  except
+    on E: Exception do
+    begin
+      if Assigned(FErrorCommand) then
+        FErrorCommand(GetBaseURL,
+                      AResource,
+                      ASubResource,
+                      FRequestMethod,
+                      E.Message,
+                      TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode)
+      else
+        raise ERESTConnectionError
+                .Create(GetBaseURL,
+                        AResource,
+                        ASubResource,
+                        FRequestMethod,
+                        E.Message,
+                        TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode);
+    end;
+  end;
+end;
+
+procedure TRESTClientDWCore.ClearDWParams;
+var
+  LFor: Integer;
+begin
+  for LFor := FDWParams.Count -1 downto 0 do
+    FDWParams.Items[LFor].Free;
+  FDWParams.Clear;
+end;
+
+function TRESTClientDWCore.Execute(const AResource, ASubResource: String;
+  const ARequestMethod: TRESTRequestMethodType;
+  const AParamsProc: TProc): String;
+var
+  LFor: Integer;
+  LJSONParam: TJSONParam;
+  LResource: String;
+  LSubResource: String;
+
+  function GetRequestMethod: String;
+  begin
+    case ARequestMethod of
+      TRESTRequestMethodType.rtPOST:   Result := 'POST';
+      TRESTRequestMethodType.rtPUT:    Result := 'PUT';
+      TRESTRequestMethodType.rtGET:    Result := 'GET';
+      TRESTRequestMethodType.rtDELETE: Result := 'DELETE';
+      TRESTRequestMethodType.rtPATCH: ;
+    end;
+  end;
+
+begin
+  Result := '';
+  LResource := AResource;
+  LSubResource := ASubResource;
+  /// <summary>
+  ///    Executa a procedure de adição dos parâmetros
+  /// </summary>
+  if Assigned(AParamsProc) then
+    AParamsProc();
+  /// <summary> Define dados do proxy </summary>
+  SetProxyParamsClientValue;
+  /// <summary> Define valores de autenticação </summary>
+  SetAuthenticatorTypeValues;
+  /// <summary>
+  ///   Passa os dados de acesso para o RESTClient do DW Core
+  /// </summary>
+  FRESTClient.Host := FHost;
+  FRESTClient.Port := FPort;
+  if FProtocol = TRestProtocol.Http then
+    FRESTClient.TypeRequest := trHttp
+  else
+    FRESTClient.TypeRequest := trHttps;
+
+  if FServerUse then
+  begin
+    /// <summary>
+    ///   Param com nome do attributo Table() do modelo.
+    /// </summary>
+    LJSONParam := TJSONParam.Create(FDWParams.Encoding);
+    LJSONParam.ParamName := 'requesttype';
+    LJSONParam.ObjectDirection := odIN;
+    LJSONParam.JsonMode := jmPureJSON;
+    LJSONParam.AsString := GetRequestMethod;
+    FDWParams.Add(LJSONParam);
+    /// <summary>
+    ///   Param com nome do attributo Table() do modelo.
+    /// </summary>
+    LJSONParam := TJSONParam.Create(FDWParams.Encoding);
+    LJSONParam.ParamName := 'resource';
+    LJSONParam.ObjectDirection := odIN;
+    LJSONParam.JsonMode := jmPureJSON;
+    LJSONParam.AsString := AResource;
+    FDWParams.Add(LJSONParam);
+    ///
+    LResource := 'ormbr';
+    LSubResource := 'api';
+  end;
+  try
+    /// <summary> DoBeforeCommand </summary>
+    DoBeforeCommand;
+
+    case ARequestMethod of
+      TRESTRequestMethodType.rtPOST:
+        begin
+          Result := DoPOST(LResource, LSubResource);
+        end;
+      TRESTRequestMethodType.rtPUT:
+        begin
+          Result := DoPUT(LResource, LSubResource);
+        end;
+      TRESTRequestMethodType.rtGET:
+        begin
+          Result := DoGET(LResource, LSubResource);
+        end;
+      TRESTRequestMethodType.rtDELETE:
+        begin
+          Result := DoDELETE(LResource, LSubResource);
+        end;
+      TRESTRequestMethodType.rtPATCH: ;
+    end;
+    /// <summary>
+    ///   Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
+    /// </summary>
+    FResponseString := Result;
+    /// <summary> DoAfterCommand </summary>
+    DoAfterCommand;
+    /// <summary>
+    ///   Pega de volta o JSON manipulado ou não no evento AfterCommand
+    /// </summary>
+    Result := FResponseString;
+  finally
+    FResponseString := '';
+    FParams.Clear;
+    FQueryParams.Clear;
+    FBodyParams.Clear;
+    /// <summary>
+    ///   Limpa a lista de paramêtros do DW Core
+    /// </summary>
+    ClearDWParams;
+  end;
+end;
+
+procedure TRESTClientDWCore.SetAuthenticatorTypeValues;
+begin
+  case FAuthenticator.AuthenticatorType of
+    atNoAuth:
+      ;
+    atBasicAuth:
+      begin
+        FRESTClient.UserName := FAuthenticator.Username;
+        FRESTClient.Password := FAuthenticator.Password;
+      end;
+    atBearerToken:
+      begin
+      end;
+    atOAuth1:
+      begin
+      end;
+    atOAuth2:
+      begin
+      end;
+  end;
+end;
+
+procedure TRESTClientDWCore.SetBaseURL;
+begin
+  inherited;
+  FBaseURL := FBaseURL + FAPIContext;
+end;
+
+procedure TRESTClientDWCore.SetParamValues;
 var
   LFor: Integer;
   LJSONParam: TJSONParam;
@@ -154,10 +453,20 @@ begin
     ///
     FDWParams.Add(LJSONParam);
   end;
+end;
+
+procedure TRESTClientDWCore.SetParamsBodyValue;
+var
+  LFor: Integer;
+  LJSONParam: TJSONParam;
+begin
+  if FBodyParams.Count = 0 then
+    raise Exception.Create('Não foi passado o parâmetro com os dados do insert!');
+
   for LFor := 0 to FBodyParams.Count -1 do
   begin
     LJSONParam := TJSONParam.Create(FDWParams.Encoding);
-    LJSONParam.ParamName := 'body';
+    LJSONParam.ParamName := 'json';
     LJSONParam.ObjectDirection := odIN;
     LJSONParam.JsonMode := jmPureJSON;
     LJSONParam.AsString := FBodyParams.Items[LFor].AsString;
@@ -166,258 +475,7 @@ begin
   end;
 end;
 
-procedure TRESTClientDWCore.ClearDWParams;
-var
-  LFor: Integer;
-begin
-  for LFor := FDWParams.Count -1 downto 0 do
-    FDWParams.Items[LFor].Free;
-  FDWParams.Clear;
-end;
-
-function TRESTClientDWCore.Execute(const AResource, ASubResource: String;
-  const ARequestMethod: TRESTRequestMethodType;
-  const AParamsProc: TProc): String;
-var
-  LFor: Integer;
-  LJSONParam: TJSONParam;
-  LResource: String;
-  LSubResource: String;
-
-  function GetRequestMethod: String;
-  begin
-    case ARequestMethod of
-      TRESTRequestMethodType.rtPOST:   Result := 'POST';
-      TRESTRequestMethodType.rtPUT:    Result := 'PUT';
-      TRESTRequestMethodType.rtGET:    Result := 'GET';
-      TRESTRequestMethodType.rtDELETE: Result := 'DELETE';
-      TRESTRequestMethodType.rtPATCH: ;
-    end;
-  end;
-
-begin
-  Result := '';
-  LResource := AResource;
-  LSubResource := ASubResource;
-  /// <summary>
-  ///    Executa a procedure de adição dos parâmetros
-  /// </summary>
-  if Assigned(AParamsProc) then
-    AParamsProc();
-  /// <summary>
-  ///    Define dados do proxy
-  /// </summary>
-  SetProxyParamsClient;
-  /// <summary>
-  ///   Passa os dados de acesso para o RESTClient do DW Core
-  /// </summary>
-  FRESTClient.Host := FHost;
-  FRESTClient.Port := FPort;
-  FRESTClient.UserName := FAuthenticator.Username;
-  FRESTClient.Password := FAuthenticator.Password;
-  if FProtocol = TRestProtocol.Http then
-    FRESTClient.TypeRequest := trHttp
-  else
-    FRESTClient.TypeRequest := trHttps;
-  /// <summary>
-  ///   Adiciona os paramêtros do DW Core
-  /// </summary>
-  AddDWParams;
-  if FServerUse then
-  begin
-    /// <summary>
-    ///   Param com nome do attributo Table() do modelo.
-    /// </summary>
-    LJSONParam := TJSONParam.Create(FDWParams.Encoding);
-    LJSONParam.ParamName := 'requesttype';
-    LJSONParam.ObjectDirection := odIN;
-    LJSONParam.JsonMode := jmPureJSON;
-    LJSONParam.AsString := GetRequestMethod;
-    FDWParams.Add(LJSONParam);
-    /// <summary>
-    ///   Param com nome do attributo Table() do modelo.
-    /// </summary>
-    LJSONParam := TJSONParam.Create(FDWParams.Encoding);
-    LJSONParam.ParamName := 'resource';
-    LJSONParam.ObjectDirection := odIN;
-    LJSONParam.JsonMode := jmPureJSON;
-    LJSONParam.AsString := LResource;
-    FDWParams.Add(LJSONParam);
-    ///
-    LResource := 'ormbr';
-    LSubResource := 'api';
-  end;
-  try
-    /// <summary> DoBeforeCommand </summary>
-    DoBeforeCommand;
-
-    case ARequestMethod of
-      TRESTRequestMethodType.rtPOST:
-        begin
-          FRequestMethod := 'POST';
-          if FBodyParams.Count = 0 then
-            raise Exception.Create('Não foi passado o parâmetro com os dados do insert!');
-          try
-            FResponseString := FRESTClient.SendEvent(LSubResource,
-                                                     FDWParams,
-                                                     sePOST,
-                                                     jmPureJSON,
-                                                     LResource); // POST
-            Result := FResponseString;
-            if ContainsStr(Result, 'Exception:') then
-              raise Exception.Create(Result);
-          except
-            on E: Exception do
-            begin
-              if Assigned(FErrorCommand) then
-                FErrorCommand(GetBaseURL,
-                              LResource,
-                              LSubResource,
-                              FRequestMethod,
-                              E.Message,
-                              TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode)
-              else
-                raise ERESTConnectionError
-                        .Create(GetBaseURL,
-                                LResource,
-                                LSubResource,
-                                FRequestMethod,
-                                E.Message,
-                                TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode);
-            end;
-          end;
-        end;
-      TRESTRequestMethodType.rtPUT:
-        begin
-          FRequestMethod := 'PUT';
-          if FBodyParams.Count = 0 then
-            raise Exception.Create('Não foi passado o parâmetro com os dados do update!');
-          try
-            FResponseString := FRESTClient.SendEvent(LSubResource,
-                                                     FDWParams,
-                                                     sePOST, //sePUT,
-                                                     jmPureJSON,
-                                                     LResource); // PUT
-            Result := FResponseString;
-            if ContainsStr(Result, 'Exception:') then
-              raise Exception.Create(Result);
-          except
-            on E: Exception do
-            begin
-              if Assigned(FErrorCommand) then
-                FErrorCommand(GetBaseURL,
-                              LResource,
-                              LSubResource,
-                              FRequestMethod,
-                              E.Message,
-                              TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode)
-              else
-                raise ERESTConnectionError
-                        .Create(GetBaseURL,
-                                LResource,
-                                LSubResource,
-                                FRequestMethod,
-                                E.Message,
-                                TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode);
-            end;
-          end;
-        end;
-      TRESTRequestMethodType.rtGET:
-        begin
-          FRequestMethod := 'GET';
-          try
-            Result := FRESTClient.SendEvent(LSubResource,
-                                            FDWParams,
-                                            sePOST, //seGET,
-                                            jmPureJSON,
-                                            LResource);  // GET
-            if ContainsStr(Result, 'Exception:') then
-              raise Exception.Create(Result);
-          except
-            on E: Exception do
-            begin
-              if Assigned(FErrorCommand) then
-                FErrorCommand(GetBaseURL,
-                              LResource,
-                              LSubResource,
-                              FRequestMethod,
-                              E.Message,
-                              TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode)
-              else
-                raise ERESTConnectionError
-                        .Create(GetBaseURL,
-                                LResource,
-                                LSubResource,
-                                FRequestMethod,
-                                E.Message,
-                                TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode);
-            end;
-          end;
-        end;
-      TRESTRequestMethodType.rtDELETE:
-        begin
-          FRequestMethod := 'DELETE';
-          try
-            FResponseString := FRESTClient.SendEvent(LSubResource,
-                                                     FDWParams,
-                                                     sePOST, //seDELETE,
-                                                     jmPureJSON,
-                                                     LResource); // DELETE
-            Result := FResponseString;
-            if ContainsStr(Result, 'Exception:') then
-              raise Exception.Create(Result);
-          except
-            on E: Exception do
-            begin
-              if Assigned(FErrorCommand) then
-                FErrorCommand(GetBaseURL,
-                              LResource,
-                              LSubResource,
-                              FRequestMethod,
-                              E.Message,
-                              TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode)
-              else
-                raise ERESTConnectionError
-                        .Create(GetBaseURL,
-                                LResource,
-                                LSubResource,
-                                FRequestMethod,
-                                E.Message,
-                                TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode);
-            end;
-          end;
-        end;
-      TRESTRequestMethodType.rtPATCH: ;
-    end;
-    /// <summary>
-    ///   Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
-    /// </summary>
-    FResponseString := Result;
-    /// <summary> DoAfterCommand </summary>
-    DoAfterCommand;
-    /// <summary>
-    ///   Pega de volta o JSON manipulado ou não no evento AfterCommand
-    /// </summary>
-    Result := FResponseString;
-  finally
-    FResponseString := '';
-    FParams.Clear;
-    FQueryParams.Clear;
-    FBodyParams.Clear;
-    /// <summary>
-    ///   Limpa a lista de paramêtros do DW Core
-    /// </summary>
-    ClearDWParams;
-  end;
-end;
-
-procedure TRESTClientDWCore.SetBaseURL;
-begin
-  inherited;
-  FBaseURL := FBaseURL + FAPIContext;
-end;
-
-procedure TRESTClientDWCore.SetProxyParamsClient;
+procedure TRESTClientDWCore.SetProxyParamsClientValue;
 begin
   FRESTClient.ProxyOptions.BasicAuthentication := FProxyParams.BasicAuthentication;
   FRESTClient.ProxyOptions.ProxyServer := FProxyParams.ProxyServer;

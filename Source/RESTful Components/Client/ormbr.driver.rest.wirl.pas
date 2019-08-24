@@ -26,9 +26,6 @@ uses
   ormbr.driver.rest;
 
 type
-  /// <summary>
-  /// Classe de conexão concreta com dbExpress
-  /// </summary>
   TDriverRestWiRL = class(TDriverRest)
   protected
     FConnection: TRESTClientWiRL;
@@ -45,6 +42,9 @@ type
     function GetMethodGETNextPacket: String; override;
     function GetMethodGETNextPacketWhere: String; override;
     function GetServerUse: Boolean; override;
+    function GetUsername: String; override;
+    function GetPassword: String; override;
+    function GetMethodToken: String; override;
     function Execute(const AResource, ASubResource: String;
       const ARequestMethod: TRESTRequestMethodType;
       const AParams: TProc = nil): String; overload; override;
@@ -140,9 +140,24 @@ begin
   Result := FConnection.MethodPUT;
 end;
 
+function TDriverRestWiRL.GetMethodToken: String;
+begin
+
+end;
+
+function TDriverRestWiRL.GetPassword: String;
+begin
+
+end;
+
 function TDriverRestWiRL.GetServerUse: Boolean;
 begin
   Result := FConnection.ORMBrServerUse;
+end;
+
+function TDriverRestWiRL.GetUsername: String;
+begin
+
 end;
 
 procedure TDriverRestWiRL.SetClassNotServerUse(const Value: Boolean);
