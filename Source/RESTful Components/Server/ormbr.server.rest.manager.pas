@@ -30,7 +30,7 @@ uses
   ormbr.types.mapping,
   ormbr.mapping.classes,
   ormbr.command.factory,
-  ormbr.factory.interfaces,
+  dbebr.factory.interfaces,
   ormbr.mapping.explorer,
   ormbr.objects.manager.abstract,
   ormbr.mapping.explorerstrategy;
@@ -45,17 +45,11 @@ type
   protected
     FConnection: IDBConnection;
     FFetchingRecords: Boolean;
-    /// <summary>
-    ///   Instancia a class que mapea todas as class do tipo Entity
-    /// </summary>
+    // Instancia a class que mapea todas as class do tipo Entity
     FExplorer: IMappingExplorerStrategy;
-    /// <summary>
-    ///   Fábrica de comandos a serem executados
-    /// </summary>
+    // Fábrica de comandos a serem executados
     FDMLCommandFactory: TDMLCommandFactoryAbstract;
-    /// <summary>
-    ///   Controle de paginação vindo do banco de dados
-    /// </summary>
+    // Controle de paginação vindo do banco de dados
     FPageSize: Integer;
     procedure ExecuteOneToOne(AObject: TObject; AProperty: TRttiProperty;
       AAssociation: TAssociationMapping);
@@ -68,9 +62,7 @@ type
     constructor Create(const AOwner: TObject; const AConnection: IDBConnection;
       const AClassType: TClass; const APageSize: Integer);
     destructor Destroy; override;
-    /// <summary>
-    ///   Procedures
-    /// </summary>
+    // Procedures
     procedure InsertInternal(const AObject: TObject);
     procedure UpdateInternal(const AObject: TObject; const AModifiedFields: TDictionary<string, string>);
     procedure DeleteInternal(const AObject: TObject);
@@ -83,14 +75,10 @@ type
     function NextPacketList(const APageSize, APageNext: Integer): TObjectList<TObject>; overload;
     function NextPacketList(const AWhere, AOrderBy: String;
       const APageSize, APageNext: Integer): TObjectList<TObject>; overload;
-    /// <summary>
-    ///   Functions
-    /// </summary>
+    // Functions
     function GetDMLCommand: string;
     function ExistSequence: Boolean;
-    /// <summary>
-    ///   DataSet
-    /// </summary>
+    // DataSet
     function SelectInternalAll: IDBResultSet;
     function SelectInternalID(const AID: Variant): IDBResultSet;
     function SelectInternal(const ASQL: String): IDBResultSet;
@@ -98,14 +86,12 @@ type
     function NextPacket(const APageSize, APageNext: Integer): IDBResultSet; overload;
     function NextPacket(const AWhere, AOrderBy: String;
       const APageSize, APageNext: Integer): IDBResultSet; overload;
-    /// <summary>
-    ///   ObjectSet
-    /// </summary>
+    // ObjectSet
     function Find: TObjectList<TObject>; overload;
     function Find(const AID: Variant): TObject; overload;
     function FindWhere(const AWhere: string; const AOrderBy: string): TObjectList<TObject>;
     function FindOne(const AWhere: string): TObject;
-    ///
+    //
     property FetchingRecords: Boolean read FFetchingRecords write FFetchingRecords;
   end;
 
@@ -531,9 +517,7 @@ begin
       Result := FObjectInternal.ClassType.Create;
       Result.MethodCall('Create', []);
       TBind.Instance.SetFieldToProperty(LResultSet, Result);
-      /// <summary>
-      ///   Alimenta registros das associações existentes 1:1 ou 1:N
-      /// </summary>
+      // Alimenta registros das associações existentes 1:1 ou 1:N
       FillAssociation(Result);
     end
     else
@@ -555,9 +539,7 @@ begin
       LObject := FObjectInternal.ClassType.Create;
       LObject.MethodCall('Create', []);
       TBind.Instance.SetFieldToProperty(LResultSet, LObject);
-      /// <summary>
-      ///   Alimenta registros das associações existentes 1:1 ou 1:N
-      /// </summary>
+      // Alimenta registros das associações existentes 1:1 ou 1:N
       FillAssociation(LObject);
       Result := LObject;
     end

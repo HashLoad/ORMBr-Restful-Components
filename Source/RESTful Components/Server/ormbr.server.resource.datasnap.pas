@@ -84,7 +84,7 @@ begin
   LQueryParams := TStringList.Create;
   LQueryParams.Assign(GetInvocationMetadata().QueryParams);
   try
-    /// <summary> Monta a URL com a Query Param completa, necessário no parse interno </summary>
+    //Monta a URL com a Query Param completa, necessário no parse interno
     LQueryText := resource + cDELIM_QUERY;
     for LFor := 0 to LQueryParams.Count -1 do
     begin
@@ -92,14 +92,14 @@ begin
       if LFor < LQueryParams.Count -1 then
         LQueryText := LQueryText + cDELIM_AND;
     end;
-    /// <summary> Parse da Query passada na URI </summary>
+    // Parse da Query passada na URI
     LQuery.ParseQuery(LQueryText);
     if LQuery.ResourceName <> '' then
     begin
-      /// <summary> Retorno JSON </summary>
+      // Retorno JSON
       Result := TORMBrJSONUtil
                   .JSONStringToJSONValue(FAppResource.ParseFind(LQuery));
-      /// <summary> Add Count Record no JSON Result </summary>
+      // Add Count Record no JSON Result
 //      if LQuery.Count then
     end
     else
@@ -133,7 +133,7 @@ begin
   LQueryParams := TStringList.Create;
   LQueryParams.Assign(GetInvocationMetadata().QueryParams);
   try
-    /// <summary> Monta a URL com a Query Param completa, necessário no parse interno </summary>
+    // Monta a URL com a Query Param completa, necessário no parse interno
     LQueryText := resource + cDELIM_QUERY;
     for LFor := 0 to LQueryParams.Count -1 do
     begin
@@ -141,11 +141,11 @@ begin
       if LFor < LQueryParams.Count -1 then
         LQueryText := LQueryText + cDELIM_AND;
     end;
-    /// <summary> Parse da Query passada na URI </summary>
+    // Parse da Query passada na URI
     LQuery.ParseQuery(LQueryText);
     if LQuery.ResourceName <> '' then
     begin
-      /// <summary> Retorno JSON </summary>
+      // Retorno JSON
       Result := TORMBrJSONUtil
                   .JSONStringToJSONValue(FAppResource.ParseDelete(LQuery));
     end

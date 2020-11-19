@@ -7,7 +7,7 @@ AppId={{286F16C1-BB84-4E10-BDBF-4080BDF3D227}
 OutputBaseFilename=SetupClient_{#FrameworkName}
 
 [Files]
-Source: "..\RESTful Install\ORMBrInstall.exe"; DestDir: "{app}"; Flags: ignoreversion replacesameversion
+Source: "..\RESTful Install\RESTFulInstall.exe"; DestDir: "{app}"; Flags: ignoreversion replacesameversion
 
 Source: "..\..\Source\RESTful Components\Client\RestCoreClient.dres"; DestDir: "{app}\Source\RESTful Components\Client\"; Flags: ignoreversion
 Source: "..\..\Source\RESTful Components\Client\RestClient{#FrameworkName}.dres"; DestDir: "{app}\Source\RESTful Components\Client\"; Flags: ignoreversion

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2018/06/10 09:45:55.000.474,D:\ORMBr\Source\RESTFull\Component\RestGroup.groupproj=C:\Users\isaque.pinheiro\Documents\Embarcadero\Studio\Projects\ProjectGroup1.groupproj</Transaction>
+    <Transaction>2018/06/26 13:51:33.000.125,D:\ORMBr\Source\Drivers RESTFul\Component\RestGroup.groupproj=D:\ORMBr\Source\Drivers RESTFul\Component\RestClientGroup.groupproj</Transaction>
+    <Transaction>2018/06/26 13:52:24.000.069,D:\ORMBr\Source\Drivers RESTFul\Component\RestClientGroup.groupproj=D:\ORMBr\Source\Drivers RESTFul\Component Client\RestClientGroup.groupproj</Transaction>
+    <Transaction>2019/04/30 11:58:12.473,D:\ORMBr RESTful Components\Source\RESTful Components\Client\RestClientGroup_DelphiMVC.groupproj=D:\ORMBr RESTful Components\Source\RESTful Components\Client\RestClientGroup.groupproj</Transaction>
+  </Transactions>
+	<Default.Personality>
+		<Projects ActiveProject="D:\ORMBr RESTful Components\Source\RESTful Components\Client\RestCoreClient.dproj"/>
+	</Default.Personality>
+</BorlandProject>

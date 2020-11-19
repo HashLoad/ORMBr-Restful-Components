@@ -130,9 +130,9 @@ function TRESTClientDataSnap.DoDELETE(const AResource, ASubResource: String): St
 begin
   FRequestMethod := 'DELETE';
   FRESTRequest.Method := TRESTRequestMethod.rmDELETE;
-  /// <summary> Define valores dos parâmetros </summary>
+  // Define valores dos parâmetros
   SetParamValues;
-  /// <summary> DELETE </summary>
+  // DELETE
   try
     FRESTRequest.Execute;
     Result := (FRESTRequest.Response.JSONValue as TJSONArray).Items[0].ToJSON;
@@ -162,9 +162,9 @@ function TRESTClientDataSnap.DoGET(const AResource, ASubResource: String): Strin
 begin
   FRequestMethod := 'GET';
   FRESTRequest.Method := TRESTRequestMethod.rmGET;
-  /// <summary> Define valores dos parâmetros </summary>
+  // Define valores dos parâmetros
   SetParamValues;
-  /// <summary> DELETE </summary>
+  // DELETE
   try
     FRESTRequest.Execute;
     Result := (FRESTRequest.Response.JSONValue as TJSONArray).Items[0].ToJSON
@@ -195,9 +195,9 @@ function TRESTClientDataSnap.DoPOST(const AResource, ASubResource: String): Stri
 begin
   FRequestMethod := 'POST';
   FRESTRequest.Method := TRESTRequestMethod.rmPUT;
-  /// <summary> Define valores dos parâmetros </summary>
+  // Define valores dos parâmetros
   SetParamsBodyValue;
-  /// <summary> POST </summary>
+  // POST
   try
     FRESTRequest.Execute;
     Result := (FRESTRequest.Response.JSONValue as TJSONArray).Items[0].ToJSON;
@@ -227,9 +227,9 @@ function TRESTClientDataSnap.DoPUT(const AResource, ASubResource: String): Strin
 begin
   FRequestMethod := 'PUT';
   FRESTRequest.Method := TRESTRequestMethod.rmPOST;
-  /// <summary> Define valores dos parâmetros </summary>
+  // Define valores dos parâmetros
   SetParamsBodyValue;
-  /// <summary> PUT </summary>
+  // PUT
   try
     FRESTRequest.Execute;
   except
@@ -278,51 +278,47 @@ var
 
 begin
   Result := '';
-  /// <summary> Executa a procedure de adição dos parâmetros </summary>
+  // Executa a procedure de adição dos parâmetros
   if Assigned(AParamsProc) then
     AParamsProc();
-  /// <summary> Define valor da URL </summary>
+  // Define valor da URL
   SetURLValue;
-  /// <summary> Define dados do proxy </summary>
+  // Define dados do proxy
   SetProxyParamsClientValue;
-  /// <summary> Define valores de autenticação </summary>
+  // Define valores de autenticação
   SetAuthenticatorTypeValues;
 
   for LFor := 0 to FParams.Count -1 do
     if FParams.Items[LFor].AsString = 'None' then
       FParams.Items[LFor].AsString := '';
   try
-    /// <summary> DoBeforeCommand </summary>
+    // DoBeforeCommand
     DoBeforeCommand;
 
     case ARequestMethod of
       TRESTRequestMethodType.rtPOST:
         begin
-          DoPOST(AResource, ASubResource);
+          Result := DoPOST(AResource, ASubResource);
         end;
       TRESTRequestMethodType.rtPUT:
         begin
-          DoPUT(AResource, ASubResource);
+          Result := DoPUT(AResource, ASubResource);
         end;
       TRESTRequestMethodType.rtGET:
         begin
-          DoGET(AResource, ASubResource);
+          Result := DoGET(AResource, ASubResource);
         end;
       TRESTRequestMethodType.rtDELETE:
         begin
-          DoDELETE(AResource, ASubResource);
+          Result := DoDELETE(AResource, ASubResource);
         end;
       TRESTRequestMethodType.rtPATCH: ;
     end;
-    /// <summary>
-    ///   Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
-    /// </summary>
+    // Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
     FResponseString := Result;
-    /// <summary> DoAfterCommand </summary>
+    // DoAfterCommand
     DoAfterCommand;
-    /// <summary>
-    ///   Pega de volta o JSON manipulado ou não no evento AfterCommand
-    /// </summary>
+    // Pega de volta o JSON manipulado ou não no evento AfterCommand
     Result := FResponseString;
   finally
     FResponseString := '';

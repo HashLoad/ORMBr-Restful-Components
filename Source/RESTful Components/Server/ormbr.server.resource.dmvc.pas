@@ -64,7 +64,7 @@ begin
   LQuery := TRESTQuery.Create;
   LAppResource := TAppResourceBase.Create(TRESTServerDMVC.GetConnection);
   try
-    /// <summary> Parse da Query passada na URI </summary>
+    // Parse da Query passada na URI
     LQuery.ParseQuery(Context.Request.Params['resource']);
     if LQuery.ResourceName <> '' then
     begin
@@ -73,10 +73,10 @@ begin
       LQuery.SetTop(Context.Request.Params['$top']);
       LQuery.SetSkip(Context.Request.Params['$skip']);
       LQuery.SetCount(Context.Request.Params['$count']);
-      /// <summary> Retorno JSON </summary>
+      // Retorno JSON
       LResult := LAppResource.ParseFind(LQuery);
       Render(LResult);
-      /// <summary> Add Count Record no JSON Result </summary>
+      // Add Count Record no JSON Result
 //      if LQuery.Count then
     end
     else
@@ -126,14 +126,14 @@ begin
   LQuery := TRESTQuery.Create;
   LAppResource := TAppResourceBase.Create(TRESTServerDMVC.GetConnection);
   try
-    /// <summary> Parse da Query passada na URI </summary>
+    // Parse da Query passada na URI
     LQuery.ParseQuery(Context.Request.Params['resource']);
     if LQuery.ResourceName <> '' then
     begin
       LQuery.SetFilter(Context.Request.Params['$filter']);
-      /// <summary> Retorno JSON </summary>
+      // Retorno JSON
       LResult := LAppResource.ParseDelete(LQuery);
-      /// <summary> Retorno JSON </summary>
+      // Retorno JSON
       Render(LResult);
     end
     else

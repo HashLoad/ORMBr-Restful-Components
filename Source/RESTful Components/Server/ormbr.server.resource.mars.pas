@@ -20,13 +20,13 @@ interface
 
 uses
   SysUtils,
-  /// MARS
+  // MARS
   MARS.Core.Registry,
   MARS.Core.Attributes,
   MARS.Core.MediaType,
-  /// JSON
+  // JSON
   JSON,
-  /// ORMBr
+  // ORMBr
   ormbr.rest.query.parse,
   ormbr.server.resource;
 
@@ -99,7 +99,7 @@ var
 begin
   LQuery := TRESTQuery.Create;
   try
-    /// <summary> Parse da Query passada na URI </summary>
+    // Parse da Query passada na URI
     LQuery.ParseQuery(resource);
     if LQuery.ResourceName <> '' then
     begin
@@ -108,10 +108,10 @@ begin
       LQuery.SetTop(top);
       LQuery.SetSkip(skip);
       LQuery.SetCount(count);
-      /// <summary> Retorno JSON </summary>
+      // Retorno JSON
       Result := TORMBrJSONUtil
                   .JSONStringToJSONValue(FAppResource.ParseFind(LQuery));
-      /// <summary> Add Count Record no JSON Result </summary>
+      // Add Count Record no JSON Result
 //      if LQuery.Count then
     end
     else
@@ -140,12 +140,12 @@ var
 begin
   LQuery := TRESTQuery.Create;
   try
-    /// <summary> Parse da Query passada na URI </summary>
+    // Parse da Query passada na URI
     LQuery.ParseQuery(resource);
     if LQuery.ResourceName <> '' then
     begin
       LQuery.SetFilter(filter);
-      /// <summary> Retorno JSON </summary>
+      // Retorno JSON
       Result := TORMBrJSONUtil
                   .JSONStringToJSONValue(FAppResource.ParseDelete(LQuery));
     end

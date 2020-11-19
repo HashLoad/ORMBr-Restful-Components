@@ -24,14 +24,12 @@ uses
   ormbr.client.methods;
 
 type
-  /// <summary>
-  /// Classe de conexão concreta com dbExpress
-  /// </summary>
   TDriverRest = class abstract
   public
     constructor Create(AConnection: TComponent); virtual;
     destructor Destroy; override;
     function GetBaseURL: String; virtual; abstract;
+    function GetFullURL: String; virtual; abstract;
     function GetUsername: String; virtual; abstract;
     function GetPassword: String; virtual; abstract;
     function GetMethodGET: String; virtual; abstract;

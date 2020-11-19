@@ -28,9 +28,7 @@ uses
   Generics.Collections;
 
 type
-  /// <summary>
-  ///   Querying Data
-  /// </summary>
+  // Querying Data
   TRESTQuery = class
   private
     FPath: String;
@@ -185,7 +183,7 @@ begin
   LQueryingData := ParseQueryingData(FPath);
   FPathTokens := ParsePathTokens(FPath);
   FQuery := ParseOperator(LQueryingData);
-  /// <summary> Dicionário </summary>
+  // Dicionário
   ParseQueryTokens;
 end;
 
@@ -218,7 +216,7 @@ begin
       '(':
         begin
           FResourceName := LCommand;
-          /// <summary> Command Next </summary>
+          // Command Next
           if LFor +1 <= LLength then
             ParseResourceNameAndID(Copy(AValue, LFor +1, LLength));
           Break;
@@ -226,7 +224,7 @@ begin
       ')':
         begin
           FID := LCommand;
-          /// <summary> Command Next </summary>
+          // Command Next
           if LFor +1 <= LLength then
             ParseResourceNameAndID(Copy(AValue, LFor +1, LLength));
           Break;

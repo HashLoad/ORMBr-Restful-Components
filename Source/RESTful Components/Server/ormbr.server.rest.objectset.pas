@@ -31,7 +31,7 @@ uses
   ormbr.rtti.helper,
   ormbr.objects.helper,
   ormbr.mapping.explorer,
-  ormbr.factory.interfaces,
+  dbebr.factory.interfaces,
   ormbr.server.rest.session;
 
 type
@@ -330,9 +330,7 @@ var
   LInTransaction: Boolean;
   LIsConnected: Boolean;
 begin
-  /// <summary>
-  ///   Controle de transação externa, controlada pelo desenvolvedor
-  /// </summary>
+  // Controle de transação externa, controlada pelo desenvolvedor
   LInTransaction := FConnection.InTransaction;
   LIsConnected := FConnection.IsConnected;
   if not LIsConnected then
@@ -353,11 +351,9 @@ begin
         for LColumn in LPrimaryKey.Columns do
           SetAutoIncValueChilds(AObject, LColumn);
       end;
-      /// <summary>
-      ///   Executa comando insert em cascade
-      /// </summary>
+      // Executa comando insert em cascade
       CascadeActionsExecute(AObject, CascadeInsert);
-      ///
+      //
       if not LInTransaction then
         FConnection.Commit;
     except
@@ -429,9 +425,7 @@ begin
     if ACascadeAction = CascadeInsert then // Insert
     begin
       FSession.Insert(LObject);
-      /// <summary>
-      ///   Popula as propriedades de relacionamento com os valores do master
-      /// </summary>
+      // Popula as propriedades de relacionamento com os valores do master
       if FSession.ExistSequence then
       begin
         LPrimaryKey := TMappingExplorer
@@ -462,7 +456,7 @@ begin
       else
         FSession.Insert(LObject);
     end;
-    /// <summary> Executa comando em cascade de cada objeto da lista </summary>
+    // Executa comando em cascade de cada objeto da lista
     CascadeActionsExecute(LObject, ACascadeAction);
   end;
 end;
@@ -486,9 +480,7 @@ begin
   if ACascadeAction = CascadeInsert then // Insert
   begin
     FSession.Insert(LObject);
-    /// <summary>
-    /// Popula as propriedades de relacionamento com os valores do master
-    /// </summary>
+    // Popula as propriedades de relacionamento com os valores do master
     if FSession.ExistSequence then
     begin
       LPrimaryKey := TMappingExplorer
@@ -519,7 +511,7 @@ begin
     else
       FSession.Insert(LObject);
   end;
-  /// <summary> Executa comando em cascade de cada objeto da lista </summary>
+  // Executa comando em cascade de cada objeto da lista
   CascadeActionsExecute(LObject, ACascadeAction);
 end;
 
@@ -614,9 +606,7 @@ var
   LIsConnected: Boolean;
 begin
   inherited;
-  /// <summary>
-  ///   Controle de transação externa, controlada pelo desenvolvedor
-  /// </summary>
+  // Controle de transação externa, controlada pelo desenvolvedor
   LInTransaction := FConnection.InTransaction;
   LIsConnected := FConnection.IsConnected;
   if not LIsConnected then
@@ -625,13 +615,9 @@ begin
     if not LInTransaction then
       FConnection.StartTransaction;
     try
-      /// <summary>
-      ///   Executa comando update em cascade
-      /// </summary>
+      // Executa comando update em cascade
       CascadeActionsExecute(AObject, CascadeUpdate);
-      /// <summary>
-      ///   Gera a lista com as propriedades que foram alteradas
-      /// </summary>
+      // Gera a lista com as propriedades que foram alteradas
       if TObject(AObject).GetType(LRttiType) then
       begin
         LKey := GenerateKey(AObject);
@@ -643,9 +629,7 @@ begin
           FObjectState.Remove(LKey);
           FObjectState.TrimExcess;
         end;
-        /// <summary>
-        ///   Remove o item excluído em Update Mestre-Detalhe
-        /// </summary>
+        // Remove o item excluído em Update Mestre-Detalhe
         for LObject in FObjectState.Values do
           FSession.Delete(LObject);
       end;
@@ -663,9 +647,7 @@ begin
     if not LIsConnected then
       FConnection.Disconnect;
     FObjectState.Clear;
-    /// <summary>
-    ///   Após executar o comando SQL Update, limpa a lista de campos alterados.
-    /// </summary>
+    // Após executar o comando SQL Update, limpa a lista de campos alterados.
     FSession.ModifiedFields.Clear;
     FSession.ModifiedFields.TrimExcess;
     FSession.DeleteList.Clear;

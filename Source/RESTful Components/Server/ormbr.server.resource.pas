@@ -27,14 +27,14 @@ uses
   Variants,
   Rtti,
   Generics.Collections,
-  /// ORMBr JSON
+  // ORMBr JSON
   ormbr.rest.json,
   ormbr.json.utils,
-  /// ORMBr
+  // ORMBr
   ormbr.rest.query.parse,
   ormbr.mapping.repository,
   ormbr.server.rest.objectset,
-  ormbr.factory.interfaces;
+  dbebr.factory.interfaces;
 
 type
   TAppResourceBase = class
@@ -96,12 +96,11 @@ var
 begin
   LQuery := TRESTQuery.Create;
   try
-    /// <summary> Parse da Query passada na URI </summary>
     LQuery.ParseQuery(AResource);
-    if LQuery.ResourceName <> '' then
-      Result := ParseInsert(LQuery, AValue)
-    else
-      raise Exception.Create('Class ' + LQuery.ResourceName + ' not found!');
+    // Parse da Query passada na URI
+    if LQuery.ResourceName = '' then
+      raise Exception.Create('{"exception":"Class T' + AResource + ' not found!"}');
+    Result := ParseInsert(LQuery, AValue)
   finally
     LQuery.Free;
   end;
@@ -113,12 +112,11 @@ var
 begin
   LQuery := TRESTQuery.Create;
   try
-    /// <summary> Parse da Query passada na URI </summary>
+    // Parse da Query passada na URI
     LQuery.ParseQuery(AResource);
-    if LQuery.ResourceName <> '' then
-      Result := ParseUpdate(LQuery, AValue)
-    else
-      raise Exception.Create('Class ' + LQuery.ResourceName + ' not found!');
+    if LQuery.ResourceName = '' then
+      raise Exception.Create('{"exception":"Class T' + AResource + ' not found!"}');
+    Result := ParseUpdate(LQuery, AValue)
   finally
     LQuery.Free;
   end;
@@ -126,52 +124,53 @@ end;
 
 function TAppResourceBase.ParseDelete(AQuery: TRESTQuery): String;
 var
-  LPrimaryKey: TPrimaryKeyColumnsMapping;
-  LColumn: TColumnMapping;
   LObject: TObject;
   LClassType: TClass;
   LObjectSet: TRESTObjectSet;
+
+  procedure ExceptionExecute;
+  begin
+    if LObject = nil then
+      raise Exception.Create('{"result":"No records found to delete, with the filter entered!"}');
+  end;
+
+  procedure FilterExecuteFind;
+  begin
+    if Length(AQuery.Filter) > 0  then
+      LObject := LObjectSet.FindOne(AQuery.Filter);
+  end;
+
+  procedure IDExecuteFind;
+  begin
+    if LObject <> nil then
+      Exit;
+    if AQuery.ID = Null then
+      raise Exception.Create('{"exception":"The delete method needs the ID parameter!"}');
+    LObject := LObjectSet.Find(VarToStr(AQuery.ID));
+  end;
+
 begin
   Result := '';
+  LObject := nil;
   LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
   if LClassType = nil then
     Exit;
-
   try
     LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
-    LObject := LClassType.Create;
-    LObject.MethodCall('Create', []);
     try
-      if Length(AQuery.Filter) > 0  then
-      begin
-        LObject := LObjectSet.FindOne(AQuery.Filter)
-      end
-      else
-      if AQuery.ID <> Null then
-      begin
-        LPrimaryKey := TMappingExplorer.GetInstance
-                         .GetMappingPrimaryKeyColumns(LObject.ClassType);
-        if LPrimaryKey = nil then
-          raise Exception.Create(cMESSAGEPKNOTFOUND);
-
-        for LColumn in LPrimaryKey.Columns do
-        begin
-          case LColumn.ColumnProperty.PropertyType.TypeKind of
-            tkString, tkWString, tkUString, tkWChar, tkLString, tkChar:
-              begin
-                LColumn.ColumnProperty.SetValue(LObject, TValue.From<String>(AQuery.ID));
-              end;
-            tkInteger, tkSet, tkInt64:
-              begin
-                LColumn.ColumnProperty.SetValue(LObject, TValue.From<Integer>(AQuery.ID));
-              end;
-          end;
-        end;
-      end;
+      // Busca o registro pelo filtro
+      FilterExecuteFind;
+      // Busca o registro pelo ID
+      IDExecuteFind;
+      // Caso nenhum dos dois métodos encontre um registro, é gerado uma
+      // exceção com uma mensagem de registro não encontrado para quem requisitou
+      ExceptionExecute;
+      // Se passar tudo ok, será executado o método do ORMBr
       LObjectSet.Delete(LObject);
       Result := '{"result":"Class ' + AQuery.ResourceName + ' delete command executed successfully"}';
     finally
-      LObject.MethodCall('Destroy', []);
+      if LObject <> nil then
+        LObject.Free;
       LObjectSet.Free;
     end;
   except
@@ -189,7 +188,7 @@ var
 begin
   LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
   if LClassType = nil then
-    Exit;
+    raise Exception.Create('{"exception":"Class [' + AQuery.ResourceName + '] not registered on the server!"}');
 
   LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
   try
@@ -219,7 +218,7 @@ var
 begin
   LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
   if LClassType = nil then
-    Exit;
+    raise Exception.Create('{"exception":"Class [' + AQuery.ResourceName + '] not registered on the server!"}');
 
   try
     LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
@@ -249,7 +248,7 @@ begin
       LValues[Length(LValues)] := ' ';
       Result := Format(Result, [Trim(LValues)]);
     finally
-      LObject.Free;// MethodCall('Destroy', []);
+      LObject.Free;
       LObjectSet.Free;
     end;
   except
@@ -280,7 +279,7 @@ begin
 
     TORMBrJson.JsonToObject(AValue, LObjectNew);
     if LObjectNew = nil then
-      Exit;
+      raise Exception.Create('{"exception":"There was an error in trying to convert JSON into the class [' + AQuery.ResourceName + ']!"}');
 
     try
       LWhere := '';

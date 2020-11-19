@@ -26,12 +26,11 @@ uses
   ormbr.client.interfaces;
 
 type
-  /// <summary>
-  /// Fábrica de conexões abstratas
-  /// </summary>
+  // Fábrica de conexões abstratas
   TFactoryRestConnection = class abstract(TInterfacedObject, IRESTConnection)
   private
     function GetBaseURL: String;
+    function GetFullURL: String;
     function GetPassword: String;
     function GetUsername: String;
     function GetMethodGET: String;
@@ -62,6 +61,7 @@ type
     function Execute(const AResource: String; const ARequestMethod: TRESTRequestMethodType;
       const AParams: TProc = nil): String; overload; virtual; abstract;
     property BaseURL: String read GetBaseURL;
+    property FullURL: String read GetFullURL;
     property Username: String read GetUsername;
     property Password: String read GetPassword;
     property MethodGET: String read GetMethodGET;
@@ -115,6 +115,11 @@ end;
 function TFactoryRestConnection.GetBaseURL: String;
 begin
   Result := FDriverConnection.GetBaseURL;
+end;
+
+function TFactoryRestConnection.GetFullURL: String;
+begin
+  Result := FDriverConnection.GetFullURL;
 end;
 
 function TFactoryRestConnection.GetMethodDELETE: String;

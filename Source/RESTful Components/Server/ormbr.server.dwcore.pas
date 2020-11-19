@@ -81,9 +81,9 @@ end;
 
 procedure TRESTServerDWCore.SetRESTServicePooler(const Value: TRESTServicePooler);
 begin
-  /// <summary> Atualiza o valor da VAR </summary>
+  // Atualiza o valor da VAR
   FRESTServicePooler := Value;
-  /// <summary> Adiciona a App REST no DWCore </summary>
+  // Adiciona a App REST no DWCore
   AddResource;
 end;
 

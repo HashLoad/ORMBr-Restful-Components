@@ -48,7 +48,7 @@ contains
   ormbr.client.methods in 'ormbr.client.methods.pas',
   ormbr.client.interfaces in 'ormbr.client.interfaces.pas',
   ormbr.session.rest in 'ormbr.session.rest.pas',
-  ormbr.restdataset.adapter in 'D:\PROJETOS-Brasil\ORMBr\Source\RESTful\ormbr.restdataset.adapter.pas',
+  ormbr.restdataset.adapter in '..\..\..\Source\RESTful\ormbr.restdataset.adapter.pas',
   ormbr.rest.classes in '..\Common\ormbr.rest.classes.pas';
 
 end.

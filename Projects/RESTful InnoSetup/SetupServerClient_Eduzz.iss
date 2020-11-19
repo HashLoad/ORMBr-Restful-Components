@@ -52,11 +52,11 @@ Source: "..\..\Source\RESTful Components\Server\ormbr.server.rest.session.pas"; 
 Source: "..\..\Source\RESTful Components\Server\ormbr.server.{#Framework}.pas"; DestDir: "{app}\Source\RESTful Components\Server\"; Flags: ignoreversion
 Source: "..\..\Source\RESTful Components\Server\ormbr.server.resource.{#Framework}.pas"; DestDir: "{app}\Source\RESTful Components\Server\"; Flags: ignoreversion
 ;Exemplo
-Source: "..\..\Demo\RESTFul via Driver\{#FrameworkName}\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\{#FrameworkName}\"; Flags: ignoreversion
-Source: "..\..\Demo\RESTFul via Driver\{#FrameworkName}\Client\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\{#FrameworkName}\Client\"; Flags: ignoreversion
-Source: "..\..\Demo\RESTFul via Driver\{#FrameworkName}\Server\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\{#FrameworkName}\Server\"; Flags: ignoreversion
+Source: "..\..\Examples\RESTFul via Driver\{#FrameworkName}\*.*"; DestDir: "{app}\Examples\RESTFul via Driver\{#FrameworkName}\"; Flags: ignoreversion
+Source: "..\..\Examples\RESTFul via Driver\{#FrameworkName}\Client\*.*"; DestDir: "{app}\Examples\RESTFul via Driver\{#FrameworkName}\Client\"; Flags: ignoreversion
+Source: "..\..\Examples\RESTFul via Driver\{#FrameworkName}\Server\*.*"; DestDir: "{app}\Examples\RESTFul via Driver\{#FrameworkName}\Server\"; Flags: ignoreversion
 ;Banco de dados
-Source: "..\..\Demo\Data\Database\*.*"; DestDir: "{app}\Demo\RESTFul via Driver\Data\Database\"; Flags: ignoreversion
+Source: "..\..\Examples\Data\Database\*.*"; DestDir: "{app}\Examples\RESTFul via Driver\Data\Database\"; Flags: ignoreversion
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent runascurrentuser; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"

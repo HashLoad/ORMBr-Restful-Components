@@ -81,7 +81,7 @@ type
     destructor Destroy; override;
     function AsConnection: IRESTConnection;
   published
-    /// <summary> Proxy Settings to be used by the client.</summary>
+    // Proxy Settings to be used by the client
     property ProxyParams: TRestProxyInfo read FProxyParams write SetProxyParams;
     property Authenticator: TAuthenticator read FAuthenticator write SetAuthenticator;
   end;

@@ -137,7 +137,7 @@ begin
   LQuery := TRESTQuery.Create;
   LAppResource := TAppResourceBase.Create(TRESTServerDWCore.GetConnection);
   try
-    /// <summary> Parse da Query passada na URI </summary>
+    // Parse da Query passada na URI
     LQuery.ParseQuery(GetParamValue(LParam.AsString));
     if LQuery.ResourceName <> '' then
     begin
@@ -161,9 +161,9 @@ begin
       LParam := AParams.ItemsString['$count'];
       if LParam <> nil then
         LQuery.SetCount(GetParamValue(LParam.AsString));
-      /// <summary> Retorno JSON </summary>
+      // Retorno JSON
       Result := LAppResource.ParseFind(LQuery);
-      /// <summary> Add Count Record no JSON Result </summary>
+      // Add Count Record no JSON Result
 //      if LQuery.Count then
     end
     else
@@ -232,7 +232,7 @@ begin
   LQuery := TRESTQuery.Create;
   LAppResource := TAppResourceBase.Create(TRESTServerDWCore.GetConnection);
   try
-    /// <summary> Parse da Query passada na URI </summary>
+    // Parse da Query passada na URI
     LQuery.ParseQuery(LParam.AsString);
     if LQuery.ResourceName <> '' then
     begin
@@ -240,7 +240,7 @@ begin
       LParam := AParams.ItemsString['$filter'];
       if LParam <> nil then
         LQuery.SetFilter(LParam.AsString);
-      /// <summary> Retorno JSON </summary>
+      // Retorno JSON
       Result := LAppResource.ParseDelete(LQuery);
     end
     else

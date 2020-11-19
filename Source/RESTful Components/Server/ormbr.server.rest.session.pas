@@ -29,7 +29,7 @@ uses
   ormbr.types.blob,
   ormbr.mapping.classes,
   ormbr.mapping.attributes,
-  ormbr.factory.interfaces,
+  dbebr.factory.interfaces,
   ormbr.server.rest.manager;
 
 type
@@ -51,9 +51,7 @@ type
     destructor Destroy; override;
     function ExistSequence: Boolean; virtual;
     function ModifiedFields: TDictionary<string, TDictionary<string, string>>; virtual;
-    /// <summary>
-    /// ObjectSet
-    /// </summary>
+    // ObjectSet
     procedure Insert(const AObject: TObject); overload; virtual;
     procedure Insert(const AObjectList: TObjectList<TObject>); overload; virtual; abstract;
     procedure Update(const AObject: TObject; const AKey: string); overload; virtual;

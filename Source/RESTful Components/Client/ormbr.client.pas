@@ -90,10 +90,8 @@ type
     FPort: Integer;
     FServerUse: Boolean;
     FClassNotServerUse: Boolean;
-    /// <summary>
-    ///   Variável de controle, para conseguir chamar o método Execute()
-    ///   de dentro do evento de autenticação.
-    /// </summary>
+    // Variável de controle, para conseguir chamar o método Execute()
+    // de dentro do evento de autenticação.
     FPerformingAuthentication: Boolean;
     FMethodSelect: String;
     FMethodSelectID: String;
@@ -104,13 +102,14 @@ type
     FMethodNextPacket: String;
     FMethodNextPacketWhere: String;
     FMethodToken: String;
-    /// <summary> Variables the Events </summary>
+    // Variables the Events
     FRequestMethod: String;
     FResponseString: String;
     FStatusCode: Integer;
     procedure SetServerUse(const Value: Boolean); virtual;
     procedure SetBaseURL; virtual;
     function GetBaseURL: String;
+    function GetFullURL: String; virtual;
     procedure DoBeforeCommand; virtual;
     procedure DoAfterCommand; virtual;
 //    procedure DoAuthentication(var AAuthorized: Boolean); virtual;
@@ -138,6 +137,7 @@ type
     property MethodGETNextPacket: String read GetMethodGETNextPacket write SetMethodGETNextPacket;
     property MethodGETNextPacketWhere: String read GetMethodGETNextPacketWhere write SetMethodGETNextPacketWhere;
     property BaseURL: String read GetBaseURL;
+    property FullURL: String read GetFullURL;
 //    property OnAuthentication: TAuthentication read FAuthentication write FAuthentication;
     property OnBeforeCommand: TBeforeCommandEvent read FBeforeCommand write FBeforeCommand;
     property OnAfterCommand: TAfterCommandEvent read FAfterCommand write FAfterCommand;
@@ -190,7 +190,7 @@ begin
   FResponseString := '';
   FRequestMethod := '';
   FStatusCode := 0;
-  /// <summary> Monta a URL base </summary>
+  // Monta a URL base
   SetBaseURL;
 end;
 
@@ -261,6 +261,11 @@ begin
 end;
 
 function TORMBrClient.GetBaseURL: String;
+begin
+  Result := FBaseURL;
+end;
+
+function TORMBrClient.GetFullURL: String;
 begin
   Result := FBaseURL;
 end;
@@ -341,7 +346,7 @@ begin
     Exit;
 
   FAPIContext := Value;
-  /// <summary> Monta a URL base </summary>
+  // Monta a URL base
   SetBaseURL;
 end;
 
@@ -357,7 +362,7 @@ begin
     Exit;
 
   FHost := Value;
-  /// <summary> Monta a URL base </summary>
+  // Monta a URL base
   SetBaseURL;
 end;
 
@@ -385,7 +390,7 @@ begin
     Exit;
 
   FPort := Value;
-  /// <summary> Monta a URL base </summary>
+  // Monta a URL base
   SetBaseURL;
 end;
 
@@ -395,7 +400,7 @@ begin
     Exit;
 
   FProtocol := Value;
-  /// <summary> Monta a URL base </summary>
+  // Monta a URL base
   SetBaseURL;
 end;
 
@@ -405,7 +410,7 @@ begin
     Exit;
 
   FRESTContext := Value;
-  /// <summary> Monta a URL base </summary>
+  // Monta a URL base
   SetBaseURL;
 end;
 

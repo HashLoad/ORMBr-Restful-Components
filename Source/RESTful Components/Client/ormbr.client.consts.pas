@@ -20,8 +20,8 @@ interface
 
 const
   cORMBRSOBRETITULOCLIENT = 'ORMBr - REST Client Components';
-  cORMBRVERSIONCLIENT = '1.1';
-  cORMBRRELEASECLIENT = '2018';
+  cORMBRVERSIONCLIENT = '1.2';
+  cORMBRRELEASECLIENT = '2020';
   cORMBRSOBREDESCRICAOCLIENT = 'ORMBr Framework http://www.ormbr.com.br/' + sLineBreak +
                                'Client Components ' + sLineBreak +
                                'Version : ' + cORMBRVERSIONCLIENT + '.' + cORMBRRELEASECLIENT;

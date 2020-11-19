@@ -33,6 +33,7 @@ type
   IRESTConnection = interface
     ['{A5974AAA-1B36-46F2-AF8D-51C4E69BC072}']
     function GetBaseURL: String;
+    function GetFullURL: String;
     function GetUsername: String;
     function GetPassword: String;
     function GetMethodGET: String;
@@ -45,7 +46,7 @@ type
     function GetMethodGETNextPacketWhere: String;
     function GetMethodToken: String;
     function GetServerUse: Boolean;
-    ///
+    //
     procedure SetCommandMonitor(AMonitor: ICommandMonitor);
     procedure SetClassNotServerUse(const Value: Boolean);
     function CommandMonitor: ICommandMonitor;
@@ -57,6 +58,7 @@ type
     procedure AddQueryParam(AValue: String);
     procedure AddBodyParam(AValue: String);
     property BaseURL: String read GetBaseURL;
+    property FullURL: String read GetFullURL;
     property Username: String read GetUsername;
     property Password: String read GetPassword;
     property MethodGET: String read GetMethodGET;

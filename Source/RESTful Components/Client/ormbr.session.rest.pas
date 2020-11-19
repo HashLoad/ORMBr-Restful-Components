@@ -34,19 +34,17 @@ uses
   {$ELSE}
   DBXJSON,
   {$ENDIF}
-  /// orm
+  // ORMBr
   ormbr.mapping.explorerstrategy,
   ormbr.dataset.base.adapter,
   ormbr.session.abstract,
-  ormbr.factory.interfaces,
+  dbebr.factory.interfaces,
   ormbr.client.methods,
   ormbr.client.interfaces,
   ormbr.restdataset.adapter;
 
 type
-  /// <summary>
-  ///   M - Sessão RESTFull
-  /// </summary>
+  // M - Sessão RESTFull
   TSessionRest<M: class, constructor> = class(TSessionAbstract<M>)
   private
     FOwner: TRESTDataSetAdapter<M>;
@@ -74,7 +72,7 @@ type
     function FindWhere(const AWhere: string; const AOrderBy: string = ''): TObjectList<M>; override;
     function ExistSequence: Boolean; override;
     function Find(const AMethodName: String;
-      const AParams: array of string): TObjectList<M>; overload; override;
+      const AParams: array of string): TObjectList<M>; overload; //override;
   end;
 
 implementation
@@ -110,16 +108,12 @@ begin
   FResource := '';
   FSubResource := '';
   FServerUse := False;
-  /// <summary>
-  ///   Pega o nome do recurso e subresource definidos na classe
-  /// </summary>
+  // Pega o nome do recurso e subresource definidos na classe
   LObject := TObject(M.Create);
   try
     if FConnection.ServerUse then
     begin
-      /// <summary>
-      ///   Valida se tem o atributo NotServerUse para não usar o server
-      /// </summary>
+      // Valida se tem o atributo NotServerUse para não usar o server
       LNotServerUse := LObject.GetNotServerUse;
       if LNotServerUse <> nil then
       begin
@@ -137,9 +131,7 @@ begin
     end
     else
     begin
-      /// <summary>
-      ///   Nome do Recurso
-      /// </summary>
+      // Nome do Recurso
       LResource := LObject.GetResource;
       if LResource <> nil then
         FResource := Resource(LResource).Name;
@@ -150,9 +142,7 @@ begin
         if LTable <> nil then
           FResource := Table(LTable).Name;
       end;
-      /// <summary>
-      ///   Nome do SubRecurso
-      /// </summary>
+      // Nome do SubRecurso
       LSubResource := LObject.GetSubResource;
       if LSubResource <> nil then
         FSubResource := Resource(LSubResource).Name;
@@ -199,7 +189,7 @@ begin
 //    Exit;
 //  end;
 
-  /// <summary> Executa de forma diferente unsado ORMBr Server </summary>
+  // Executa de forma diferente unsado ORMBr Server
 //  LWhere := '';
 //  for LColumn in AObject.GetPrimaryKey do
 //  begin
@@ -244,6 +234,8 @@ var
   LResource: String;
 begin
   LResource := FResource;
+  // Só concatena o ID na URI se a propriedade ServerUse for igual a TRUE,
+  // caso contrário será passado como parâmetro
   if FServerUse then
     LResource := LResource + '(' + IntToStr(AID) + ')';
   LSubResource := ifThen(Length(FConnection.MethodDELETE) > 0, FConnection.MethodDELETE, FSubResource);
@@ -257,15 +249,10 @@ begin
                                        FConnection.AddParam(IntToStr(AID));
                                    end);
   finally
-    /// <summary>
-    ///   Mostra no monitor a URI completa
-    /// </summary>
+    // Mostra no monitor a URI completa
     if FConnection.CommandMonitor <> nil then
     begin
-      LURI := FConnection.BaseURL + '/' + LResource;
-      if Length(LSubResource) > 0 then
-        LURI := LURI + '/' + LSubResource;
-
+      LURI := FConnection.FullURL;
       FConnection.CommandMonitor.Command('URI    : ' + LURI + sLineBreak +
                                          'ID     : ' + IntToStr(AID) + sLineBreak +
                                          'Método : DELETE' + sLineBreak +
@@ -284,9 +271,7 @@ begin
   FFetchingRecords := False;
   FWhere := AWhere;
   FOrderBy := AOrderBy;
-  /// <summary>
-  ///   Só busca por paginação se não for um RefreshRecord
-  /// </summary>
+  // Só busca por paginação se não for um RefreshRecord
   if not FFindWhereRefreshUsed then
   begin
     if FPageSize > -1 then
@@ -318,30 +303,17 @@ begin
                                        FConnection.AddQueryParam('$orderby=' + FOrderBy);
                                    end;
                                  end);
-    /// <summary>
-    ///   Caso o JSON retornado não seja um array, é tranformado em um.
-    /// </summary>
-    {$IFDEF NEXTGEN}
-    if LJSON[0] = '{' then
-    {$ELSE}
-    if LJSON[1] = '{' then
-    {$ENDIF}
+    // Caso o JSON retornado não seja um array, é tranformado em um.
+    if {$IFDEF NEXTGEN}LJSON[0]{$ELSE}LJSON[1]{$ENDIF} = '{' then
       LJSON := '[' + LJSON + ']';
 
-    /// <summary>
-    ///   Transforma o JSON recebido populando em uma lista de objetos
-    /// </summary>
+    // Transforma o JSON recebido populando em uma lista de objetos
     Result := TORMBrJson.JsonToObjectList<M>(LJSON);
   finally
-    /// <summary>
-    ///   Mostra no monitor a URI completa
-    /// </summary>
+    // Mostra no monitor a URI completa
     if FConnection.CommandMonitor <> nil then
     begin
-      LURI := FConnection.BaseURL + '/' + FResource;
-      if Length(FConnection.MethodGETWhere) > 0 then
-        LURI := LURI + '/' + FConnection.MethodGETWhere;
-
+      LURI := FConnection.FullURL;
       FConnection.CommandMonitor.Command('URI    : ' + LURI + sLineBreak +
                                          'Where  : ' + AWhere + sLineBreak +
                                          'OrderBy: ' + AOrderBy + sLineBreak +
@@ -353,9 +325,7 @@ end;
 
 function TSessionRest<M>.Find(const AID: Integer): M;
 begin
-  /// <summary>
-  ///   Transforma o JSON recebido populando o objeto
-  /// </summary>
+  // Transforma o JSON recebido populando o objeto
   FFindWhereUsed := False;
   FFetchingRecords := False;
   Result := Find(IntToStr(AID));
@@ -387,20 +357,13 @@ begin
                                    if not FServerUse then
                                      FConnection.AddParam(AID)
                                  end);
-    /// <summary>
-    ///   Transforma o JSON recebido populando o objeto
-    /// </summary>
+    // Transforma o JSON recebido populando o objeto
     Result := TORMBrJson.JsonToObject<M>(LJSON);
   finally
-    /// <summary>
-    ///   Mostra no monitor a URI completa
-    /// </summary>
+    // ostra no monitor a URI completa
     if FConnection.CommandMonitor <> nil then
     begin
-      LURI := FConnection.BaseURL + '/' + LResource;
-      if Length(FConnection.MethodGETId) > 0 then
-        LURI := LURI + '/' + FConnection.MethodGETId;
-
+      LURI := FConnection.FullURL;
       FConnection.CommandMonitor.Command('URI    : ' + LURI + sLineBreak +
                                          'ID     : ' + AID  + sLineBreak +
                                          'Método : GET' + sLineBreak +
@@ -428,30 +391,17 @@ begin
     LSubResource := ifThen(Length(FConnection.MethodGET) > 0, FConnection.MethodGET, FSubResource);
   try
     LJSON := FConnection.Execute(FResource, LSubResource, rtGET);
-    /// <summary>
-    ///   Caso o JSON retornado não seja um array, é tranformado em um.
-    /// </summary>
-    {$IFDEF NEXTGEN}
-    if LJSON[0] = '{' then
-    {$ELSE}
-    if LJSON[1] = '{' then
-    {$ENDIF}
+    // Caso o JSON retornado não seja um array, é tranformado em um.
+    if {$IFDEF NEXTGEN}LJSON[0]{$ELSE}LJSON[1]{$ENDIF} = '{' then
       LJSON := '[' + LJSON + ']';
 
-    /// <summary>
-    ///   Transforma o JSON recebido populando uma lista de objetos
-    /// </summary>
+    // Transforma o JSON recebido populando uma lista de objetos
     Result := TORMBrJson.JsonToObjectList<M>(LJSON);
   finally
-    /// <summary>
-    ///   Mostra no monitor a URI completa
-    /// </summary>
+    // Mostra no monitor a URI completa
     if FConnection.CommandMonitor <> nil then
     begin
-      LURI := FConnection.BaseURL + '/' + FResource;
-      if Length(LSubResource) > 0 then
-        LURI := LURI + '/' + LSubResource;
-
+      LURI := FConnection.FullURL;
       FConnection.CommandMonitor.Command('URI    : ' + LURI + sLineBreak +
                                          'Método : GET' + sLineBreak +
                                          'Json   : ' + LJSON, nil);
@@ -482,9 +432,7 @@ begin
                                      FConnection.AddBodyParam(LJSON);
                                    end);
     FResultParams.Clear;
-    /// <summary>
-    ///   Gera lista de params com o retorno, se existir o elemento "params" no JSON.
-    /// </summary>
+    // Gera lista de params com o retorno, se existir o elemento "params" no JSON.
     LParamsObject := TORMBrJSONUtil.JSONStringToJSONObject(LResult);
     if LParamsObject = nil then
       Exit;
@@ -509,20 +457,15 @@ begin
   finally
     if LParamsObject <> nil then
       LParamsObject.Free;
-    /// <summary>
-    ///   Mostra no monitor a URI completa
-    /// </summary>
-//    if FConnection.CommandMonitor <> nil then
-//    begin
-//      LURI := FConnection.BaseURL + '/' + FResource;
-//      if Length(LSubResource) > 0 then
-//        LURI := LURI + '/' + LSubResource;
-//
-//      FConnection.CommandMonitor.Command('URI    : ' + LURI + sLineBreak +
-//                                         'Método : POST' + sLineBreak +
-//                                         'Result : ' + LResult + sLineBreak +
-//                                         'Json   : ' + LJSON, nil);
-//    end;
+    // Mostra no monitor a URI completa
+    if FConnection.CommandMonitor <> nil then
+    begin
+      LURI := FConnection.FullURL;
+      FConnection.CommandMonitor.Command('URI    : ' + LURI + sLineBreak +
+                                         'Método : POST' + sLineBreak +
+                                         'Result : ' + LResult + sLineBreak +
+                                         'Json   : ' + LJSON, nil);
+    end;
   end;
 end;
 
@@ -599,17 +542,13 @@ begin
                                      FConnection.AddQueryParam('$skip='    + IntToStr(FPageNext));
                                    end;
                                  end);
-    /// <summary>
-    ///   Transforma o JSON recebido populando o objeto
-    /// </summary>
+    // Transforma o JSON recebido populando o objeto
     Result := TORMBrJson.JsonToObjectList<M>(LJSON);
   finally
-    /// <summary>
-    ///   Mostra no monitor a URI completa
-    /// </summary>
+    // Mostra no monitor a URI completa
     if FConnection.CommandMonitor <> nil then
     begin
-      LURI := FConnection.BaseURL + '/' + FResource;
+      LURI := FConnection.FullURL;
       if Length(LSubResource) > 0 then
         LURI := LURI + '/' + LSubResource;
 
@@ -647,17 +586,13 @@ begin
                                      FConnection.AddQueryParam('$skip=' + IntToStr(FPageNext));
                                    end;
                                  end);
-    /// <summary>
-    ///   Transforma o JSON recebido populando o objeto
-    /// </summary>
+    // Transforma o JSON recebido populando o objeto
     Result := TORMBrJson.JsonToObjectList<M>(LJSON);
   finally
-    /// <summary>
-    ///   Mostra no monitor a URI completa
-    /// </summary>
+    // Mostra no monitor a URI completa
     if FConnection.CommandMonitor <> nil then
     begin
-      LURI := FConnection.BaseURL + '/' + FResource;
+      LURI := FConnection.FullURL;
       if Length(LSubResource) > 0 then
         LURI := LURI + '/' + LSubResource;
 
@@ -693,15 +628,10 @@ begin
                                      end);
     end;
   finally
-    /// <summary>
-    ///   Mostra no monitor a URI completa
-    /// </summary>
+    // Mostra no monitor a URI completa
     if FConnection.CommandMonitor <> nil then
     begin
-      LURI := FConnection.BaseURL + '/' + LResource;
-      if Length(LSubResource) > 0 then
-        LURI := LURI + '/' + LSubResource;
-
+      LURI := FConnection.FullURL;
       FConnection.CommandMonitor.Command('URI    : ' + LURI + sLineBreak +
                                          'Método : PUT' + sLineBreak +
                                          'Result : ' + LResult + sLineBreak +
@@ -775,21 +705,14 @@ begin
         raise Exception.Create(E.Message);
       end;
     end;
-    /// <summary>
-    ///   Transforma o JSON recebido populando o objeto
-    /// </summary>
+    // Transforma o JSON recebido populando o objeto
     Result := TORMBrJson.JsonToObjectList<M>(LJSON);
   finally
     LJSONArray.Free;
-    /// <summary>
-    ///   Mostra no monitor a URI completa
-    /// </summary>
+    // Mostra no monitor a URI completa
     if FConnection.CommandMonitor <> nil then
     begin
-      LURI := FConnection.BaseURL + '/' + FResource;
-      if Length(AMethodName) > 0 then
-        LURI := LURI + '/' + AMethodName;
-
+      LURI := FConnection.FullURL;
       FConnection.CommandMonitor.Command('URI    : ' + LURI + sLineBreak +
                                          'Método : GET' + sLineBreak +
                                          'Json   : ' + LJSON, nil);
