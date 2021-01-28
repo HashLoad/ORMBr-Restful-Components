@@ -2,7 +2,7 @@ object Form3: TForm3
   Left = 0
   Top = 0
   Caption = 'Form3'
-  ClientHeight = 665
+  ClientHeight = 628
   ClientWidth = 864
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -205,17 +205,6 @@ object Form3: TForm3
     ParentCtl3D = False
     TabOrder = 4
   end
-  object Memo1: TMemo
-    AlignWithMargins = True
-    Left = 3
-    Top = 502
-    Width = 858
-    Height = 160
-    Align = alBottom
-    Lines.Strings = (
-      'Memo1')
-    TabOrder = 15
-  end
   object Button3: TButton
     Left = 751
     Top = 471
@@ -233,6 +222,24 @@ object Form3: TForm3
     DataField = 'InternalField'
     DataSource = DataSource1
     TabOrder = 1
+  end
+  object Memo1: TMemo
+    Left = 8
+    Top = 502
+    Width = 840
+    Height = 89
+    Lines.Strings = (
+      'Memo1')
+    TabOrder = 15
+  end
+  object Button4: TButton
+    Left = 751
+    Top = 597
+    Width = 97
+    Height = 25
+    Caption = 'Ping'
+    TabOrder = 16
+    OnClick = Button4Click
   end
   object DataSource1: TDataSource
     DataSet = FDMaster
@@ -309,7 +316,7 @@ object Form3: TForm3
     APIContext = 'api'
     RESTContext = '/ormbr'
     ORMBrServerUse = True
-    Left = 114
-    Top = 43
+    Left = 108
+    Top = 34
   end
 end

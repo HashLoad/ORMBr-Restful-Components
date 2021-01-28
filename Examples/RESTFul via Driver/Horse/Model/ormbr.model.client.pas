@@ -8,14 +8,15 @@ uses
   SysUtils, 
   Generics.Collections, 
   /// orm 
-  ormbr.mapping.attributes,
+  dbcbr.mapping.attributes,
+  dbcbr.types.mapping,
+  dbcbr.mapping.register,
   ormbr.types.nullable,
-  ormbr.types.mapping,
-  ormbr.mapping.register,
   ormbr.types.blob;
 
 type
   [Entity]
+//  [NotServerUse] // <<<<========
   [Table('client','')]
   [PrimaryKey('client_id', 'Chave primária')]
   [Indexe('idx_client_name','client_name')]
@@ -25,7 +26,7 @@ type
     { Private declarations }
     Fclient_id: Integer;
     Fclient_name: String;
-//    Fclient_foto: TBlob;
+    Fclient_foto: TBlob;
   public
     { Public declarations }
     [Restrictions([NoUpdate, NotNull])]
@@ -37,9 +38,9 @@ type
     [Dictionary('client_name','Mensagem de validação','','','',taLeftJustify)]
     property client_name: String read Fclient_name write Fclient_name;
 
-//    [Column('client_foto', ftBlob)]
-//    [Dictionary('client_foto','Mensagem de validação')]
-//    property client_foto: TBlob read Fclient_foto write Fclient_foto;
+    [Column('client_foto', ftBlob)]
+    [Dictionary('client_foto','Mensagem de validação')]
+    property client_foto: TBlob read Fclient_foto write Fclient_foto;
   end;
 
 implementation

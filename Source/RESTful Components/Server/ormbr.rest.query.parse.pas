@@ -116,7 +116,7 @@ function TRESTQuery.GetCount: Boolean;
 begin
   Result := False;
   if FQueryTokens.ContainsKey('$count') then
-    Result := FQueryTokens.Items['$count'] = 'True';
+    Result := LowerCase(FQueryTokens.Items['$count']) = 'true';
 end;
 
 function TRESTQuery.GetExpand: String;

@@ -8,17 +8,15 @@ uses
   SysUtils, 
   Generics.Collections, 
   /// orm 
-  ormbr.mapping.attributes, 
-  ormbr.mapping.register,
-  ormbr.types.mapping;
+  dbcbr.mapping.register,
+  dbcbr.mapping.attributes,
+  dbcbr.types.mapping;
 
 type
   [Entity]
   [Table('lookup','')]
   [PrimaryKey('lookup_id', 'Chave primária')]
   [Indexe('idx_lookup_description','lookup_description')]
-  [Resource('tapilookup')]
-  [SubResource('lookup')]
   Tlookup = class
   private
     { Private declarations }

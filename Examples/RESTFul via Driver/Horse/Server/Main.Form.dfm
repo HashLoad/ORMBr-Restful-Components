@@ -4,8 +4,8 @@ object FrmVCL: TFrmVCL
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'VCL'
-  ClientHeight = 93
-  ClientWidth = 248
+  ClientHeight = 144
+  ClientWidth = 364
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,39 +15,20 @@ object FrmVCL: TFrmVCL
   OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object lbStatus: TLabel
-    Left = 8
-    Top = 7
-    Width = 70
-    Height = 13
-    Caption = 'Status: Offline'
-  end
   object lbPorta: TLabel
-    Left = 8
-    Top = 26
-    Width = 24
-    Height = 13
-    Caption = 'Port:'
-  end
-  object btnStop: TBitBtn
-    Left = 127
-    Top = 53
-    Width = 113
-    Height = 25
-    Caption = 'Stop'
-    Enabled = False
-    TabOrder = 0
-    OnClick = btnStopClick
-  end
-  object btnStart: TBitBtn
-    Left = 8
-    Top = 53
-    Width = 113
-    Height = 25
-    Caption = 'Start'
-    TabOrder = 1
-    OnClick = btnStartClick
+    Left = 140
+    Top = 56
+    Width = 86
+    Height = 23
+    Caption = 'Port: 9000'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
   end
 end

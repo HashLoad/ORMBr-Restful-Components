@@ -29,7 +29,7 @@ uses
   ormbr.client.base,
   ormbr.client.methods,
 
-  uDWAbout, uDWConsts, uRESTDWBase, uDWJSONObject, uDWConstsData;
+  uDWAbout, uDWConsts, uRESTDWBase, uDWJSONObject, uDWConstsData, ServerUtils;
 
 type
   TRESTClientPoolerHacker = class(TRESTClientPooler)
@@ -57,7 +57,10 @@ type
     destructor Destroy; override;
     function Execute(const AResource, ASubResource: String;
       const ARequestMethod: TRESTRequestMethodType;
-      const AParamsProc: TProc = nil): String;
+      const AParamsProc: TProc = nil): String; overload;
+    function Execute(const AURL: String;
+      const ARequestMethod: TRESTRequestMethodType;
+      const AParamsProc: TProc = nil): String; overload;
   published
     property MethodGET;
     property MethodPOST;
@@ -94,7 +97,7 @@ begin
   FMethodDelete := 'delete';
   FAPIContext := 'restdataware';
   FRESTContext := '';
-  /// <summary> Monta a URL base </summary>
+  // Monta a URL base
   SetBaseURL;
 end;
 
@@ -115,9 +118,9 @@ end;
 function TRESTClientDWCore.DoDELETE(const AResource, ASubResource: String): String;
 begin
   FRequestMethod := 'DELETE';
-  /// <summary> Define valores dos parâmetros </summary>
+  // Define valores dos parâmetros
   SetParamValues;
-  /// <summary> DELETE </summary>
+  // DELETE
   try
     Result := FRESTClient.SendEvent(ASubResource,
                                     FDWParams,
@@ -151,9 +154,9 @@ end;
 function TRESTClientDWCore.DoGET(const AResource, ASubResource: String): String;
 begin
   FRequestMethod := 'GET';
-  /// <summary> Define valores dos parâmetros </summary>
+  // Define valores dos parâmetros
   SetParamValues;
-  /// <summary> GET </summary>
+  // GET
   try
     Result := FRESTClient.SendEvent(ASubResource,
                                     FDWParams,
@@ -187,9 +190,9 @@ end;
 function TRESTClientDWCore.DoPOST(const AResource, ASubResource: String): String;
 begin
   FRequestMethod := 'POST';
-  /// <summary> Define valores dos parâmetros </summary>
+  // Define valores dos parâmetros
   SetParamsBodyValue;
-  /// <summary> POST </summary>
+  // POST
   try
     Result := FRESTClient.SendEvent(ASubResource,
                                     FDWParams,
@@ -223,9 +226,9 @@ end;
 function TRESTClientDWCore.DoPUT(const AResource, ASubResource: String): String;
 begin
   FRequestMethod := 'PUT';
-  /// <summary> Define valores dos parâmetros </summary>
+  // Define valores dos parâmetros
   SetParamsBodyValue;
-  /// <summary> PUT </summary>
+  // PUT
   try
     Result := FRESTClient.SendEvent(ASubResource,
                                     FDWParams,
@@ -253,6 +256,90 @@ begin
                         E.Message,
                         TRESTClientPoolerHacker(FRESTClient).HttpRequest.ResponseCode);
     end;
+  end;
+end;
+
+function TRESTClientDWCore.Execute(const AURL: String;
+  const ARequestMethod: TRESTRequestMethodType;
+  const AParamsProc: TProc): String;
+var
+  LFor: Integer;
+  LJSONParam: TJSONParam;
+
+  function GetRequestMethod: String;
+  begin
+    case ARequestMethod of
+      TRESTRequestMethodType.rtPOST:   Result := 'POST';
+      TRESTRequestMethodType.rtPUT:    Result := 'PUT';
+      TRESTRequestMethodType.rtGET:    Result := 'GET';
+      TRESTRequestMethodType.rtDELETE: Result := 'DELETE';
+      TRESTRequestMethodType.rtPATCH: ;
+    end;
+  end;
+
+begin
+  Result := '';
+  // Executa a procedure de adição dos parâmetros
+  if Assigned(AParamsProc) then
+    AParamsProc();
+  // Define dados do proxy
+  SetProxyParamsClientValue;
+  // Define valores de autenticação
+  SetAuthenticatorTypeValues;
+  // Passa os dados de acesso para o RESTClient do DW Core
+  FRESTClient.Host := FHost;
+  FRESTClient.Port := FPort;
+  if FProtocol = TRestProtocol.Http then
+    FRESTClient.TypeRequest := trHttp
+  else
+    FRESTClient.TypeRequest := trHttps;
+
+  if FServerUse then
+  begin
+    // Param com nome do attributo Table() do modelo.
+    LJSONParam := TJSONParam.Create(FDWParams.Encoding);
+    LJSONParam.ParamName := 'requesttype';
+    LJSONParam.ObjectDirection := odIN;
+    LJSONParam.JsonMode := jmPureJSON;
+    LJSONParam.AsString := GetRequestMethod;
+    FDWParams.Add(LJSONParam);
+  end;
+  try
+    // DoBeforeCommand
+    DoBeforeCommand;
+
+    case ARequestMethod of
+      TRESTRequestMethodType.rtPOST:
+        begin
+          Result := DoPOST(AURL, '');
+        end;
+      TRESTRequestMethodType.rtPUT:
+        begin
+          Result := DoPUT(AURL, '');
+        end;
+      TRESTRequestMethodType.rtGET:
+        begin
+          Result := DoGET(AURL, '');
+        end;
+      TRESTRequestMethodType.rtDELETE:
+        begin
+          Result := DoDELETE(AURL, '');
+        end;
+      TRESTRequestMethodType.rtPATCH: ;
+    end;
+    // Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
+    FResponseString := Result;
+    // DoAfterCommand
+    DoAfterCommand;
+    // Pega de volta o JSON manipulado ou não no evento AfterCommand
+    Result := FResponseString;
+  finally
+    FResponseString := '';
+    FParams.Clear;
+    FQueryParams.Clear;
+    FBodyParams.Clear;
+    // Limpa a lista de paramêtros do DW Core
+    ClearDWParams;
   end;
 end;
 
@@ -289,18 +376,14 @@ begin
   Result := '';
   LResource := AResource;
   LSubResource := ASubResource;
-  /// <summary>
-  ///    Executa a procedure de adição dos parâmetros
-  /// </summary>
+  // Executa a procedure de adição dos parâmetros
   if Assigned(AParamsProc) then
     AParamsProc();
-  /// <summary> Define dados do proxy </summary>
+  // Define dados do proxy
   SetProxyParamsClientValue;
-  /// <summary> Define valores de autenticação </summary>
+  // Define valores de autenticação
   SetAuthenticatorTypeValues;
-  /// <summary>
-  ///   Passa os dados de acesso para o RESTClient do DW Core
-  /// </summary>
+  // Passa os dados de acesso para o RESTClient do DW Core
   FRESTClient.Host := FHost;
   FRESTClient.Port := FPort;
   if FProtocol = TRestProtocol.Http then
@@ -310,18 +393,14 @@ begin
 
   if FServerUse then
   begin
-    /// <summary>
-    ///   Param com nome do attributo Table() do modelo.
-    /// </summary>
+    // Param com nome do attributo Table() do modelo.
     LJSONParam := TJSONParam.Create(FDWParams.Encoding);
     LJSONParam.ParamName := 'requesttype';
     LJSONParam.ObjectDirection := odIN;
     LJSONParam.JsonMode := jmPureJSON;
     LJSONParam.AsString := GetRequestMethod;
     FDWParams.Add(LJSONParam);
-    /// <summary>
-    ///   Param com nome do attributo Table() do modelo.
-    /// </summary>
+    // Param com nome do attributo Table() do modelo.
     LJSONParam := TJSONParam.Create(FDWParams.Encoding);
     LJSONParam.ParamName := 'resource';
     LJSONParam.ObjectDirection := odIN;
@@ -333,7 +412,7 @@ begin
     LSubResource := 'api';
   end;
   try
-    /// <summary> DoBeforeCommand </summary>
+    // DoBeforeCommand
     DoBeforeCommand;
 
     case ARequestMethod of
@@ -355,24 +434,18 @@ begin
         end;
       TRESTRequestMethodType.rtPATCH: ;
     end;
-    /// <summary>
-    ///   Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
-    /// </summary>
+    // Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
     FResponseString := Result;
-    /// <summary> DoAfterCommand </summary>
+    // DoAfterCommand
     DoAfterCommand;
-    /// <summary>
-    ///   Pega de volta o JSON manipulado ou não no evento AfterCommand
-    /// </summary>
+    // Pega de volta o JSON manipulado ou não no evento AfterCommand
     Result := FResponseString;
   finally
     FResponseString := '';
     FParams.Clear;
     FQueryParams.Clear;
     FBodyParams.Clear;
-    /// <summary>
-    ///   Limpa a lista de paramêtros do DW Core
-    /// </summary>
+    // Limpa a lista de paramêtros do DW Core
     ClearDWParams;
   end;
 end;
@@ -381,20 +454,31 @@ procedure TRESTClientDWCore.SetAuthenticatorTypeValues;
 begin
   case FAuthenticator.AuthenticatorType of
     atNoAuth:
-      ;
+      begin
+        FRESTClient.AuthenticationOptions.AuthorizationOption := rdwAONone;
+      end;
     atBasicAuth:
       begin
-        FRESTClient.UserName := FAuthenticator.Username;
-        FRESTClient.Password := FAuthenticator.Password;
+        FRESTClient.AuthenticationOptions.AuthorizationOption := rdwAOBasic;
+        TRDWAuthOptionBasic(FRESTClient.AuthenticationOptions.OptionParams).Username := FAuthenticator.Username;
+        TRDWAuthOptionBasic(FRESTClient.AuthenticationOptions.OptionParams).Password := FAuthenticator.Password;
       end;
     atBearerToken:
       begin
+        FRESTClient.AuthenticationOptions.AuthorizationOption := rdwAOBearer;
+        TRDWAuthOptionBearerClient(FRESTClient.AuthenticationOptions.OptionParams).Key := '';
+        TRDWAuthOptionBearerClient(FRESTClient.AuthenticationOptions.OptionParams).Token := FAuthenticator.Token;
       end;
     atOAuth1:
       begin
+        FRESTClient.AuthenticationOptions.AuthorizationOption := rdwAOToken;
+        TRDWAuthOptionTokenClient(FRESTClient.AuthenticationOptions.OptionParams).Key := '';
+        TRDWAuthOptionTokenClient(FRESTClient.AuthenticationOptions.OptionParams).Token := FAuthenticator.Token;
       end;
     atOAuth2:
       begin
+        FRESTClient.AuthenticationOptions.AuthorizationOption := rdwOAuth;
+        TRDWAuthOAuth(FRESTClient.AuthenticationOptions.OptionParams).Token := FAuthenticator.Token;
       end;
   end;
 end;

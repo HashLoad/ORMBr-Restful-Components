@@ -34,6 +34,7 @@ uses
   ormbr.client.base,
   ormbr.client,
   ormbr.client.horse,
+  ormbr.client.methods,
 
   FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
@@ -69,14 +70,16 @@ type
     DBEdit7: TDBEdit;
     Button1: TButton;
     DBImage1: TDBImage;
-    Memo1: TMemo;
     Button3: TButton;
     RESTClientHorse1: TRESTClientHorse;
     DBEdit8: TDBEdit;
+    Memo1: TMemo;
+    Button4: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
   private
     { Private declarations }
     oManager: TManagerDataSet;
@@ -102,6 +105,15 @@ end;
 procedure TForm3.Button3Click(Sender: TObject);
 begin
   TCommandMonitor.GetInstance.Show;
+end;
+
+procedure TForm3.Button4Click(Sender: TObject);
+begin
+  Memo1.Text := RESTClientHorse1.Execute('ping', '', TRESTRequestMethodType.rtGET,
+                                         procedure
+                                         begin
+                                           RESTClientHorse1.AddParam('ID = 7');
+                                         end);
 end;
 
 procedure TForm3.FormCreate(Sender: TObject);

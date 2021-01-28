@@ -28,6 +28,8 @@ uses
 
 type
   TAppResource = class(TAppResourceBase)
+  private
+    const cCLASSNOTFOUND = '{"exception":"Class T%s not found!"}';
   public
     constructor Create; overload; virtual;
     destructor Destroy; override;
@@ -83,8 +85,7 @@ begin
     // Parse da AQuery passada na URI
     LQuery.ParseQuery(AResource);
     if LQuery.ResourceName = '' then
-      raise Exception.Create('{"exception":"Class T' + AResource + ' not found!"}');
-
+      raise Exception.CreateFmt(cCLASSNOTFOUND, [AResource]);
     if AQuery.Count > 0 then
     begin
       if AQuery.ContainsKey('$filter') then
@@ -100,8 +101,6 @@ begin
     end;
     // Retorno JSON
     Result := ParseFind(LQuery);
-    // Add Count Record no JSON Result
-//      if LQuery.Count then
   finally
     LQuery.Free;
   end;
@@ -129,8 +128,7 @@ begin
     // Parse da AQuery passada na URI
     LQuery.ParseQuery(AResource);
     if LQuery.ResourceName = '' then
-      raise Exception.Create('{"exception":"Class T' + AResource + ' not found!"}');
-
+      raise Exception.CreateFmt(cCLASSNOTFOUND, [AResource]);
     if AFilter <> '' then
       LQuery.SetFilter(AFilter);
     // Retorno JSON

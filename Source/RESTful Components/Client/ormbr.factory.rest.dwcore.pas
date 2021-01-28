@@ -26,9 +26,7 @@ uses
   ormbr.client.methods;
 
 type
-  /// <summary>
-  /// Fábrica de conexões abstratas
-  /// </summary>
+  // Fábrica de conexões abstratas
   TFactoryRestDWCore = class (TFactoryRestConnection)
   public
     constructor Create(AConnection: TComponent); override;

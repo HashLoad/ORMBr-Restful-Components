@@ -24,12 +24,12 @@ uses
   TypInfo,
   Generics.Collections,
   /// ORMBr
-  ormbr.core.consts,
-  ormbr.rtti.helper,
-  ormbr.types.blob,
-  ormbr.mapping.classes,
-  ormbr.mapping.attributes,
+  dbcbr.rtti.helper,
+  dbcbr.mapping.classes,
+  dbcbr.mapping.attributes,
   dbebr.factory.interfaces,
+  ormbr.core.consts,
+  ormbr.types.blob,
   ormbr.server.rest.manager;
 
 type
@@ -64,9 +64,7 @@ type
     function NextPacketList(const APageSize, APageNext: Integer): TObjectList<TObject>; overload; virtual;
     function NextPacketList(const AWhere, AOrderBy: String; const APageSize, APageNext: Integer): TObjectList<TObject>; overload; virtual;
     function ResultParams: TParams;
-    /// <summary>
-    /// DataSet e ObjectSet
-    /// </summary>
+    // DataSet e ObjectSet
     procedure ModifyFieldsCompare(const AKey: string; const AObjectSource,
       AObjectUpdate: TObject); virtual;
     function Find: TObjectList<TObject>; overload; virtual;
@@ -80,10 +78,11 @@ type
 implementation
 
 uses
-  ormbr.mapping.explorer,
+  dbcbr.mapping.explorer,
   ormbr.objects.helper;
 
 { TRESTObjectSetSession<M> }
+
 constructor TRESTObjectSetSession.Create(const AConnection: IDBConnection;
   const AClassType: TClass; const APageSize: Integer = -1);
 begin
@@ -92,9 +91,7 @@ begin
   FDeleteList := TObjectList<TObject>.Create;
   FResultParams := TParams.Create;
   FManager := TRESTObjectManager.Create(Self, AConnection, AClassType, APageSize);
-  /// <summary>
-  /// Inicia uma lista interna para gerenciar campos alterados
-  /// </summary>
+  // Inicia uma lista interna para gerenciar campos alterados
   FModifiedFields.Clear;
   FModifiedFields.TrimExcess;
   FModifiedFields.Add(AClassType.ClassName, TDictionary<string, string>.Create);
@@ -181,7 +178,6 @@ var
   LProperty: TRttiProperty;
 begin
   LColumns := TMappingExplorer
-                .GetInstance
                   .GetMappingColumn(AObjectSource.ClassType);
   for LColumn in LColumns do
   begin
@@ -192,10 +188,8 @@ begin
       Continue;
     if not FModifiedFields.ContainsKey(AKey) then
       FModifiedFields.Add(AKey, TDictionary<string, string>.Create);
-    /// <summary>
-    ///   Se o tipo da property for tkRecord provavelmente tem Nullable nela
-    ///   Se não for tkRecord entra no ELSE e pega o valor de forma direta
-    /// </summary>
+    // Se o tipo da property for tkRecord provavelmente tem Nullable nela
+    // Se não for tkRecord entra no ELSE e pega o valor de forma direta
     if LProperty.PropertyType.TypeKind in [tkRecord] then // Nullable ou TBlob
     begin
       if LProperty.IsBlob then

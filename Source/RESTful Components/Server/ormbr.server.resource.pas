@@ -27,12 +27,10 @@ uses
   Variants,
   Rtti,
   Generics.Collections,
-  // ORMBr JSON
-  ormbr.rest.json,
-  ormbr.json.utils,
   // ORMBr
+  dbcbr.mapping.repository,
+  ormbr.json,
   ormbr.rest.query.parse,
-  ormbr.mapping.repository,
   ormbr.server.rest.objectset,
   dbebr.factory.interfaces;
 
@@ -40,12 +38,20 @@ type
   TAppResourceBase = class
   private
     FConnection: IDBConnection;
-    FRepository: TMappingRepository;
-    function ResolverFindToSkip(AObjectSet: TRESTObjectSet; AQuery: TRESTQuery): String;
-    function ResolverFindFilter(AObjectSet: TRESTObjectSet; AQuery: TRESTQuery): String;
-    function ResolverFindID(AObjectSet: TRESTObjectSet; AQuery: TRESTQuery): String;
-    function ResolverFindAll(AObjectSet: TRESTObjectSet): String;
+    const cRESOURCENOTFOUND = '{"exception":"Resource T%s not found!"}';
+    const cRESOURCENOTREGISTER = '{"exception":"Resource [%s] not registered on the server!"}';
+    const cRESOURCEPERMITION = '{"exception":"Resource [%s] without access permission by the [NotServerUse] attribute!"}';
+    const cEXCEPTIONJSON = '{"exception":"There was an error in trying to convert JSON into the class [%s]!"}';
+    const cRESOURCEDELETE = '{"result":"Resource %s delete command executed successfully"}';
+    const cRESOURCEINSERT = '{"result":"Resource %s insert command executed successfully", "params":[{%s}]}';
+    const cRESOURCEUPDATE = '{"result":"Resource %s update command executed successfully"}';
+
+    function ResolverFindToSkip(const AObjectSet: TRESTObjectSet; const AQuery: TRESTQuery): String;
+    function ResolverFindFilter(const AObjectSet: TRESTObjectSet; const AQuery: TRESTQuery): String;
+    function ResolverFindID(const AObjectSet: TRESTObjectSet; const AQuery: TRESTQuery): String;
+    function ResolverFindAll(const AObjectSet: TRESTObjectSet; const AQuery: TRESTQuery): String;
   protected
+    FResultCount: Integer;
     function ParseInsert(AQuery: TRESTQuery; AValue: String): String;
     function ParseUpdate(AQuery: TRESTQuery; AValue: String): String;
   public
@@ -57,15 +63,16 @@ type
     function insert(AResource: String; AValue: String): String; overload; virtual;
     function update(AResource: String; AValue: String): String; overload; virtual;
     function delete(AResource: String): String; overload; virtual;
+    function ResultCount: Integer;
   end;
 
 implementation
 
 uses
+  dbcbr.mapping.explorer,
+  dbcbr.mapping.classes,
+  dbcbr.rtti.helper,
   ormbr.objects.helper,
-  ormbr.mapping.explorer,
-  ormbr.mapping.classes,
-  ormbr.rtti.helper,
   ormbr.core.consts;
 
 { TAppResourceBase }
@@ -75,8 +82,8 @@ begin
 //  {$IFDEF TRIAL}
 //  MessageDlg('Esta é uma versão de demonstração do ORMBr - REST Server Components. Adquira a versão completa pelo E-mail isaquesp@gmail.com', mtInformation, [mbOk], 0);
 //  {$ENDIF}
+  FResultCount := 0;
   FConnection := AConnection;
-  FRepository := TMappingExplorer.GetInstance.Repository;
 end;
 
 function TAppResourceBase.delete(AResource: String): String;
@@ -99,7 +106,7 @@ begin
     LQuery.ParseQuery(AResource);
     // Parse da Query passada na URI
     if LQuery.ResourceName = '' then
-      raise Exception.Create('{"exception":"Class T' + AResource + ' not found!"}');
+      raise Exception.CreateFmt(cRESOURCENOTFOUND, [AResource]);
     Result := ParseInsert(LQuery, AValue)
   finally
     LQuery.Free;
@@ -115,7 +122,7 @@ begin
     // Parse da Query passada na URI
     LQuery.ParseQuery(AResource);
     if LQuery.ResourceName = '' then
-      raise Exception.Create('{"exception":"Class T' + AResource + ' not found!"}');
+      raise Exception.CreateFmt(cRESOURCENOTFOUND, [AResource]);
     Result := ParseUpdate(LQuery, AValue)
   finally
     LQuery.Free;
@@ -152,7 +159,7 @@ var
 begin
   Result := '';
   LObject := nil;
-  LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
+  LClassType := TMappingExplorer.GetRepositoryMapping.FindEntityByName(AQuery.ResourceName);
   if LClassType = nil then
     Exit;
   try
@@ -167,7 +174,7 @@ begin
       ExceptionExecute;
       // Se passar tudo ok, será executado o método do ORMBr
       LObjectSet.Delete(LObject);
-      Result := '{"result":"Class ' + AQuery.ResourceName + ' delete command executed successfully"}';
+      Result := Format(cRESOURCEDELETE, [AQuery.ResourceName]);
     finally
       if LObject <> nil then
         LObject.Free;
@@ -185,10 +192,16 @@ function TAppResourceBase.ParseFind(AQuery: TRESTQuery): String;
 var
   LClassType: TClass;
   LObjectSet: TRESTObjectSet;
+  LNotSeverUse: Boolean;
 begin
-  LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
+  LClassType := TMappingExplorer.GetRepositoryMapping.FindEntityByName(AQuery.ResourceName);
   if LClassType = nil then
-    raise Exception.Create('{"exception":"Class [' + AQuery.ResourceName + '] not registered on the server!"}');
+    raise Exception.CreateFmt(cRESOURCENOTREGISTER, [AQuery.ResourceName]);
+
+  // Verifica se foi negado acesso a classe, pelo atributo NotServerUse
+  LNotSeverUse := TMappingExplorer.GetNotServerUse(LClassType);
+  if LNotSeverUse then
+    raise Exception.CreateFmt(cRESOURCEPERMITION, [AQuery.ResourceName]);
 
   LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
   try
@@ -201,7 +214,7 @@ begin
     if AQuery.ID <> Null then
       Result := ResolverFindID(LObjectSet, AQuery)
     else
-      Result := ResolverFindAll(LObjectSet);
+      Result := ResolverFindAll(LObjectSet, AQuery);
   finally
     LObjectSet.Free;
   end;
@@ -216,9 +229,9 @@ var
   LObjectSet: TRESTObjectSet;
   LValues: String;
 begin
-  LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
+  LClassType := TMappingExplorer.GetRepositoryMapping.FindEntityByName(AQuery.ResourceName);
   if LClassType = nil then
-    raise Exception.Create('{"exception":"Class [' + AQuery.ResourceName + '] not registered on the server!"}');
+    raise Exception.CreateFmt(cRESOURCENOTREGISTER, [AQuery.ResourceName]);
 
   try
     LObjectSet := TRESTObjectSet.Create(FConnection, LClassType);
@@ -231,11 +244,8 @@ begin
 
     try
       LObjectSet.Insert(LObject);
-      Result := '{"result":"Class ' + AQuery.ResourceName
-              + ' insert command executed successfully",'
-              + ' "params":[{%s}]}';
       LValues := '';
-      LPrimaryKey := TMappingExplorer.GetInstance
+      LPrimaryKey := TMappingExplorer
                        .GetMappingPrimaryKeyColumns(LObject.ClassType);
       if LPrimaryKey = nil then
         raise Exception.Create(cMESSAGEPKNOTFOUND);
@@ -246,7 +256,7 @@ begin
                            + ',';
 
       LValues[Length(LValues)] := ' ';
-      Result := Format(Result, [Trim(LValues)]);
+      Result := Format(cRESOURCEINSERT, [AQuery.ResourceName, Trim(LValues)]);
     finally
       LObject.Free;
       LObjectSet.Free;
@@ -269,7 +279,7 @@ var
   LColumn: TColumnMapping;
   LWhere: String;
 begin
-  LClassType := FRepository.FindEntityByName(AQuery.ResourceName);
+  LClassType := TMappingExplorer.GetRepositoryMapping.FindEntityByName(AQuery.ResourceName);
   if LClassType = nil then
     Exit;
   try
@@ -279,12 +289,11 @@ begin
 
     TORMBrJson.JsonToObject(AValue, LObjectNew);
     if LObjectNew = nil then
-      raise Exception.Create('{"exception":"There was an error in trying to convert JSON into the class [' + AQuery.ResourceName + ']!"}');
+      raise Exception.CreateFmt(cEXCEPTIONJSON, [AQuery.ResourceName]);
 
     try
       LWhere := '';
-      LPrimaryKey := TMappingExplorer.GetInstance
-                       .GetMappingPrimaryKeyColumns(LObjectNew.ClassType);
+      LPrimaryKey := TMappingExplorer.GetMappingPrimaryKeyColumns(LObjectNew.ClassType);
       if LPrimaryKey = nil then
         raise Exception.Create(cMESSAGEPKNOTFOUND);
 
@@ -299,7 +308,7 @@ begin
       try
         LObjectSet.Modify(LObjectOld);
         LObjectSet.Update(LObjectNew);
-        Result := '{"result":"Class ' + AQuery.ResourceName + ' update command executed successfully"}';
+        Result := Format(cRESOURCEUPDATE, [AQuery.ResourceName]);
       finally
         LObjectOld.Free;
       end;
@@ -315,55 +324,76 @@ begin
   end;
 end;
 
-function TAppResourceBase.ResolverFindAll(AObjectSet: TRESTObjectSet): String;
+function TAppResourceBase.ResolverFindAll(const AObjectSet: TRESTObjectSet;
+  const AQuery: TRESTQuery): String;
 var
   LObjectList: TObjectList<TObject>;
 begin
+  FResultCount := 0;
   LObjectList := AObjectSet.Find;
   try
     Result := TORMBrJson.ObjectListToJsonString(LObjectList);
+    if AQuery.Count then
+      FResultCount := LObjectList.Count;
   finally
     LObjectList.Clear;
     LObjectList.Free;
   end;
 end;
 
-function TAppResourceBase.ResolverFindFilter(AObjectSet: TRESTObjectSet; AQuery: TRESTQuery): String;
+function TAppResourceBase.ResolverFindFilter(const AObjectSet: TRESTObjectSet;
+  const AQuery: TRESTQuery): String;
 var
   LObjectList: TObjectList<TObject>;
 begin
+  FResultCount := 0;
   LObjectList := AObjectSet.FindWhere(AQuery.Filter, AQuery.OrderBy);
   try
     Result := TORMBrJson.ObjectListToJsonString(LObjectList);
+    if AQuery.Count then
+      FResultCount := LObjectList.Count;
   finally
     LObjectList.Clear;
     LObjectList.Free;
   end;
 end;
 
-function TAppResourceBase.ResolverFindID(AObjectSet: TRESTObjectSet; AQuery: TRESTQuery): String;
+function TAppResourceBase.ResolverFindID(const AObjectSet: TRESTObjectSet;
+  const AQuery: TRESTQuery): String;
 var
   LObject: TObject;
 begin
+  FResultCount := 0;
   LObject := AObjectSet.Find(VarToStr(AQuery.ID));
   try
     Result := TORMBrJson.ObjectToJsonString(LObject);
+    if AQuery.Count then
+      FResultCount := 1;
   finally
     LObject.Free;
   end;
 end;
 
-function TAppResourceBase.ResolverFindToSkip(AObjectSet: TRESTObjectSet; AQuery: TRESTQuery): String;
+function TAppResourceBase.ResolverFindToSkip(const AObjectSet: TRESTObjectSet;
+  const AQuery: TRESTQuery): String;
 var
   LObjectList: TObjectList<TObject>;
 begin
+  FResultCount := 0;
   LObjectList := AObjectSet.NextPacket(AQuery.Filter, AQuery.OrderBy, AQuery.Top, AQuery.Skip);
   try
     Result := TORMBrJson.ObjectListToJsonString(LObjectList);
+    if AQuery.Count then
+      FResultCount := LObjectList.Count;
   finally
     LObjectList.Clear;
     LObjectList.Free;
   end;
+end;
+
+function TAppResourceBase.ResultCount: Integer;
+begin
+  Result := FResultCount;
 end;
 
 function TAppResourceBase.select(AResource: String): String;

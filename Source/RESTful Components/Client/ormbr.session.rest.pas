@@ -35,7 +35,6 @@ uses
   DBXJSON,
   {$ENDIF}
   // ORMBr
-  ormbr.mapping.explorerstrategy,
   ormbr.dataset.base.adapter,
   ormbr.session.abstract,
   dbebr.factory.interfaces,
@@ -78,14 +77,13 @@ type
 implementation
 
 uses
+  ormbr.json,
+  ormbr.core.consts,
+  ormbr.objects.utils,
   ormbr.objects.helper,
-  ormbr.rest.json,
-  ormbr.mapping.classes,
-  ormbr.mapping.explorer,
-  ormbr.mapping.rttiutils,
-  ormbr.mapping.attributes,
-  ormbr.json.utils,
-  ormbr.core.consts;
+  dbcbr.mapping.classes,
+  dbcbr.mapping.explorer,
+  dbcbr.mapping.attributes;
 
 { TSessionRest<M> }
 
@@ -162,7 +160,7 @@ var
   LSequence: TSequenceMapping;
 begin
   Result := False;
-  LSequence := TMappingExplorer.GetInstance.GetMappingSequence(TClass(M));
+  LSequence := TMappingExplorer.GetMappingSequence(TClass(M));
   if LSequence <> nil then
     Result := True;
 end;
@@ -171,59 +169,13 @@ procedure TSessionRest<M>.Delete(const AObject: M);
 var
   LColumn: TColumnMapping;
   LPrimaryKey: TPrimaryKeyColumnsMapping;
-//  LSubResource: String;
-//  LURI: String;
-//  LResult: String;
-//  LResource: String;
-//  LWhere: String;
 begin
-//  if not FServerUse then
-//  begin
-    LPrimaryKey := TMappingExplorer.GetInstance
-                     .GetMappingPrimaryKeyColumns(AObject.ClassType);
-    if LPrimaryKey = nil then
-      raise Exception.Create(cMESSAGEPKNOTFOUND);
+  LPrimaryKey := TMappingExplorer.GetMappingPrimaryKeyColumns(AObject.ClassType);
+  if LPrimaryKey = nil then
+    raise Exception.Create(cMESSAGEPKNOTFOUND);
 
-    LColumn := LPrimaryKey.Columns.Items[0];
-    Delete(LColumn.ColumnProperty.GetValue(TObject(AObject)).AsInteger);
-//    Exit;
-//  end;
-
-  // Executa de forma diferente unsado ORMBr Server
-//  LWhere := '';
-//  for LColumn in AObject.GetPrimaryKey do
-//  begin
-//    LWhere := LWhere + '(' + LColumn.ColumnName
-//                     + '=' + VarToStr(LColumn.PropertyRtti.GetValue(TObject(AObject)).AsVariant) + ') AND ';
-//  end;
-//  LWhere := Copy(LWhere, 1, Length(LWhere) -5);
-//
-//  if FServerUse then
-//    LResource := FResource;
-//
-//  LSubResource := ifThen(Length(FConnection.MethodDELETE) > 0, FConnection.MethodDELETE, FSubResource);
-//  LResult := FConnection.Execute(LResource,
-//                                 LSubResource,
-//                                 rtDELETE,
-//                                 procedure
-//                                 begin
-//                                   if not FServerUse then
-//                                     FConnection.AddParam(LWhere)
-//                                   else
-//                                     FConnection.AddQueryParam('$filter=' + ParseOperator(LWhere));
-//                                 end);
-//  /// <summary> Mostra no monitor a URI completa </summary>
-//  if FConnection.CommandMonitor = nil then
-//    Exit;
-//
-//  LURI := FConnection.BaseURL + '/' + LResource;
-//  if Length(LSubResource) > 0 then
-//    LURI := LURI + '/' + LSubResource;
-//
-//  FConnection.CommandMonitor.Command('URI    : ' + LURI + sLineBreak +
-//                                     'Filtro : ' + LWhere + sLineBreak +
-//                                     'Método : DELETE' + sLineBreak +
-//                                     'Result : ' + LResult, nil);
+  LColumn := LPrimaryKey.Columns.Items[0];
+  Delete(LColumn.ColumnProperty.GetValue(TObject(AObject)).AsInteger);
 end;
 
 procedure TSessionRest<M>.Delete(const AID: Integer);
@@ -246,7 +198,7 @@ begin
                                    procedure
                                    begin
                                      if not FServerUse then
-                                       FConnection.AddParam(IntToStr(AID));
+                                       FConnection.AddQueryParam('$value=' + IntToStr(AID));
                                    end);
   finally
     // Mostra no monitor a URI completa
@@ -291,17 +243,9 @@ begin
                                  rtGET,
                                  procedure
                                  begin
-                                   if not FServerUse then
-                                   begin
-                                     FConnection.AddParam(FWhere);
-                                     FConnection.AddParam(IfThen(FOrderBy = '', 'None', FOrderBy));
-                                   end
-                                   else
-                                   begin
-                                     FConnection.AddQueryParam('$filter=' + ParseOperator(FWhere));
-                                     if Length(FOrderBy) > 0 then
-                                       FConnection.AddQueryParam('$orderby=' + FOrderBy);
-                                   end;
+                                   FConnection.AddQueryParam('$filter=' + ParseOperator(FWhere));
+                                   if Length(FOrderBy) > 0 then
+                                     FConnection.AddQueryParam('$orderby=' + FOrderBy);
                                  end);
     // Caso o JSON retornado não seja um array, é tranformado em um.
     if {$IFDEF NEXTGEN}LJSON[0]{$ELSE}LJSON[1]{$ENDIF} = '{' then
@@ -355,7 +299,7 @@ begin
                                  procedure
                                  begin
                                    if not FServerUse then
-                                     FConnection.AddParam(AID)
+                                     FConnection.AddQueryParam('$value=' + AID)
                                  end);
     // Transforma o JSON recebido populando o objeto
     Result := TORMBrJson.JsonToObject<M>(LJSON);
@@ -433,7 +377,7 @@ begin
                                    end);
     FResultParams.Clear;
     // Gera lista de params com o retorno, se existir o elemento "params" no JSON.
-    LParamsObject := TORMBrJSONUtil.JSONStringToJSONObject(LResult);
+    LParamsObject := TORMBrJson.JSONStringToJSONObject(LResult);
     if LParamsObject = nil then
       Exit;
 
@@ -527,20 +471,10 @@ begin
                                  rtGET,
                                  procedure
                                  begin
-                                   if not FServerUse then
-                                   begin
-                                     FConnection.AddParam(AWhere);
-                                     FConnection.AddParam(IfThen(AOrderBy = '', 'None', AOrderBy));
-                                     FConnection.AddParam(IntToStr(FPageSize));
-                                     FConnection.AddParam(IntToStr(FPageNext));
-                                   end
-                                   else
-                                   begin
-                                     FConnection.AddQueryParam('$filter='  + ParseOperator(AWhere));
-                                     FConnection.AddQueryParam('$orderby=' + AOrderBy);
-                                     FConnection.AddQueryParam('$top='     + IntToStr(FPageSize));
-                                     FConnection.AddQueryParam('$skip='    + IntToStr(FPageNext));
-                                   end;
+                                   FConnection.AddQueryParam('$filter='  + ParseOperator(AWhere));
+                                   FConnection.AddQueryParam('$orderby=' + AOrderBy);
+                                   FConnection.AddQueryParam('$top='     + IntToStr(FPageSize));
+                                   FConnection.AddQueryParam('$skip='    + IntToStr(FPageNext));
                                  end);
     // Transforma o JSON recebido populando o objeto
     Result := TORMBrJson.JsonToObjectList<M>(LJSON);
@@ -575,16 +509,8 @@ begin
                                  rtGET,
                                  procedure
                                  begin
-                                   if not FServerUse then
-                                   begin
-                                     FConnection.AddParam(IntToStr(FPageSize));
-                                     FConnection.AddParam(IntToStr(FPageNext));
-                                   end
-                                   else
-                                   begin
-                                     FConnection.AddQueryParam('$top='  + IntToStr(FPageSize));
-                                     FConnection.AddQueryParam('$skip=' + IntToStr(FPageNext));
-                                   end;
+                                   FConnection.AddQueryParam('$top='  + IntToStr(FPageSize));
+                                   FConnection.AddQueryParam('$skip=' + IntToStr(FPageNext));
                                  end);
     // Transforma o JSON recebido populando o objeto
     Result := TORMBrJson.JsonToObjectList<M>(LJSON);
@@ -596,6 +522,7 @@ begin
       if Length(LSubResource) > 0 then
         LURI := LURI + '/' + LSubResource;
 
+      // Gera Lentidão se tiver campo TBlob no JSON
       FConnection.CommandMonitor.Command('URI    : ' + LURI + sLineBreak +
                                          'Método : GET' + sLineBreak +
                                          'Json   : ' + LJSON, nil);
@@ -697,7 +624,7 @@ begin
                                    rtGET,
                                    procedure
                                    begin
-                                     FConnection.AddParam(LJSONArray.ToJSON);
+                                     FConnection.AddBodyParam(LJSONArray.ToJSON);
                                    end);
     except
       on E: Exception do

@@ -21,26 +21,31 @@ interface
 uses
   Classes,
   SysUtils,
+  StrUtils,
   ormbr.rest.classes,
   // DBEBr Conexão
   dbebr.factory.interfaces,
   // HorseCore
   Horse,
+  Horse.Http,
   Horse.Core;
 
 type
   TRESTServerHorse = class(TORMBrComponent)
   private
-    class var
-    FConnection: IDBConnection;
+    class var FConnection: IDBConnection;
   private
-    procedure SetConnection(const AConnection: IDBConnection);
-    procedure AddResource;
+    FAPIAddress: String;
+    const cEXCEPTION = '{"Exception": "%s"}';
+    procedure AddResources;
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(AOwner: TComponent); overload; override;
+    constructor Create(AOwner: TComponent; const AConnection: IDBConnection;
+      const AAPIAddress: String = ''); overload;
+    constructor Create(const AConnection: IDBConnection;
+      const AAPIAddress: String = ''); overload;
     destructor Destroy; override;
     class function GetConnection: IDBConnection;
-    property Connection: IDBConnection read GetConnection write SetConnection;
   published
 
   end;
@@ -52,11 +57,34 @@ uses
 
 { TRESTServerHorse }
 
+constructor TRESTServerHorse.Create(AOwner: TComponent; const AConnection: IDBConnection;
+      const AAPIAddress: String = '');
+begin
+  inherited Create(AOwner);
+  FConnection := AConnection;
+  if AAPIAddress = '' then
+    FAPIAddress := 'api/ormbr/:resource'
+  else
+  begin
+    // Se o último caracter não for '/' concatena ele para ser
+    FAPIAddress := AAPIAddress;
+    if RightStr(FAPIAddress, 1) <> '/' then
+      FAPIAddress := FAPIAddress + '/';
+    FAPIAddress := FAPIAddress + ':resource';
+  end;
+  // Define as rotas para no horse e verbos
+  AddResources;
+end;
+
+constructor TRESTServerHorse.Create(const AConnection: IDBConnection;
+  const AAPIAddress: String);
+begin
+  Create(nil, AConnection, AAPIAddress);
+end;
+
 constructor TRESTServerHorse.Create(AOwner: TComponent);
 begin
-  inherited;
-  // Define as rotas para no horse e verbos
-  AddResource;
+  raise Exception.Create('Use constructors with parameters [Connection] and [Api Address]!');
 end;
 
 destructor TRESTServerHorse.Destroy;
@@ -69,14 +97,9 @@ begin
   Result := FConnection;
 end;
 
-procedure TRESTServerHorse.SetConnection(const AConnection: IDBConnection);
+procedure TRESTServerHorse.AddResources;
 begin
-  FConnection := AConnection;
-end;
-
-procedure TRESTServerHorse.AddResource;
-begin
-  THorse.Get('api/ormbr/:resource',
+  THorse.Get(FAPIAddress,
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     var
       LAppResource: TAppResource;
@@ -84,17 +107,20 @@ begin
       LAppResource := TAppResource.Create;
       try
         try
-          Res.Send(LAppResource.select(Req.Params['resource'], Req.Params, Req.Query));
+          Res.Send(LAppResource.select(Req.Params['resource'], Req.Params, Req.Query)); //.ContentType('application/json');
+          // Add records count in Headers "ResultCount"
+          if LAppResource.ResultCount > 0 then
+            Res.RawWebResponse.CustomHeaders.AddPair('ResultCount', IntToStr(LAppResource.ResultCount));
         except
           on E: Exception do
-            Res.Send(E.Message);
+            Res.Send(Format(cEXCEPTION, [E.Message])); //.ContentType('application/json');
         end;
       finally
         LAppResource.Free;
       end;
     end);
 
-  THorse.Post('api/ormbr/:resource',
+  THorse.Post(FAPIAddress,
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     var
       LAppResource: TAppResource;
@@ -102,17 +128,17 @@ begin
       LAppResource := TAppResource.Create;
       try
         try
-          Res.Send(LAppResource.insert(Req.Params['resource'], Req.Body));
+          Res.Send(LAppResource.insert(Req.Params['resource'], Req.Body)); //.ContentType('application/json');
         except
           on E: Exception do
-            Res.Send(E.Message);
+            Res.Send(Format(cEXCEPTION, [E.Message])); //.ContentType('application/json');
         end;
       finally
         LAppResource.Free;
       end;
     end);
 
-  THorse.Put('api/ormbr/:resource',
+  THorse.Put(FAPIAddress,
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     var
       LAppResource: TAppResource;
@@ -120,17 +146,17 @@ begin
       LAppResource := TAppResource.Create;
       try
         try
-          Res.Send(LAppResource.update(Req.Params['resource'], Req.Body));
+          Res.Send(LAppResource.update(Req.Params['resource'], Req.Body)); //.ContentType('application/json');
         except
           on E: Exception do
-            Res.Send(E.Message);
+            Res.Send(Format(cEXCEPTION, [E.Message])); //.ContentType('application/json');
         end;
       finally
         LAppResource.Free;
       end;
     end);
 
-  THorse.Delete('api/ormbr/:resource',
+  THorse.Delete(FAPIAddress,
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     var
       LAppResource: TAppResource;
@@ -139,12 +165,12 @@ begin
       try
         try
           if Req.Query.Count = 0 then
-            Res.Send(LAppResource.delete(Req.Params['resource']))
+            Res.Send(LAppResource.delete(Req.Params['resource'])) //.ContentType('application/json')
           else
-            Res.Send(LAppResource.delete(Req.Params['resource'], Req.Query['$filter']));
+            Res.Send(LAppResource.delete(Req.Params['resource'], Req.Query['$filter'])); //.ContentType('application/json');
         except
           on E: Exception do
-            Res.Send(E.Message);
+            Res.Send(Format(cEXCEPTION, [E.Message])); //.ContentType('application/json');
         end;
       finally
         LAppResource.Free;

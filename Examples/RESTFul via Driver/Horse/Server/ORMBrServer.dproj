@@ -69,7 +69,7 @@
         <VerInfo_Locale>1046</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=;CFBundleName=</VerInfo_Keys>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
-        <DCC_UnitSearchPath>.\Win32\Debug;.\Win32\Release;.\Win36\Debug;.\Win36\Release;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>.\Win32\Debug;.\Win32\Release;.\Win36\Debug;.\Win36\Release;..\..\..\..\Source\RESTful Components\Common;..\..\..\..\Source\RESTful Components\Server;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_Define>DRIVERRESTFUL;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
@@ -134,20 +134,22 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\ormbr.model.client.pas"/>
-        <DCCReference Include="..\ormbr.model.detail.pas"/>
-        <DCCReference Include="..\ormbr.model.lookup.pas"/>
-        <DCCReference Include="..\ormbr.model.master.pas"/>
-        <DCCReference Include="uDataModuleServer.pas">
-            <Form>DataModuleServer</Form>
+        <DCCReference Include="Provider\provider.datamodule.pas">
+            <Form>ProviderDM</Form>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\Source\RESTful Components\Server\ormbr.server.horse.pas"/>
-        <DCCReference Include="..\..\..\..\Source\RESTful Components\Server\ormbr.server.resource.horse.pas"/>
-        <DCCReference Include="Main.Form.pas">
-            <Form>FrmVCL</Form>
+        <DCCReference Include="main.server.pas">
+            <Form>FormServer</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\Model\ormbr.model.client.pas"/>
+        <DCCReference Include="..\Model\ormbr.model.detail.pas"/>
+        <DCCReference Include="..\Model\ormbr.model.lookup.pas"/>
+        <DCCReference Include="..\Model\ormbr.model.master.pas"/>
+        <DCCReference Include="Controller\controller.ormbr.server.pas"/>
+        <DCCReference Include="Repository\repository.ormbr.server.pas"/>
+        <DCCReference Include="Provider\provider.ormbr.server.pas"/>
+        <DCCReference Include="Provider\provider.interfaces.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -169,6 +171,7 @@
                     <Source Name="MainSource">ORMBrServer.dpr</Source>
                 </Source>
                 <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclDataSnapNativeServer270.bpl">Embarcadero DBExpress DataSnap Native Server Components</Excluded_Packages>
                     <Excluded_Packages Name="C:\Program Files (x86)\Embarcadero\Studio\20.0\bin\designide260.bpl">Embarcadero Designer IDE Package</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>

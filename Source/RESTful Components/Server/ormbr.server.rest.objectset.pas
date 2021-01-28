@@ -25,13 +25,13 @@ uses
   Variants,
   SysUtils,
   Generics.Collections,
-  ormbr.core.consts,
-  ormbr.mapping.classes,
-  ormbr.types.mapping,
-  ormbr.rtti.helper,
-  ormbr.objects.helper,
-  ormbr.mapping.explorer,
+  dbcbr.mapping.classes,
+  dbcbr.types.mapping,
+  dbcbr.rtti.helper,
+  dbcbr.mapping.explorer,
   dbebr.factory.interfaces,
+  ormbr.core.consts,
+  ormbr.objects.helper,
   ormbr.server.rest.session;
 
 type
@@ -102,9 +102,7 @@ var
   LIsConnected: Boolean;
 begin
   inherited;
-  /// <summary>
-  ///   Controle de transação externa, controlada pelo desenvolvedor
-  /// </summary>
+  // Controle de transação externa, controlada pelo desenvolvedor
   LInTransaction := FConnection.InTransaction;
   LIsConnected := FConnection.IsConnected;
   if not LIsConnected then
@@ -113,13 +111,9 @@ begin
     if not LInTransaction then
       FConnection.StartTransaction;
     try
-      /// <summary>
-      ///   Executa comando delete em cascade
-      /// </summary>
+      // Executa comando delete em cascade
       CascadeActionsExecute(AObject, CascadeDelete);
-      /// <summary>
-      ///   Executa comando delete master
-      /// </summary>
+      // Executa comando delete master
       FSession.Delete(AObject);
       ///
       if not LInTransaction then
@@ -149,30 +143,21 @@ var
 begin
   if ASourceObject.GetType(LRttiType) then
   begin
-    /// <summary>
-    /// Cria um novo objeto para ser guardado na lista com o estado atual do ASourceObject.
-    /// </summary>
+    // Cria um novo objeto para ser guardado na lista com o estado atual do ASourceObject.
     LStateObject := ASourceObject.ClassType.Create;
-    /// <summary>
-    ///   Gera uma chave de identificação unica para cada item da lista
-    /// </summary>
+    // Gera uma chave de identificação unica para cada item da lista
     LKey := GenerateKey(ASourceObject);
-    /// <summary>
-    ///   Guarda o novo objeto na lista, identificado pela chave
-    /// </summary>
+    // Guarda o novo objeto na lista, identificado pela chave
     FObjectState.Add(LKey, LStateObject);
     try
       for LProperty in LRttiType.GetProperties do
       begin
         if not LProperty.IsWritable then
           Continue;
-
         if LProperty.IsNotCascade then
           Continue;
-
         if LProperty.PropertyType.TypeKind in cPROPERTYTYPES_2 then
           Continue;
-
         if LProperty.PropertyType.TypeKind = tkClass then
         begin
           if LProperty.IsList then
@@ -202,15 +187,13 @@ var
   LAssociation: TAssociationMapping;
   LAssociations: TAssociationMappingList;
 begin
-  LAssociations := TMappingExplorer.GetInstance.GetMappingAssociation(AObject.ClassType);
+  LAssociations := TMappingExplorer.GetMappingAssociation(AObject.ClassType);
   if LAssociations = nil then
     Exit;
-
   for LAssociation in LAssociations do
   begin
     if not (ACascadeAction in LAssociation.CascadeActions) then
       Continue;
-
     if LAssociation.Multiplicity in [OneToOne, ManyToOne] then
       OneToOneCascadeActionsExecute(AObject, LAssociation, ACascadeAction)
     else
@@ -313,7 +296,6 @@ var
 begin
   LKey := AObject.ClassName;
   LPrimaryKey := TMappingExplorer
-                   .GetInstance
                      .GetMappingPrimaryKeyColumns(AObject.ClassType);
   if LPrimaryKey = nil then
     raise Exception.Create(cMESSAGEPKNOTFOUND);
@@ -343,7 +325,6 @@ begin
       if FSession.ExistSequence then
       begin
         LPrimaryKey := TMappingExplorer
-                         .GetInstance
                            .GetMappingPrimaryKeyColumns(AObject.ClassType);
         if LPrimaryKey = nil then
           raise Exception.Create(cMESSAGEPKNOTFOUND);
@@ -429,7 +410,6 @@ begin
       if FSession.ExistSequence then
       begin
         LPrimaryKey := TMappingExplorer
-                         .GetInstance
                            .GetMappingPrimaryKeyColumns(AObject.ClassType);
         if LPrimaryKey = nil then
           raise Exception.Create(cMESSAGEPKNOTFOUND);
@@ -483,9 +463,7 @@ begin
     // Popula as propriedades de relacionamento com os valores do master
     if FSession.ExistSequence then
     begin
-      LPrimaryKey := TMappingExplorer
-                       .GetInstance
-                         .GetMappingPrimaryKeyColumns(AObject.ClassType);
+      LPrimaryKey := TMappingExplorer.GetMappingPrimaryKeyColumns(AObject.ClassType);
       if LPrimaryKey = nil then
         raise Exception.Create(cMESSAGEPKNOTFOUND);
 
@@ -522,7 +500,7 @@ var
   LAssociations: TAssociationMappingList;
 begin
   /// Association
-  LAssociations := TMappingExplorer.GetInstance.GetMappingAssociation(AObject.ClassType);
+  LAssociations := TMappingExplorer.GetMappingAssociation(AObject.ClassType);
   if LAssociations = nil then
     Exit;
 
@@ -663,7 +641,6 @@ var
 begin
   LKey := AObject.ClassName;
   LPrimaryKey := TMappingExplorer
-                   .GetInstance
                      .GetMappingPrimaryKeyColumns(AObject.ClassType);
   if LPrimaryKey = nil then
     raise Exception.Create(cMESSAGEPKNOTFOUND);

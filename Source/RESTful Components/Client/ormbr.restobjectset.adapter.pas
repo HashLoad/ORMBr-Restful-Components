@@ -73,9 +73,9 @@ procedure TRESTObjectSetAdapter<M>.Delete(const AObject: M);
 begin
   inherited;
   try
-    /// <summary> Executa comando delete em cascade </summary>
+    // Executa comando delete em cascade
     CascadeActionsExecute(AObject, CascadeDelete);
-    /// <summary> Executa comando delete master </summary>
+    // Executa comando delete master
     FSession.Delete(AObject);
   except
     on E: Exception do

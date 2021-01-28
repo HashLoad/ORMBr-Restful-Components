@@ -16,25 +16,20 @@ uses
 
   dbebr.factory.interfaces,
   dbebr.factory.firedac,
+  // ORMBr Driver SQLite
   ormbr.dml.generator.sqlite,
-  ormbr.server.horse,
-  uDataModuleServer;
+  ormbr.form.monitor,
+  // ORMBr Server Horse
+  ormbr.server.horse;
 
 type
   TFrmVCL = class(TForm)
-    lbStatus: TLabel;
     lbPorta: TLabel;
-    btnStop: TBitBtn;
-    btnStart: TBitBtn;
-    procedure btnStopClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure btnStartClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     FRESTServerHorse: TRESTServerHorse;
     FConnection: IDBConnection;
-    procedure Status;
-    procedure Start;
-    procedure Stop;
   end;
 
 var
@@ -42,61 +37,43 @@ var
 
 implementation
 
-uses Horse;
+uses
+  uDataModuleServer,
+  Horse;
 
 {$R *.dfm}
 
-procedure TFrmVCL.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TFrmVCL.FormCreate(Sender: TObject);
 begin
-  if THorse.IsRunning then
-    Stop;
-end;
-
-procedure TFrmVCL.Start;
-begin
-  // ORMBr - REST Server Horse
+  // DBEBr Engine de Conexão a Banco de Dados
   FConnection := TFactoryFireDAC.Create(DataModuleServer.FDConnection1, dnSQLite);
 
+  // ORMBr - REST Server Horse
   FRESTServerHorse := TRESTServerHorse.Create(Self);
   FRESTServerHorse.Connection := FConnection;
+
+
+
+  THorse.Get('api/ormbr/ping/:id',
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    begin
+      Res.Send('{"Result": "Recebi ping, toma pong ' + Req.Params['id'] + '"}').ContentType('application/json');
+    end);
+
+  THorse.Get('/ping',
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    begin
+      Res.Send('{"Result": "Recebi ping, toma pong"}').ContentType('application/json');
+    end);
+
 
   THorse.Listen(9000);
 end;
 
-procedure TFrmVCL.Status;
+procedure TFrmVCL.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  btnStop.Enabled := THorse.IsRunning;
-  btnStart.Enabled := not THorse.IsRunning;
   if THorse.IsRunning then
-  begin
-    lbStatus.Caption := 'Status: Online';
-    lbPorta.Caption := 'Port: ' + IntToStr(THorse.Port);
-  end
-  else
-  begin
-    lbStatus.Caption := 'Status: Offline';
-    lbPorta.Caption := 'Port: ';
-  end;
+    THorse.StopListen;
 end;
-
-procedure TFrmVCL.Stop;
-begin
-  THorse.StopListen;
-end;
-
-procedure TFrmVCL.btnStartClick(Sender: TObject);
-begin
-  Start;
-  Status;
-end;
-
-procedure TFrmVCL.btnStopClick(Sender: TObject);
-begin
-  Stop;
-  Status;
-end;
-
-initialization
-  ReportMemoryLeaksOnShutdown := DebugHook <> 0;
 
 end.

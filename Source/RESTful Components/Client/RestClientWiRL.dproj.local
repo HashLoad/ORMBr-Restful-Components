@@ -2,32 +2,32 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>2018/06/09 19:00:25.000.583,=rtl.dcp</Transaction>
-    <Transaction>2018/06/09 19:00:45.000.066,C:\Users\isaque.pinheiro\Documents\Embarcadero\Studio\Projects\Package1.dproj=C:\Users\isaque.pinheiro\Documents\Embarcadero\Studio\Projects\RestConnection.dproj</Transaction>
-    <Transaction>2018/06/09 19:01:04.000.502,C:\Users\isaque.pinheiro\Documents\Embarcadero\Studio\Projects\RestConnection.dproj=D:\ORMBr\Source\RESTFull\Component\Package\RestConnection.dproj</Transaction>
+    <Transaction>2018/06/09 19:00:45.000.066,C:\Users\isaque.pinheiro\Documents\Embarcadero\Studio\Projects\RestConnection.dproj=C:\Users\isaque.pinheiro\Documents\Embarcadero\Studio\Projects\Package1.dproj</Transaction>
+    <Transaction>2018/06/09 19:01:04.000.502,D:\ORMBr\Source\RESTFull\Component\Package\RestConnection.dproj=C:\Users\isaque.pinheiro\Documents\Embarcadero\Studio\Projects\RestConnection.dproj</Transaction>
     <Transaction>2018/06/09 19:01:15.000.263,=D:\ORMBr\Source\RESTFull\Component\Source\ormbr.rest.connection.pas</Transaction>
     <Transaction>2018/06/09 19:21:12.000.978,=D:\ORMBr\Source\RESTFull\Component\ormbr.rest.connection.pas</Transaction>
-    <Transaction>2018/06/09 19:25:58.000.662,D:\ORMBr\Source\RESTFull\Component\RestConnection.dproj=D:\ORMBr\Source\RESTFull\Component\RestCore.dproj</Transaction>
+    <Transaction>2018/06/09 19:25:58.000.662,D:\ORMBr\Source\RESTFull\Component\RestCore.dproj=D:\ORMBr\Source\RESTFull\Component\RestConnection.dproj</Transaction>
     <Transaction>2018/06/10 06:40:59.000.053,=D:\ORMBr\Source\RESTFull\Component\Unit1.pas</Transaction>
-    <Transaction>2018/06/10 06:41:33.000.199,D:\ORMBr\Source\RESTFull\Component\Unit1.pas=D:\ORMBr\Source\RESTFull\Component\ormbr.rest.wirl.connection.pas</Transaction>
+    <Transaction>2018/06/10 06:41:33.000.199,D:\ORMBr\Source\RESTFull\Component\ormbr.rest.wirl.connection.pas=D:\ORMBr\Source\RESTFull\Component\Unit1.pas</Transaction>
     <Transaction>2018/06/10 06:58:58.000.468,=D:\ORMBr\Source\RESTFull\Component\ormbr.types.session.pas</Transaction>
     <Transaction>2018/06/10 06:59:15.000.083,D:\ORMBr\Source\RESTFull\Component\ormbr.types.session.pas=</Transaction>
     <Transaction>2018/06/10 07:01:12.000.184,=D:\ORMBr\Source\RESTFull\Component\Unit1.pas</Transaction>
-    <Transaction>2018/06/10 07:01:30.000.083,D:\ORMBr\Source\RESTFull\Component\Unit1.pas=D:\ORMBr\Source\RESTFull\Component\ormbr.types.rest.pas</Transaction>
-    <Transaction>2018/06/10 07:03:36.000.966,D:\ORMBr\Source\RESTFull\Component\ormbr.types.rest.pas=D:\ORMBr\Source\RESTFull\Component\ormbr.rest.types.pas</Transaction>
-    <Transaction>2018/06/10 07:34:56.000.643,D:\ORMBr\Source\RESTFull\Component\RestCore.dproj=D:\ORMBr\Source\RESTFull\Component\RestWiRLConnection.dproj</Transaction>
-    <Transaction>2018/06/10 07:35:52.000.917,D:\ORMBr\Source\RESTFull\Component\RestWiRLConnection.dproj=D:\ORMBr\Source\RESTFull\Component\RestWiRL.dproj</Transaction>
+    <Transaction>2018/06/10 07:01:30.000.083,D:\ORMBr\Source\RESTFull\Component\ormbr.types.rest.pas=D:\ORMBr\Source\RESTFull\Component\Unit1.pas</Transaction>
+    <Transaction>2018/06/10 07:03:36.000.966,D:\ORMBr\Source\RESTFull\Component\ormbr.rest.types.pas=D:\ORMBr\Source\RESTFull\Component\ormbr.types.rest.pas</Transaction>
+    <Transaction>2018/06/10 07:34:56.000.643,D:\ORMBr\Source\RESTFull\Component\RestWiRLConnection.dproj=D:\ORMBr\Source\RESTFull\Component\RestCore.dproj</Transaction>
+    <Transaction>2018/06/10 07:35:52.000.917,D:\ORMBr\Source\RESTFull\Component\RestWiRL.dproj=D:\ORMBr\Source\RESTFull\Component\RestWiRLConnection.dproj</Transaction>
     <Transaction>2018/06/10 07:49:56.000.193,=D:\ORMBr\Source\Drivers\ormbr.driver.rest.pas</Transaction>
     <Transaction>2018/06/10 07:49:56.000.203,=D:\ORMBr\Source\Drivers\ormbr.factory.rest.pas</Transaction>
     <Transaction>2018/06/10 07:51:22.000.995,=D:\ORMBr\Source\Drivers\ormbr.driver.rest.wirl.pas</Transaction>
     <Transaction>2018/06/10 07:51:23.000.033,=D:\ORMBr\Source\Drivers\ormbr.factory.rest.wirl.pas</Transaction>
     <Transaction>2018/06/10 08:22:05.000.072,=IndyCore.dcp</Transaction>
-    <Transaction>2018/06/10 08:22:05.000.049,=dbrtl.dcp</Transaction>
     <Transaction>2018/06/10 08:22:05.000.080,=WiRLRunTime.dcp</Transaction>
     <Transaction>2018/06/10 08:22:05.000.066,=IndyProtocols.dcp</Transaction>
+    <Transaction>2018/06/10 08:22:05.000.049,=dbrtl.dcp</Transaction>
     <Transaction>2018/06/10 08:22:05.000.057,=IndySystem.dcp</Transaction>
-    <Transaction>2018/06/10 08:35:48.000.449,D:\ORMBr\Source\Drivers\ormbr.driver.rest.wirl.pas=</Transaction>
     <Transaction>2018/06/10 08:35:48.000.368,D:\ORMBr\Source\Drivers\ormbr.driver.rest.pas=</Transaction>
     <Transaction>2018/06/10 08:35:48.000.571,D:\ORMBr\Source\Drivers\ormbr.factory.rest.wirl.pas=</Transaction>
+    <Transaction>2018/06/10 08:35:48.000.449,D:\ORMBr\Source\Drivers\ormbr.driver.rest.wirl.pas=</Transaction>
     <Transaction>2018/06/10 08:35:48.000.519,D:\ORMBr\Source\Drivers\ormbr.factory.rest.pas=</Transaction>
     <Transaction>2018/06/10 10:14:38.000.192,D:\ORMBr\Source\RESTFull\Component\ormbr.rest.types.pas=</Transaction>
     <Transaction>2018/06/10 10:18:02.000.993,=rtl.dcp</Transaction>
@@ -42,16 +42,22 @@
     <Transaction>2018/06/11 15:06:53.000.908,D:\ORMBr\Source\RESTFull\Component\ormbr.rest.types.pas=</Transaction>
     <Transaction>2018/06/11 15:06:53.000.860,D:\ORMBr\Source\RESTFull\Component\ormbr.rest.connection.pas=</Transaction>
     <Transaction>2018/06/14 13:03:26.000.067,=D:\ORMBr\Source\Drivers RESTFul\Component\ormbr.rest.reg.pas</Transaction>
-    <Transaction>2018/06/14 13:06:35.000.678,D:\ORMBr\Source\Drivers RESTFul\Component\ormbr.rest.wirl.reg.pas=D:\ORMBr\Source\Drivers RESTFul\Component\ormbr.rest.reg.pas</Transaction>
-    <Transaction>2018/06/19 15:03:43.000.278,=D:\ORMBr\Source\Drivers RESTFul\ormbr.driver.rest.wirl.pas</Transaction>
+    <Transaction>2018/06/14 13:06:35.000.678,D:\ORMBr\Source\Drivers RESTFul\Component\ormbr.rest.reg.pas=D:\ORMBr\Source\Drivers RESTFul\Component\ormbr.rest.wirl.reg.pas</Transaction>
     <Transaction>2018/06/19 15:03:43.000.315,=D:\ORMBr\Source\Drivers RESTFul\ormbr.factory.rest.wirl.pas</Transaction>
-    <Transaction>2018/06/26 12:50:08.000.219,D:\ORMBr\Source\Drivers RESTFul\Component\RestClientWiRL.dproj=D:\ORMBr\Source\Drivers RESTFul\Component\RestWiRL.dproj</Transaction>
-    <Transaction>2018/06/26 13:22:47.000.943,D:\ORMBr\Source\Drivers RESTFul\Component Client\ormbr.client.wirl.pas=D:\ORMBr\Source\Drivers RESTFul\Component\ormbr.rest.wirl.connection.pas</Transaction>
-    <Transaction>2018/06/26 13:23:34.000.351,D:\ORMBr\Source\Drivers RESTFul\Component Client\ormbr.client.wirl.reg.pas=D:\ORMBr\Source\Drivers RESTFul\Component\ormbr.rest.wirl.reg.pas</Transaction>
-    <Transaction>2018/06/26 13:52:41.000.732,D:\ORMBr\Source\Drivers RESTFul\Component Client\RestClientWiRL.dproj=D:\ORMBr\Source\Drivers RESTFul\Component\RestClientWiRL.dproj</Transaction>
+    <Transaction>2018/06/19 15:03:43.000.278,=D:\ORMBr\Source\Drivers RESTFul\ormbr.driver.rest.wirl.pas</Transaction>
+    <Transaction>2018/06/26 12:50:08.000.219,D:\ORMBr\Source\Drivers RESTFul\Component\RestWiRL.dproj=D:\ORMBr\Source\Drivers RESTFul\Component\RestClientWiRL.dproj</Transaction>
+    <Transaction>2018/06/26 13:22:47.000.943,D:\ORMBr\Source\Drivers RESTFul\Component\ormbr.rest.wirl.connection.pas=D:\ORMBr\Source\Drivers RESTFul\Component Client\ormbr.client.wirl.pas</Transaction>
+    <Transaction>2018/06/26 13:23:34.000.351,D:\ORMBr\Source\Drivers RESTFul\Component\ormbr.rest.wirl.reg.pas=D:\ORMBr\Source\Drivers RESTFul\Component Client\ormbr.client.wirl.reg.pas</Transaction>
+    <Transaction>2018/06/26 13:52:41.000.732,D:\ORMBr\Source\Drivers RESTFul\Component\RestClientWiRL.dproj=D:\ORMBr\Source\Drivers RESTFul\Component Client\RestClientWiRL.dproj</Transaction>
     <Transaction>2018/06/26 17:32:40.000.216,=D:\ORMBr\Source\Drivers RESTFul\Component Client\Images\wirl.bmp</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="Images"/>
+    <File Path="Images\wirl.bmp"/>
+    <File Path="ormbr.client.wirl.pas"/>
+    <File Path="ormbr.client.wirl.reg.pas"/>
+    <File Path="ormbr.driver.rest.wirl.pas"/>
+    <File Path="ormbr.factory.rest.wirl.pas"/>
     <File Path="dbrtl.dcp"/>
     <File Path="IndyCore.dcp"/>
     <File Path="IndyProtocols.dcp"/>
@@ -59,11 +65,5 @@
     <File Path="RestCoreClient.dcp"/>
     <File Path="rtl.dcp"/>
     <File Path="WiRLRunTime.dcp"/>
-    <File Path="Images"/>
-    <File Path="Images\wirl.bmp"/>
-    <File Path="ormbr.client.wirl.pas"/>
-    <File Path="ormbr.client.wirl.reg.pas"/>
-    <File Path="ormbr.driver.rest.wirl.pas"/>
-    <File Path="ormbr.factory.rest.wirl.pas"/>
   </ProjectSortOrder>
 </BorlandProject>

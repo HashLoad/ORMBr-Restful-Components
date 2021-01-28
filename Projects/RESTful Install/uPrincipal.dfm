@@ -1030,7 +1030,7 @@ object frmPrincipal: TfrmPrincipal
         OnClick = URLClick
       end
       object Label25: TLabel
-        Left = 95
+        Left = 93
         Top = 431
         Width = 344
         Height = 13
@@ -1038,6 +1038,21 @@ object frmPrincipal: TfrmPrincipal
         Caption = 
           'https://svn.code.sf.net/p/rest-dataware-componentes/dataware/tru' +
           'nk'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 2667766
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsUnderline]
+        ParentFont = False
+        OnClick = URLClick
+      end
+      object Label8: TLabel
+        Left = 93
+        Top = 450
+        Width = 172
+        Height = 13
+        Cursor = crHandPoint
+        Caption = 'https://github.com/HashLoad/horse'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = 2667766
         Font.Height = -11

@@ -2,7 +2,7 @@ object framePacotes: TframePacotes
   Left = 0
   Top = 0
   Width = 560
-  Height = 1000
+  Height = 578
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
   Color = 9407864
@@ -11,7 +11,7 @@ object framePacotes: TframePacotes
   TabOrder = 0
   object pnlBotoesMarcar: TPanel
     Left = 0
-    Top = 959
+    Top = 537
     Width = 560
     Height = 41
     Align = alBottom
@@ -104,7 +104,7 @@ object framePacotes: TframePacotes
     Left = 3
     Top = 3
     Width = 554
-    Height = 953
+    Height = 531
     Align = alClient
     BevelOuter = bvNone
     BorderStyle = bsNone
@@ -113,13 +113,13 @@ object framePacotes: TframePacotes
     TabOrder = 0
     object Label2: TLabel
       Left = 308
-      Top = 276
+      Top = 310
       Width = 134
       Height = 13
       Margins.Left = 5
       Caption = 'Server Component for WiRL'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2667766
+      Font.Color = clYellow
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -128,13 +128,13 @@ object framePacotes: TframePacotes
     end
     object Label3: TLabel
       Left = 308
-      Top = 299
+      Top = 333
       Width = 138
       Height = 13
       Margins.Left = 5
       Caption = 'Server Component for MARS'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2667766
+      Font.Color = clYellow
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -143,13 +143,13 @@ object framePacotes: TframePacotes
     end
     object Label4: TLabel
       Left = 308
-      Top = 322
+      Top = 356
       Width = 219
       Height = 13
       Margins.Left = 5
       Caption = 'Server Component for Delphi MVC Framework'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2667766
+      Font.Color = clYellow
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -158,7 +158,7 @@ object framePacotes: TframePacotes
     end
     object Label5: TLabel
       Left = 12
-      Top = 227
+      Top = 261
       Width = 146
       Height = 13
       Caption = 'REST Server Components '
@@ -172,7 +172,7 @@ object framePacotes: TframePacotes
     end
     object Bevel1: TBevel
       Left = 161
-      Top = 233
+      Top = 267
       Width = 366
       Height = 14
       Shape = bsTopLine
@@ -180,7 +180,7 @@ object framePacotes: TframePacotes
     end
     object Label6: TLabel
       Left = 12
-      Top = 55
+      Top = 75
       Width = 140
       Height = 13
       Caption = 'REST Client Components '
@@ -193,20 +193,20 @@ object framePacotes: TframePacotes
     end
     object Bevel2: TBevel
       Left = 161
-      Top = 61
+      Top = 81
       Width = 366
       Height = 14
       Shape = bsTopLine
     end
     object RestClientDatasnap_Label: TLabel
       Left = 308
-      Top = 101
+      Top = 121
       Width = 151
       Height = 13
       Margins.Left = 5
       Caption = 'Client Component for Datasnap'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2667766
+      Font.Color = clYellow
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -214,13 +214,13 @@ object framePacotes: TframePacotes
     end
     object RestClientWiRL_Label: TLabel
       Left = 308
-      Top = 124
+      Top = 144
       Width = 129
       Height = 13
       Margins.Left = 5
       Caption = 'Client Component for WiRL'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2667766
+      Font.Color = clYellow
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -228,13 +228,13 @@ object framePacotes: TframePacotes
     end
     object RestClientMARS_Label: TLabel
       Left = 308
-      Top = 147
+      Top = 167
       Width = 133
       Height = 13
       Margins.Left = 5
       Caption = 'Client Component for MARS'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2667766
+      Font.Color = clYellow
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -242,13 +242,13 @@ object framePacotes: TframePacotes
     end
     object RestClientDelphiMVC_Label: TLabel
       Left = 308
-      Top = 170
+      Top = 190
       Width = 214
       Height = 13
       Margins.Left = 5
       Caption = 'Client Component for Delphi MVC Framework'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2667766
+      Font.Color = clYellow
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -256,13 +256,13 @@ object framePacotes: TframePacotes
     end
     object RestClientDWCore_Label: TLabel
       Left = 308
-      Top = 193
+      Top = 213
       Width = 148
       Height = 13
       Margins.Left = 5
       Caption = 'Client Component for DW Core'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2667766
+      Font.Color = clYellow
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -270,13 +270,13 @@ object framePacotes: TframePacotes
     end
     object Label1: TLabel
       Left = 308
-      Top = 253
+      Top = 287
       Width = 157
       Height = 13
       Margins.Left = 5
       Caption = 'Server Component for DataSnap'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2667766
+      Font.Color = clYellow
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -285,13 +285,13 @@ object framePacotes: TframePacotes
     end
     object Label13: TLabel
       Left = 308
-      Top = 79
-      Width = 111
+      Top = 99
+      Width = 184
       Height = 13
       Margins.Left = 5
-      Caption = 'Client Component Core'
+      Caption = 'Client Component Core (Depend'#234'ncia)'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2667766
+      Font.Color = clYellow
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -318,14 +318,56 @@ object framePacotes: TframePacotes
       Shape = bsTopLine
     end
     object Label8: TLabel
-      Left = 308
-      Top = 25
-      Width = 179
+      Left = 235
+      Top = 53
+      Width = 252
       Height = 13
       Margins.Left = 5
-      Caption = 'Core do ORMBr Framework for Delphi'
+      Caption = 'Core do ORMBr Framework for Delphi (Depend'#234'ncia)'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2667766
+      Font.Color = clYellow
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object RestClientHorse_Label: TLabel
+      Left = 308
+      Top = 234
+      Width = 133
+      Height = 13
+      Margins.Left = 5
+      Caption = 'Client Component for Horse'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clYellow
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label9: TLabel
+      Left = 235
+      Top = 35
+      Width = 249
+      Height = 13
+      Margins.Left = 5
+      Caption = 'Core do DBCBr Framework for Delphi (Depend'#234'ncia)'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clYellow
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label10: TLabel
+      Left = 235
+      Top = 17
+      Width = 248
+      Height = 13
+      Margins.Left = 5
+      Caption = 'Core do DBEBr Framework for Delphi (Depend'#234'ncia)'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clYellow
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
@@ -334,7 +376,7 @@ object framePacotes: TframePacotes
     object RestServerDatasnap_dpk: TCheckBox
       Tag = 1
       Left = 12
-      Top = 252
+      Top = 286
       Width = 199
       Height = 17
       Caption = 'REST Server Component (DataSnap)'
@@ -344,13 +386,13 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 7
+      TabOrder = 10
       Visible = False
     end
     object RestServerWiRL_dpk: TCheckBox
       Tag = 1
       Left = 12
-      Top = 275
+      Top = 309
       Width = 199
       Height = 17
       Caption = 'REST Server Component (WiRL)'
@@ -360,13 +402,13 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 8
+      TabOrder = 11
       Visible = False
     end
     object RestServerMARS_dpk: TCheckBox
       Tag = 1
       Left = 12
-      Top = 298
+      Top = 332
       Width = 199
       Height = 17
       Caption = 'REST Server Component (MARS)'
@@ -376,13 +418,13 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 9
+      TabOrder = 12
       Visible = False
     end
     object RestServerDelphiMVC_dpk: TCheckBox
       Tag = 1
       Left = 12
-      Top = 321
+      Top = 355
       Width = 271
       Height = 17
       Caption = 'REST Server Component (Delphi MVC Framework)'
@@ -392,12 +434,12 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 10
+      TabOrder = 13
       Visible = False
     end
     object RestClientDatasnap_dpk: TCheckBox
       Left = 12
-      Top = 100
+      Top = 120
       Width = 199
       Height = 17
       Hint = 'RestClientDatasnap.dpk'
@@ -408,11 +450,11 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 2
+      TabOrder = 4
     end
     object RestClientWiRL_dpk: TCheckBox
       Left = 12
-      Top = 123
+      Top = 143
       Width = 199
       Height = 17
       Hint = 'RestClientWiRL.dpk'
@@ -423,11 +465,11 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 3
+      TabOrder = 5
     end
     object RestClientMARS_dpk: TCheckBox
       Left = 12
-      Top = 146
+      Top = 166
       Width = 199
       Height = 17
       Hint = 'RestClientMARS.dpk'
@@ -438,11 +480,11 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 4
+      TabOrder = 6
     end
     object RestClientDelphiMVC_dpk: TCheckBox
       Left = 12
-      Top = 169
+      Top = 189
       Width = 271
       Height = 17
       Hint = 'RestClientDelphiMVC.dpk'
@@ -453,11 +495,11 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 7
     end
     object RestClientDWCore_dpk: TCheckBox
       Left = 12
-      Top = 192
+      Top = 210
       Width = 199
       Height = 17
       Hint = 'RestClientDWCore.dpk'
@@ -468,11 +510,11 @@ object framePacotes: TframePacotes
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 6
+      TabOrder = 8
     end
     object RestCoreClient_dpk: TCheckBox
       Left = 12
-      Top = 78
+      Top = 98
       Width = 199
       Height = 17
       Hint = 'RestCoreClient.dpk'
@@ -486,15 +528,66 @@ object framePacotes: TframePacotes
       Font.Style = []
       ParentFont = False
       State = cbChecked
-      TabOrder = 1
+      TabOrder = 3
     end
     object ORMBrCore_dpk: TCheckBox
       Left = 12
-      Top = 24
+      Top = 52
       Width = 199
       Height = 17
       Hint = 'ORMBrCore.dpk'
       Caption = 'ORMBr Core'
+      Checked = True
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      State = cbChecked
+      TabOrder = 2
+    end
+    object RestClientHorse_dpk: TCheckBox
+      Left = 12
+      Top = 233
+      Width = 199
+      Height = 17
+      Hint = 'RestClientHorse.dpk'
+      Caption = 'REST Client Component (Horse)'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 9
+    end
+    object DBCBrCore_dpk: TCheckBox
+      Left = 12
+      Top = 34
+      Width = 199
+      Height = 17
+      Hint = 'DBCBrCore.dpk'
+      Caption = 'DBCBr Core'
+      Checked = True
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      State = cbChecked
+      TabOrder = 1
+    end
+    object DBEBrCore_dpk: TCheckBox
+      Left = 12
+      Top = 16
+      Width = 199
+      Height = 17
+      Hint = 'DBEBrCore.dpk'
+      Caption = 'DBEBr Core'
       Checked = True
       Enabled = False
       Font.Charset = DEFAULT_CHARSET

@@ -109,7 +109,7 @@ begin
   FRESTResponse.RootElement := '';
   FAPIContext := '';
   FRESTContext := '';
-  /// <summary> Monta a URL base </summary>
+  // Monta a URL base
   SetBaseURL;
 end;
 
@@ -131,9 +131,9 @@ function TRESTClientWS.DoDELETE(const AResource, ASubResource: String): String;
 begin
   FRequestMethod := 'DELETE';
   FRESTRequest.Method := TRESTRequestMethod.rmDELETE;
-  /// <summary> Define valores dos parâmetros </summary>
+  // Define valores dos parâmetros
   SetParamValues;
-  /// <summary> DELETE </summary>
+  // DELETE
   try
     FRESTRequest.Execute;
     Result := (FRESTRequest.Response.JSONValue as TJSONArray).Items[0].ToJSON;
@@ -163,9 +163,9 @@ function TRESTClientWS.DoGET(const AResource, ASubResource: String): String;
 begin
   FRequestMethod := 'GET';
   FRESTRequest.Method := TRESTRequestMethod.rmGET;
-  /// <summary> Define valores dos parâmetros </summary>
+  // Define valores dos parâmetros
   SetParamValues;
-  /// <summary> GET </summary>
+  // GET
   try
     FRESTRequest.Execute;
     if Length(FRESTResponse.RootElement) > 0 then
@@ -198,9 +198,9 @@ function TRESTClientWS.DoPOST(const AResource, ASubResource: String): String;
 begin
   FRequestMethod := 'POST';
   FRESTRequest.Method := TRESTRequestMethod.rmPOST;
-  /// <summary> Define valores dos parâmetros </summary>
+  // Define valores dos parâmetros
   SetParamsBodyValue;
-  /// <summary> POST </summary>
+  // POST
   try
     FRESTRequest.Execute;
     Result := (FRESTRequest.Response.JSONValue as TJSONArray).Items[0].ToJSON;
@@ -230,9 +230,9 @@ function TRESTClientWS.DoPUT(const AResource, ASubResource: String): String;
 begin
   FRequestMethod := 'PUT';
   FRESTRequest.Method := TRESTRequestMethod.rmPUT;
-  /// <summary> Define valores dos parâmetros </summary>
+  // Define valores dos parâmetros
   SetParamsBodyValue;
-  /// <summary> PUT </summary>
+  // PUT
   try
     FRESTRequest.Execute;
   except
@@ -274,21 +274,21 @@ var
 
 begin
   Result := '';
-  /// <summary> Executa a procedure de adição dos parâmetros </summary>
+  // Executa a procedure de adição dos parâmetros
   if Assigned(AParamsProc) then
     AParamsProc();
-  /// <summary> Define valor da URL </summary>
+  // Define valor da URL
   SetURLValue;
-  /// <summary> Define dados do proxy </summary>
+  // Define dados do proxy
   SetProxyParamsClientValue;
-  /// <summary> Define valores de autenticação </summary>
+  // Define valores de autenticação
   SetAuthenticatorTypeValues;
 
   for LFor := 0 to FParams.Count -1 do
     if FParams.Items[LFor].AsString = 'None' then
       FParams.Items[LFor].AsString := '';
   try
-    /// <summary> DoBeforeCommand </summary>
+    // DoBeforeCommand
     DoBeforeCommand;
 
     case ARequestMethod of
@@ -310,15 +310,11 @@ begin
         end;
       TRESTRequestMethodType.rtPATCH: ;
     end;
-    /// <summary>
-    ///   Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
-    /// </summary>
+    // Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
     FResponseString := Result;
-    /// <summary> DoAfterCommand </summary>
+    // DoAfterCommand
     DoAfterCommand;
-    /// <summary>
-    ///   Pega de volta o JSON manipulado ou não no evento AfterCommand
-    /// </summary>
+    // Pega de volta o JSON manipulado ou não no evento AfterCommand
     Result := FResponseString;
   finally
     FResponseString := '';
@@ -331,28 +327,21 @@ end;
 procedure TRESTClientWS.SetAuthenticatorTypeValues;
 begin
   case FAuthenticator.AuthenticatorType of
-    atNoAuth:
-      ;
-    atBasicAuth:
-      begin
-//        FRESTResponse. UserName := FAuthenticator.Username;
-//        FRESTToken.Password := FAuthenticator.Password;
-      end;
-    atBearerToken:
-      begin
-//        FRESTToken.UserName := FAuthenticator.Username;
-//        FRESTToken.Password := FAuthenticator.Password;
-//        FRESTToken.Token := FAuthenticator.Token;
-      end;
-    atOAuth1:
-      begin
-
-      end;
+    atNoAuth:;
+    atBasicAuth:;
+    atBearerToken,
+    atOAuth1,
     atOAuth2:
       begin
-
+        if Length(FAuthenticator.Token) > 0 then
+        begin
+          FRESTClient.AddAuthParameter('Authorization', 'Bearer ' + FAuthenticator.Token, TRESTRequestParameterKind.pkHTTPHEADER);
+          Exit;
+        end;
       end;
   end;
+  FRESTClient.AddAuthParameter('username', FAuthenticator.Username, TRESTRequestParameterKind.pkHTTPHEADER);
+  FRESTClient.AddAuthParameter('password', FAuthenticator.Password, TRESTRequestParameterKind.pkHTTPHEADER);
 end;
 
 procedure TRESTClientWS.SetBaseURL;
@@ -367,7 +356,7 @@ procedure TRESTClientWS.SetParamValues;
 var
   LFor: Integer;
 begin
-  /// <summary> Params </summary>
+  // Params
   for LFor := 0 to FParams.Count -1 do
   begin
     FRESTRequest.ResourceSuffix := FRESTRequest.ResourceSuffix + '/{' +
@@ -375,7 +364,7 @@ begin
     FRESTRequest.Params.AddUrlSegment(FParams.Items[LFor].Name,
                                       FParams.Items[LFor].AsString);
   end;
-  /// <summary> Query Params </summary>
+  // Query Params
   for LFor := 0 to FQueryParams.Count -1 do
     FRESTRequest.AddParameter(FQueryParams.Items[LFor].Name,
                               FQueryParams.Items[LFor].AsString);

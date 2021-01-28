@@ -61,7 +61,10 @@ type
     destructor Destroy; override;
     function Execute(const AResource, ASubResource: String;
       const ARequestMethod: TRESTRequestMethodType;
-      const AParamsProc: TProc = nil): String;
+      const AParamsProc: TProc = nil): String; overload;
+    function Execute(const AURL: String;
+      const ARequestMethod: TRESTRequestMethodType;
+      const AParamsProc: TProc = nil): String; overload;
   published
     property APIContext;
     property RESTContext;
@@ -266,6 +269,68 @@ begin
   Result := FResponseString;
 end;
 
+function TRESTClientWiRL.Execute(const AURL: String;
+  const ARequestMethod: TRESTRequestMethodType;
+  const AParamsProc: TProc): String;
+
+  procedure SetURLValue;
+  begin
+    FRESTClient.WiRLEngineURL := GetBaseURL;
+    FRESTClientApp.AppName := '';
+    FRESTResource.Resource := '';
+    FRESTSubResource.Resource := '';
+    FRESTSubResource.PathParamsValues.Clear;
+    FRESTSubResource.QueryParams.Clear;
+  end;
+
+begin
+  Result := '';
+  // Executa a procedure de adição dos parâmetros
+  if Assigned(AParamsProc) then
+    AParamsProc();
+  // Define valor da URL
+  SetURLValue;
+  // Define dados do proxy
+  SetProxyParamsClientValue;
+  // Define valores de autenticação
+  SetAuthenticatorTypeValues;
+  try
+    // DoBeforeCommand
+    DoBeforeCommand;
+
+    case ARequestMethod of
+      TRESTRequestMethodType.rtPOST:
+        begin
+          Result := DoPOST('', '');
+        end;
+      TRESTRequestMethodType.rtPUT:
+        begin
+          Result := DoPUT('', '');
+        end;
+      TRESTRequestMethodType.rtGET:
+        begin
+          Result := DoGET('', '');
+        end;
+      TRESTRequestMethodType.rtDELETE:
+        begin
+          Result := DoDELETE('', '');
+        end;
+      TRESTRequestMethodType.rtPATCH: ;
+    end;
+    // Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
+    FResponseString := Result;
+    // DoAfterCommand
+    DoAfterCommand;
+    // Pega de volta o JSON manipulado ou não no evento AfterCommand
+    Result := FResponseString;
+  finally
+    FResponseString := '';
+    FParams.Clear;
+    FQueryParams.Clear;
+    FBodyParams.Clear;
+  end;
+end;
+
 function TRESTClientWiRL.Execute(const AResource, ASubResource: String;
   const ARequestMethod: TRESTRequestMethodType;
   const AParamsProc: TProc): String;
@@ -273,10 +338,8 @@ function TRESTClientWiRL.Execute(const AResource, ASubResource: String;
   procedure SetURLValue;
   begin
     FRESTClientApp.AppName := FAPIContext;
-    /// <summary>
-    ///   Trata a URL Base caso o componente esteja para usar o servidor,
-    ///   mas a classe não.
-    /// </summary>
+    // Trata a URL Base caso o componente esteja para usar o servidor,
+    // mas a classe não.
     if (FServerUse) and (FClassNotServerUse) then
       FRESTClientApp.AppName := RemoveContextServerUse(FRESTClientApp.AppName);
 
@@ -289,17 +352,17 @@ function TRESTClientWiRL.Execute(const AResource, ASubResource: String;
 
 begin
   Result := '';
-  /// <summary> Executa a procedure de adição dos parâmetros </summary>
+  // Executa a procedure de adição dos parâmetros
   if Assigned(AParamsProc) then
     AParamsProc();
-  /// <summary> Define valor da URL </summary>
+  // Define valor da URL
   SetURLValue;
-  /// <summary> Define dados do proxy </summary>
+  // Define dados do proxy
   SetProxyParamsClientValue;
-  /// <summary> Define valores de autenticação </summary>
+  // Define valores de autenticação
   SetAuthenticatorTypeValues;
   try
-    /// <summary> DoBeforeCommand </summary>
+    // DoBeforeCommand
     DoBeforeCommand;
 
     case ARequestMethod of
@@ -321,15 +384,11 @@ begin
         end;
       TRESTRequestMethodType.rtPATCH: ;
     end;
-    /// <summary>
-    ///   Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
-    /// </summary>
+    // Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
     FResponseString := Result;
-    /// <summary> DoAfterCommand </summary>
+    // DoAfterCommand
     DoAfterCommand;
-    /// <summary>
-    ///   Pega de volta o JSON manipulado ou não no evento AfterCommand
-    /// </summary>
+    // Pega de volta o JSON manipulado ou não no evento AfterCommand
     Result := FResponseString;
   finally
     FResponseString := '';
@@ -348,28 +407,21 @@ end;
 procedure TRESTClientWiRL.SetAuthenticatorTypeValues;
 begin
   case FAuthenticator.AuthenticatorType of
-    atNoAuth:
-      ;
-    atBasicAuth:
-      begin
-        FRESTToken.UserName := FAuthenticator.Username;
-        FRESTToken.Password := FAuthenticator.Password;
-      end;
-    atBearerToken:
-      begin
-        FRESTClient.Request.HeaderFields.AddPair('username', FAuthenticator.Username);
-        FRESTClient.Request.HeaderFields.AddPair('password', FAuthenticator.Password);
-        FRESTClient.Request.HeaderFields.AddPair('bearertoken', FAuthenticator.Token);
-      end;
-    atOAuth1:
-      begin
-
-      end;
+    atNoAuth:;
+    atBasicAuth:;
+    atBearerToken,
+    atOAuth1,
     atOAuth2:
       begin
-
+        if Length(FAuthenticator.Token) > 0 then
+        begin
+          FRESTClient.Request.HeaderFields.AddPair('Authorization', 'Bearer ' + FAuthenticator.Token);
+          Exit;
+        end;
       end;
   end;
+  FRESTToken.UserName := FAuthenticator.Username;
+  FRESTToken.Password := FAuthenticator.Password;
 end;
 
 procedure TRESTClientWiRL.SetBaseURL;

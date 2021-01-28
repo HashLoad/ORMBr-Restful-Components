@@ -30,7 +30,7 @@ type
   TClientParam = array of String;
   PClientParam = ^TClientParam;
 
-//  TAuthentication = procedure (var AAuthorized: Boolean) of object;
+  TAuthentication = procedure of object;
   TBeforeCommandEvent = procedure (ARequestMethod: String) of object;
   TAfterCommandEvent = procedure (AStatusCode: Integer;
                               var AResponseString: String;
@@ -46,7 +46,6 @@ type
 
   TORMBrClient = class(TORMBrClientBase)
   private
-//    FAuthentication: TAuthentication;
     FBeforeCommand: TBeforeCommandEvent;
     FAfterCommand: TAfterCommandEvent;
     function GetMethodGET: String;
@@ -106,13 +105,13 @@ type
     FRequestMethod: String;
     FResponseString: String;
     FStatusCode: Integer;
+    FAuthentication: TAuthentication;
     procedure SetServerUse(const Value: Boolean); virtual;
     procedure SetBaseURL; virtual;
     function GetBaseURL: String;
     function GetFullURL: String; virtual;
     procedure DoBeforeCommand; virtual;
     procedure DoAfterCommand; virtual;
-//    procedure DoAuthentication(var AAuthorized: Boolean); virtual;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -138,7 +137,7 @@ type
     property MethodGETNextPacketWhere: String read GetMethodGETNextPacketWhere write SetMethodGETNextPacketWhere;
     property BaseURL: String read GetBaseURL;
     property FullURL: String read GetFullURL;
-//    property OnAuthentication: TAuthentication read FAuthentication write FAuthentication;
+    property OnAuthentication: TAuthentication read FAuthentication write FAuthentication;
     property OnBeforeCommand: TBeforeCommandEvent read FBeforeCommand write FBeforeCommand;
     property OnAfterCommand: TAfterCommandEvent read FAfterCommand write FAfterCommand;
     property OnErrorCommand: TErrorCommandEvent read FErrorCommand write FErrorCommand;
@@ -210,12 +209,6 @@ begin
   if Assigned(FAfterCommand) then
     FAfterCommand(FStatusCode, FResponseString, FRequestMethod);
 end;
-
-//procedure TORMBrClient.DoAuthentication(var AAuthorized: Boolean);
-//begin
-//  if Assigned(FAuthenticator) then
-//    FAuthenticator(AAuthorized);
-//end;
 
 procedure TORMBrClient.DoBeforeCommand;
 begin

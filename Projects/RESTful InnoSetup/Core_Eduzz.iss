@@ -1,5 +1,5 @@
 #define MyAppName "ORMBr - REST Server/Client Components"
-#define MyAppExeName "ORMBrInstall.exe"
+#define MyAppExeName "RESTfulInstall"
 #define VersionApp "1.5.1"
 #define CopyRight "Copyright (C) 2018-2019 Isaque Pinhero, Inc."
 #define URL "https://www.ormbr.com.br"
@@ -16,8 +16,10 @@
 ;#define FrameworkName = "WiRL"
 ;#define Framework = "dmvc"
 ;#define FrameworkName = "DelphiMVC"
-#define Framework = "dwcore"
-#define FrameworkName = "DWCore"
+;#define Framework = "dwcore"
+;#define FrameworkName = "DWCore"
+#define Framework = "Horse"
+#define FrameworkName = "Horse"
 
 [Setup]
 PrivilegesRequired=admin

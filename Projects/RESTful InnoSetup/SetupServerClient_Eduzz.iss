@@ -59,4 +59,4 @@ Source: "..\..\Examples\RESTFul via Driver\{#FrameworkName}\Server\*.*"; DestDir
 Source: "..\..\Examples\Data\Database\*.*"; DestDir: "{app}\Examples\RESTFul via Driver\Data\Database\"; Flags: ignoreversion
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Flags: nowait postinstall skipifsilent runascurrentuser; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
+Filename: "{app}\{#MyAppExeName}_{#FrameworkName}"; Flags: nowait postinstall skipifsilent runascurrentuser; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"

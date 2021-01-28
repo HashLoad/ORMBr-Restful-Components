@@ -6,6 +6,7 @@ unit uPrincipal;
 //{$DEFINE RESTFULMARS}
 //{$DEFINE RESTFULDELPHIMVC}
 //{$DEFINE RESTFULDWCORE}
+//{$DEFINE RESTFULHORSE}
 
 interface
 
@@ -71,6 +72,7 @@ type
     edtDelphiVersion: TComboBox;
     Label1: TLabel;
     ckbUsarArquivoConfig: TCheckBox;
+    Label8: TLabel;
     procedure imgPropaganda1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -680,7 +682,11 @@ begin
     else if oORMBr.Installations[iFor].VersionNumberStr = 'd25' then
       edtDelphiVersion.Items.Add('Delphi 10.2 Tokyo')
     else if oORMBr.Installations[iFor].VersionNumberStr = 'd26' then
-      edtDelphiVersion.Items.Add('Delphi 10.3 Rio');
+      edtDelphiVersion.Items.Add('Delphi 10.3 Rio')
+    else if oORMBr.Installations[iFor].VersionNumberStr = 'd27' then
+      edtDelphiVersion.Items.Add('Delphi 10.4 Sydney')
+    else if oORMBr.Installations[iFor].VersionNumberStr = 'd28' then
+      edtDelphiVersion.Items.Add('Delphi 10.5 ??');
 
     // -- Evento disparado antes de iniciar a execução do processo.
     oORMBr.Installations[iFor].DCC32.OnBeforeExecute := BeforeExecute;
@@ -710,6 +716,8 @@ begin
   framePacotes1.RestClientDelphiMVC_Label.Visible := False;
   framePacotes1.RestClientDWCore_dpk.Visible := False;
   framePacotes1.RestClientDWCore_Label.Visible := False;
+  framePacotes1.RestClientHorse_dpk.Visible := False;
+  framePacotes1.RestClientHorse_Label.Visible := False;
   {$ENDIF}
 
   {$IFDEF RESTFULDATASNAP}
@@ -746,6 +754,13 @@ begin
   framePacotes1.RestClientDWCore_Label.Top := cTOP;
   framePacotes1.RestClientDWCore_dpk.Checked := True;
   framePacotes1.RestClientDWCore_dpk.Top := cTOP - 1;
+  {$ENDIF}
+  {$IFDEF RESTFULHORSE}
+  framePacotes1.RestClientHorse_dpk.Visible := True;
+  framePacotes1.RestClientHorse_Label.Visible := True;
+  framePacotes1.RestClientHorse_Label.Top := cTOP;
+  framePacotes1.RestClientHorse_dpk.Checked := True;
+  framePacotes1.RestClientHorse_dpk.Top := cTOP - 1;
   {$ENDIF}
 end;
 

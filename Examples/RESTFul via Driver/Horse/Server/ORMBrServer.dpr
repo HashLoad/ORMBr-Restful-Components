@@ -3,20 +3,22 @@ program ORMBrServer;
 
 uses
   Vcl.Forms,
-  ormbr.model.client in '..\ormbr.model.client.pas',
-  ormbr.model.detail in '..\ormbr.model.detail.pas',
-  ormbr.model.lookup in '..\ormbr.model.lookup.pas',
-  ormbr.model.master in '..\ormbr.model.master.pas',
-  uDataModuleServer in 'uDataModuleServer.pas' {DataModuleServer: TDataModule},
-  ormbr.server.horse in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.horse.pas',
-  ormbr.server.resource.horse in '..\..\..\..\Source\RESTful Components\Server\ormbr.server.resource.horse.pas',
-  Main.Form in 'Main.Form.pas' {FrmVCL};
+  provider.datamodule in 'Provider\provider.datamodule.pas' {ProviderDM: TDataModule},
+  main.server in 'main.server.pas' {FormServer},
+  ormbr.model.client in '..\Model\ormbr.model.client.pas',
+  ormbr.model.detail in '..\Model\ormbr.model.detail.pas',
+  ormbr.model.lookup in '..\Model\ormbr.model.lookup.pas',
+  ormbr.model.master in '..\Model\ormbr.model.master.pas',
+  controller.ormbr.server in 'Controller\controller.ormbr.server.pas',
+  repository.ormbr.server in 'Repository\repository.ormbr.server.pas',
+  provider.ormbr.server in 'Provider\provider.ormbr.server.pas',
+  provider.interfaces in 'Provider\provider.interfaces.pas';
 
 {$R *.res}
 
 begin
+  ReportMemoryLeaksOnShutdown := DebugHook <> 0;
   Application.Initialize;
-  Application.CreateForm(TDataModuleServer, DataModuleServer);
-  Application.CreateForm(TFrmVCL, FrmVCL);
+  Application.CreateForm(TFormServer, FormServer);
   Application.Run;
 end.

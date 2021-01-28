@@ -27,7 +27,7 @@ package RestClientHorse;
 {$DEFINE RELEASE}
 {$DEFINE DRIVERRESTFUL}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'ORMBr - RESTful Client (Horse)'}
+{$DESCRIPTION 'ORMBr - RESTful Client (DataSnap)'}
 {$IMPLICITBUILD ON}
 
 requires

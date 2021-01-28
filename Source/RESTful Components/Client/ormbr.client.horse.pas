@@ -64,7 +64,10 @@ type
     procedure AddQueryParam(AValue: String); override;
     function Execute(const AResource, ASubResource: String;
       const ARequestMethod: TRESTRequestMethodType;
-      const AParamsProc: TProc = nil): String;
+      const AParamsProc: TProc = nil): String; overload;
+    function Execute(const AURL: String;
+      const ARequestMethod: TRESTRequestMethodType;
+      const AParamsProc: TProc = nil): String; overload;
   published
     property APIContext;
     property RESTContext;
@@ -257,6 +260,73 @@ begin
   end;
 end;
 
+function TRESTClientHorse.Execute(const AURL: String;
+  const ARequestMethod: TRESTRequestMethodType;
+  const AParamsProc: TProc): String;
+var
+  LFor: Integer;
+
+  procedure SetURLValue;
+  begin
+    FRESTClient.BaseURL := AURL;
+    FRESTRequest.Params.Clear;
+    FRESTRequest.ResetToDefaults;
+    FRESTRequest.Resource := '';
+    FRESTRequest.ResourceSuffix := '';
+  end;
+
+begin
+  Result := '';
+  // Executa a procedure de adição dos parâmetros
+  if Assigned(AParamsProc) then
+    AParamsProc();
+  // Define valor da URL
+  SetURLValue;
+  // Define dados do proxy
+  SetProxyParamsClientValue;
+  // Define valores de autenticação
+  SetAuthenticatorTypeValues;
+
+  for LFor := 0 to FParams.Count -1 do
+    if FParams.Items[LFor].AsString = 'None' then
+      FParams.Items[LFor].AsString := '';
+  try
+    // DoBeforeCommand
+    DoBeforeCommand;
+
+    case ARequestMethod of
+      TRESTRequestMethodType.rtPOST:
+        begin
+          Result := DoPOST('', '');
+        end;
+      TRESTRequestMethodType.rtPUT:
+        begin
+          Result := DoPUT('', '');
+        end;
+      TRESTRequestMethodType.rtGET:
+        begin
+          Result := DoGET('', '');
+        end;
+      TRESTRequestMethodType.rtDELETE:
+        begin
+          Result := DoDELETE('', '');
+        end;
+      TRESTRequestMethodType.rtPATCH: ;
+    end;
+    // Passao JSON para a VAR que poderá ser manipulada no evento AfterCommand
+    FResponseString := Result;
+    // DoAfterCommand
+    DoAfterCommand;
+    // Pega de volta o JSON manipulado ou não no evento AfterCommand
+    Result := FResponseString;
+  finally
+    FResponseString := '';
+    FParams.Clear;
+    FQueryParams.Clear;
+    FBodyParams.Clear;
+  end;
+end;
+
 function TRESTClientHorse.Execute(const AResource, ASubResource: String;
       const ARequestMethod: TRESTRequestMethodType;
       const AParamsProc: TProc = nil): String;
@@ -336,27 +406,23 @@ end;
 
 procedure TRESTClientHorse.SetAuthenticatorTypeValues;
 begin
+  if Assigned(FAuthentication) then
+    FAuthentication;
   case FAuthenticator.AuthenticatorType of
-    atNoAuth:
-      ;
+    atNoAuth:;
     atBasicAuth:
       begin
-//        FRESTResponse. UserName := FAuthenticator.Username;
-//        FRESTToken.Password := FAuthenticator.Password;
+        if Length(FAuthenticator.Token) > 0 then
+          FRESTClient.AddAuthParameter('Authorization', 'Basic ' + FAuthenticator.Token,
+                                       TRESTRequestParameterKind.pkHTTPHEADER);
       end;
-    atBearerToken:
-      begin
-//        FRESTToken.UserName := FAuthenticator.Username;
-//        FRESTToken.Password := FAuthenticator.Password;
-//        FRESTToken.Token := FAuthenticator.Token;
-      end;
-    atOAuth1:
-      begin
-
-      end;
+    atBearerToken,
+    atOAuth1,
     atOAuth2:
       begin
-
+        if Length(FAuthenticator.Token) > 0 then
+          FRESTClient.AddAuthParameter('Authorization', 'Bearer ' + FAuthenticator.Token,
+                                       TRESTRequestParameterKind.pkHTTPHEADER);
       end;
   end;
 end;
