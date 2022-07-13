@@ -3,5 +3,6 @@
 *.bpl
 __history/
 __recovery/
+descontinuado
 Win32/
 /modules
