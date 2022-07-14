@@ -14,7 +14,7 @@
   @abstract(Telagram : https://t.me/ormbr)
 }
 
-{$INCLUDE ..\..\ormbr.inc}
+{$INCLUDE ..\..\..\ormbr.inc}
 
 unit ormbr.client.about;
 
@@ -39,7 +39,7 @@ uses
   SysUtils,
   Variants,
   Classes,
-  ormbr.client.consts;
+  ormbr.client.consts, Vcl.Imaging.pngimage;
 
 type
   TFormAboutClient = class(TForm)

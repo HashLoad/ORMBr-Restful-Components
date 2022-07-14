@@ -47,7 +47,8 @@ type
     procedure Insert(const AObject: M); override;
     procedure Update(const AObject: M); override;
     procedure Delete(const AObject: M); override;
-    function Find(const AMethodName: String; const AParams: array of string): TObjectList<M>; overload; override;
+    function Find(const AMethodName: String;
+      const AParams: array of string): TObjectList<M>; overload; override;
   end;
 
 implementation

@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>2018/06/13 16:45:38.000.782,D:\ORMBr\Demo\RESTFul via Driver\Datasnap\ORMBrDatasnap.groupproj=C:\Users\isaque.pinheiro\Documents\Embarcadero\Studio\Projects\ProjectGroup1.groupproj</Transaction>
-    <Transaction>2020/11/19 08:41:36.000.008,D:\ORMBr RESTful Components\Examples\RESTFul via Driver\Horse\ORMBrDatasnap.groupproj=D:\ORMBr RESTful Components\Examples\RESTFul via Driver\Horse\ORMBrHorse.groupproj</Transaction>
+    <Transaction>2018/06/13 16:45:38.000.782,C:\Users\isaque.pinheiro\Documents\Embarcadero\Studio\Projects\ProjectGroup1.groupproj=D:\ORMBr\Demo\RESTFul via Driver\Datasnap\ORMBrDatasnap.groupproj</Transaction>
+    <Transaction>2020/11/19 08:41:36.000.008,D:\ORMBr RESTful Components\Examples\RESTFul via Driver\Horse\ORMBrHorse.groupproj=D:\ORMBr RESTful Components\Examples\RESTFul via Driver\Horse\ORMBrDatasnap.groupproj</Transaction>
   </Transactions>
 	<Default.Personality>
-		<Projects ActiveProject="D:\PROJETOS-Brasil\ORMBr RESTful Components\Examples\RESTFul via Driver\Horse\Client\ORMBrClient.dproj"/>
+		<Projects ActiveProject="D:\PROJETOS-Brasil\ORMBr\Source\RESTful\Examples\RESTFul via Driver\Horse\Server\ORMBrServer.dproj"/>
 	</Default.Personality>
 </BorlandProject>
