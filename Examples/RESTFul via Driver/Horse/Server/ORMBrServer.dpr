@@ -4,7 +4,6 @@ program ORMBrServer;
 uses
   Vcl.Forms,
   provider.datamodule in 'Provider\provider.datamodule.pas' {ProviderDM: TDataModule},
-  main.server in 'main.server.pas' {FormServer},
   ormbr.model.client in '..\Model\ormbr.model.client.pas',
   ormbr.model.detail in '..\Model\ormbr.model.detail.pas',
   ormbr.model.lookup in '..\Model\ormbr.model.lookup.pas',
@@ -12,7 +11,8 @@ uses
   controller.ormbr.server in 'Controller\controller.ormbr.server.pas',
   repository.ormbr.server in 'Repository\repository.ormbr.server.pas',
   provider.ormbr.server in 'Provider\provider.ormbr.server.pas',
-  provider.interfaces in 'Provider\provider.interfaces.pas';
+  provider.interfaces in 'Provider\provider.interfaces.pas',
+  main.server in 'main.server.pas' {FormServer};
 
 {$R *.res}
 

@@ -27,7 +27,6 @@ uses
   dbebr.factory.interfaces,
   // HorseCore
   Horse,
-  Horse.Http,
   Horse.Core;
 
 type
@@ -107,13 +106,13 @@ begin
       LAppResource := TAppResource.Create;
       try
         try
-          Res.Send(LAppResource.select(Req.Params['resource'], Req.Params, Req.Query)); //.ContentType('application/json');
+          Res.Send(LAppResource.select(Req.Params['resource'], Req.Params, Req.Query)).ContentType('application/json');
           // Add records count in Headers "ResultCount"
           if LAppResource.ResultCount > 0 then
             Res.RawWebResponse.CustomHeaders.AddPair('ResultCount', IntToStr(LAppResource.ResultCount));
         except
           on E: Exception do
-            Res.Send(Format(cEXCEPTION, [E.Message])); //.ContentType('application/json');
+            Res.Send(Format(cEXCEPTION, [E.Message])).ContentType('application/json');
         end;
       finally
         LAppResource.Free;
@@ -128,10 +127,10 @@ begin
       LAppResource := TAppResource.Create;
       try
         try
-          Res.Send(LAppResource.insert(Req.Params['resource'], Req.Body)); //.ContentType('application/json');
+          Res.Send(LAppResource.insert(Req.Params['resource'], Req.Body)).ContentType('application/json');
         except
           on E: Exception do
-            Res.Send(Format(cEXCEPTION, [E.Message])); //.ContentType('application/json');
+            Res.Send(Format(cEXCEPTION, [E.Message])).ContentType('application/json');
         end;
       finally
         LAppResource.Free;
@@ -146,10 +145,10 @@ begin
       LAppResource := TAppResource.Create;
       try
         try
-          Res.Send(LAppResource.update(Req.Params['resource'], Req.Body)); //.ContentType('application/json');
+          Res.Send(LAppResource.update(Req.Params['resource'], Req.Body)).ContentType('application/json');
         except
           on E: Exception do
-            Res.Send(Format(cEXCEPTION, [E.Message])); //.ContentType('application/json');
+            Res.Send(Format(cEXCEPTION, [E.Message])).ContentType('application/json');
         end;
       finally
         LAppResource.Free;
@@ -165,12 +164,12 @@ begin
       try
         try
           if Req.Query.Count = 0 then
-            Res.Send(LAppResource.delete(Req.Params['resource'])) //.ContentType('application/json')
+            Res.Send(LAppResource.delete(Req.Params['resource'])).ContentType('application/json')
           else
-            Res.Send(LAppResource.delete(Req.Params['resource'], Req.Query['$filter'])); //.ContentType('application/json');
+            Res.Send(LAppResource.delete(Req.Params['resource'], Req.Query['$filter'])).ContentType('application/json');
         except
           on E: Exception do
-            Res.Send(Format(cEXCEPTION, [E.Message])); //.ContentType('application/json');
+            Res.Send(Format(cEXCEPTION, [E.Message])).ContentType('application/json');
         end;
       finally
         LAppResource.Free;

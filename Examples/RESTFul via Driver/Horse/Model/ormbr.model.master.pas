@@ -20,6 +20,7 @@ uses
 type
   [Entity]
   [Table('master','')]
+//  [PrimaryKey('master_id', AutoInc, SequenceInc, NoSort, True, 'Chave primária')]
   [PrimaryKey('master_id', AutoInc, NoSort, True, 'Chave primária')]
   [Sequence('seq_master')]
   [OrderBy('master_id')]

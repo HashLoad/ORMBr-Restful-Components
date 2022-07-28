@@ -37,8 +37,8 @@ type
     ///
     /// </summary>
     function select(AResource: String;
-                    AParams: THorseList;
-                    AQuery: THorseList): string; overload;
+                    AParams: THorseCoreParam;
+                    AQuery: THorseCoreParam): string; overload;
     /// <summary>
     ///
     /// </summary>
@@ -75,8 +75,8 @@ begin
 end;
 
 function TAppResource.select(AResource: String;
-                             AParams: THorseList;
-                             AQuery: THorseList): string;
+                             AParams: THorseCoreParam;
+                             AQuery: THorseCoreParam): string;
 var
   LQuery: TRESTQuery;
 begin
