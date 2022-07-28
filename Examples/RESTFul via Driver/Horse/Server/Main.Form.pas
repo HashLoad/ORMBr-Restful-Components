@@ -49,10 +49,7 @@ begin
   FConnection := TFactoryFireDAC.Create(DataModuleServer.FDConnection1, dnSQLite);
 
   // ORMBr - REST Server Horse
-  FRESTServerHorse := TRESTServerHorse.Create(Self);
-  FRESTServerHorse.Connection := FConnection;
-
-
+  FRESTServerHorse := TRESTServerHorse.Create(Self, FConnection);
 
   THorse.Get('api/ormbr/ping/:id',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
